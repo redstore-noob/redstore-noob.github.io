@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NyaLauncher · 文档</title>
+  <meta name="description" content="NyaLauncher 文档：入门、架构总览、模块说明、插件开发与贡献指南。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    /* ===== 顶部条 ===== */
+    .docs-top {
+      position: sticky; top: 0; z-index: 40;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px clamp(18px, 5vw, 40px);
+      background: rgba(26, 11, 51, .55);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--glass-brd);
+    }
+    .docs-top__brand { font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; display: flex; gap: 8px; align-items: center; }
+    .docs-top__back { font-size: .9rem; color: var(--text-dim); border: 1px solid var(--glass-brd); padding: 7px 16px; border-radius: 999px; transition: .25s; }
+    .docs-top__back:hover { color: #fff; border-color: var(--neon-cyan); box-shadow: var(--shadow-cyan); }
+
+    /* ===== 布局 ===== */
+    .docs { max-width: 1200px; margin: 0 auto; padding: clamp(28px, 5vw, 54px) clamp(18px, 5vw, 40px) 80px; display: flex; gap: 40px; align-items: flex-start; }
+
+    .docs__sidebar { position: sticky; top: 84px; width: 224px; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 18px;
+      background: var(--glass-bg); border: 1px solid var(--glass-brd);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 10px 30px rgba(8,2,20,.4); }
+    .docs__sidebar a { display: flex; align-items: center; gap: 10px; color: var(--text-dim); padding: 10px 14px; border-radius: 12px; font-size: .95rem; border-left: 2px solid transparent; transition: .2s; }
+    .docs__sidebar a:hover, .docs__sidebar a.active { color: #fff; background: rgba(255,255,255,.08); border-left-color: var(--neon-pink); }
+    .docs__sidebar .sb-emoji { font-size: 1.05rem; }
+    .docs__sidebar .sb-sep { height: 1px; background: var(--glass-brd); margin: 8px 10px; }
+    .docs__sidebar .sb-ext { color: var(--neon-cyan); }
+
+    .docs__main { flex: 1; min-width: 0; }
+
+    /* ===== 页面切换 ===== */
+    .doc-page { display: none; }
+    .doc-page.is-active { display: block; animation: pageIn .45s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes pageIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+    /* ===== 页头 / 区块 ===== */
+    .page-head { margin-bottom: 26px; }
+    .page-head h1 { font-family: var(--font-head); font-weight: 800; font-size: clamp(1.9rem, 5vw, 2.6rem); line-height: 1.15; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .page-lead { color: var(--text-dim); margin-top: 10px; font-size: 1.02rem; line-height: 1.7; }
+    .doc-block { margin-bottom: 30px; padding: 26px 28px; border-radius: 20px;
+      background: var(--glass-bg); border: 1px solid var(--glass-brd);
+      backdrop-filter: blur(14px) saturate(180%); -webkit-backdrop-filter: blur(14px) saturate(180%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 10px 30px rgba(8,2,20,.4); }
+    .doc-block h2 { font-family: var(--font-head); font-weight: 600; font-size: 1.35rem; margin-bottom: 12px; }
+    .doc-block h3 { font-family: var(--font-head); font-weight: 600; font-size: 1.05rem; margin: 18px 0 8px; color: var(--neon-cyan); }
+    .doc-block p { color: var(--text-dim); line-height: 1.75; }
+
+    .doc-tag { display: inline-block; font-size: .7rem; font-weight: 600; color: #150826; background: var(--grad); border-radius: 999px; padding: 2px 10px; vertical-align: middle; box-shadow: 0 0 14px rgba(255,107,203,.4); }
+    .doc-note { margin: 14px 0; padding: 12px 16px; border-radius: 14px; font-size: .85rem; line-height: 1.7; color: var(--text-dim); border: 1px solid rgba(255,107,203,.45); background: linear-gradient(135deg, rgba(255,107,203,.10), rgba(255,107,203,.03)); box-shadow: inset 0 1px 0 rgba(255,255,255,.18); }
+    .doc-note strong { color: var(--neon-pink); }
+
+    /* ===== 概览 Hero + 卡片网格 ===== */
+    .docs-hero { position: relative; overflow: hidden; text-align: center; margin-bottom: 30px; padding: clamp(30px, 6vw, 50px) 24px; border-radius: 24px;
+      background: var(--glass-bg); border: 1px solid var(--glass-brd);
+      backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 16px 50px rgba(108,43,217,.35); }
+    .docs-hero__badge { display: inline-block; margin-bottom: 16px; padding: 6px 16px; border-radius: 999px; border: 1px solid var(--glass-brd); background: rgba(255,255,255,.05); font-size: .78rem; letter-spacing: .5px; color: var(--text-dim); }
+    .docs-hero h1 { font-family: var(--font-head); font-weight: 800; font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.1; }
+    .docs-hero__lead { color: var(--text-dim); margin-top: 12px; font-size: 1.05rem; }
+    .docs-hero__chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 22px; }
+    .docs-chip { font-size: .8rem; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--glass-brd); background: rgba(255,255,255,.05); color: var(--text-dim); }
+    .docs-chip b { color: var(--neon-cyan); font-family: var(--font-mono); }
+
+    .ov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .ov-card { display: flex; flex-direction: column; gap: 6px; padding: 20px; border-radius: 18px; text-decoration: none; color: var(--text);
+      background: var(--glass-bg); border: 1px solid var(--glass-brd);
+      backdrop-filter: blur(12px) saturate(170%); -webkit-backdrop-filter: blur(12px) saturate(170%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 8px 24px rgba(8,2,20,.4);
+      transition: transform .3s, border-color .3s, box-shadow .3s; }
+    .ov-card:hover { transform: translateY(-4px); border-color: var(--neon-cyan); box-shadow: var(--shadow-cyan), inset 0 1px 0 rgba(255,255,255,.5); }
+    .ov-card__emoji { font-size: 1.7rem; }
+    .ov-card__title { font-family: var(--font-head); font-weight: 700; font-size: 1.05rem; }
+    .ov-card__desc { font-size: .85rem; color: var(--text-dim); line-height: 1.6; }
+
+    /* ===== 能力 chips ===== */
+    .cap-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .cap { font-family: var(--font-mono); font-size: .76rem; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--glass-brd); background: rgba(0,245,255,.06); color: var(--neon-cyan); }
+
+    /* ===== 核心 API 卡片 ===== */
+    .api-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 10px; }
+    .api-card { display: flex; flex-direction: column; gap: 5px; padding: 15px 17px; background: var(--glass-bg); border: 1px solid var(--glass-brd); border-radius: 14px; backdrop-filter: blur(12px) saturate(170%); -webkit-backdrop-filter: blur(12px) saturate(170%); box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 8px 22px rgba(8,2,20,.4); transition: transform .3s, border-color .3s, box-shadow .3s; }
+    .api-card:hover { transform: translateY(-3px); border-color: rgba(0,245,255,.5); box-shadow: var(--shadow-cyan), inset 0 1px 0 rgba(255,255,255,.5); }
+    .api-card__name { font-family: var(--font-mono); font-weight: 700; font-size: .95rem; color: var(--text); }
+    .api-card__desc { font-size: .82rem; color: var(--text-dim); line-height: 1.6; }
+
+    /* ===== CTA 按钮 ===== */
+    .doc-cta { text-align: center; padding: 30px 24px; border-radius: 20px; margin-top: 8px;
+      background: linear-gradient(135deg, rgba(255,107,203,.14), rgba(0,245,255,.10));
+      border: 1px solid var(--glass-brd); box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 10px 30px rgba(108,43,217,.35); }
+    .doc-cta h3 { font-family: var(--font-head); font-weight: 700; font-size: 1.2rem; color: #fff; margin-bottom: 8px; }
+    .doc-cta p { color: var(--text-dim); font-size: .9rem; margin-bottom: 18px; }
+    .doc-cta__btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 999px; background: var(--grad); color: #150826; font-family: var(--font-head); font-weight: 700; text-decoration: none; box-shadow: 0 8px 26px rgba(255,107,203,.45); transition: .25s; }
+    .doc-cta__btn:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(0,245,255,.5); }
+
+    /* ===== 模块网格 ===== */
+    .mod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .mod-card { display: flex; gap: 14px; padding: 18px; align-items: flex-start;
+      background: var(--glass-bg); border: 1px solid var(--glass-brd); border-radius: 16px;
+      backdrop-filter: blur(12px) saturate(170%); -webkit-backdrop-filter: blur(12px) saturate(170%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 8px 24px rgba(8,2,20,.4);
+      transition: transform .3s, border-color .3s, box-shadow .3s; }
+    .mod-card:hover { transform: translateY(-4px); border-color: var(--neon-cyan); box-shadow: var(--shadow-cyan), inset 0 1px 0 rgba(255,255,255,.5); }
+    .mod-card__icon { font-size: 1.6rem; flex: 0 0 auto; line-height: 1.3; }
+    .mod-card__body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .mod-card__name { font-family: var(--font-mono); font-weight: 700; font-size: .95rem; color: var(--text); word-break: break-word; }
+    .mod-card__desc { font-size: .84rem; color: var(--text-dim); }
+
+    /* ===== 代码块（Mac 风格头部） ===== */
+    code { font-family: var(--font-mono); background: rgba(255,255,255,.06); border: 1px solid var(--glass-brd); padding: 2px 8px; border-radius: 6px; color: var(--neon-cyan); font-size: .88rem; }
+    pre.code-block { position: relative; display: block; background: rgba(10, 3, 24, .62); border: 1px solid var(--glass-brd); border-radius: 12px; padding: 42px 18px 16px; overflow-x: auto; color: var(--text); font-family: var(--font-mono); font-size: .85rem; line-height: 1.7; margin: 12px 0; }
+    pre.code-block::before { content: "● ● ●"; position: absolute; top: 0; left: 0; right: 0; height: 32px; display: flex; align-items: center; padding-left: 16px; font-size: .7rem; letter-spacing: 4px; color: rgba(255,255,255,.32); background: rgba(255,255,255,.05); border-bottom: 1px solid var(--glass-brd); border-radius: 12px 12px 0 0; }
+    pre.code-block::after { content: attr(data-lang); position: absolute; top: 8px; right: 14px; font-family: var(--font-mono); font-size: .68rem; color: var(--text-dim); letter-spacing: .5px; }
+    pre.code-block .k { color: var(--neon-pink); } pre.code-block .s { color: var(--neon-cyan); } pre.code-block .c { color: var(--text-dim); font-style: italic; }
+
+    /* ===== 底部 ===== */
+    .docs-foot { text-align: center; margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--glass-brd);
+      display: flex; flex-direction: column; align-items: center; gap: 16px; color: var(--text-dim); font-size: .85rem; }
+    .docs-return { display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 999px; background: var(--grad); color: #150826; font-family: var(--font-head); font-weight: 600; text-decoration: none; box-shadow: 0 8px 26px rgba(255,107,203,.4); transition: .25s; }
+    .docs-return:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(0,245,255,.5); }
+
+    @media (max-width: 860px) {
+      .docs { flex-direction: column; }
+      .docs__sidebar { position: static; width: 100%; flex-direction: row; flex-wrap: wrap; }
+      .docs__sidebar a { border-left: none; }
+      .docs__sidebar .sb-sep { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 液态玻璃折射滤镜（隐藏） -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="liquid-glass" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="4" result="t" />
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="16" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- 背景层（纯 CSS，无需脚本） -->
+  <div class="bg-gradient" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-vignette" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--3" aria-hidden="true"></div>
+
+  <!-- 顶部条 -->
+  <header class="docs-top">
+    <a class="docs-top__brand" href="../index.html">
+      <span>🐱</span><span>Nya<span class="grad-text">Launcher</span> · 文档</span>
+    </a>
+    <a class="docs-top__back" href="../index.html">← 返回首页</a>
+  </header>
+
+  <div class="docs">
+    <!-- 侧边导航 -->
+    <nav class="docs__sidebar">
+      <a href="#overview"><span class="sb-emoji">🏠</span>概览</a>
+      <a href="#getting-started"><span class="sb-emoji">🚀</span>入门</a>
+      <a href="#architecture"><span class="sb-emoji">🧭</span>架构总览</a>
+      <a href="#modules"><span class="sb-emoji">📦</span>模块说明</a>
+      <a href="#plugins"><span class="sb-emoji">🧩</span>插件开发</a>
+      <a href="#contributing"><span class="sb-emoji">🤝</span>贡献指南</a>
+      <div class="sb-sep"></div>
+      <a class="sb-ext" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener"><span class="sb-emoji">🐙</span>GitHub 仓库</a>
+    </nav>
+
+    <!-- 正文：每页切换 -->
+    <main class="docs__main">
+
+      <!-- 概览 -->
+      <section class="doc-page is-active" id="overview">
+        <header class="docs-hero">
+          <span class="docs-hero__badge mono">v0.1.0-preview4 · 文档</span>
+          <h1>NyaLauncher <span class="grad-text">文档</span></h1>
+          <p class="docs-hero__lead">现代 · 轻量 · 跨平台 · 为自由而生的 Minecraft 启动器。左侧选一个主题开始阅读。</p>
+          <div class="docs-hero__chips">
+            <span class="docs-chip">模块 <b>6</b></span>
+            <span class="docs-chip">许可证 <b>Apache 2.0</b></span>
+            <span class="docs-chip">运行时 <b>.NET 10</b></span>
+            <span class="docs-chip">QQ 群 <b>1108330006</b></span>
+          </div>
+        </header>
+        <div class="ov-grid">
+          <a class="ov-card" href="#getting-started"><span class="ov-card__emoji">🚀</span><span class="ov-card__title">入门</span><span class="ov-card__desc">克隆仓库、安装依赖并构建运行。</span></a>
+          <a class="ov-card" href="#architecture"><span class="ov-card__emoji">🧭</span><span class="ov-card__title">架构总览</span><span class="ov-card__desc">分层设计、GUI 与核心解耦。</span></a>
+          <a class="ov-card" href="#modules"><span class="ov-card__emoji">📦</span><span class="ov-card__title">模块说明</span><span class="ov-card__desc">六个工程模块的职责一览。</span></a>
+          <a class="ov-card" href="#plugins"><span class="ov-card__emoji">🧩</span><span class="ov-card__title">插件开发</span><span class="ov-card__desc">用 Abstractions SDK 扩展启动器。</span></a>
+          <a class="ov-card" href="#contributing"><span class="ov-card__emoji">🤝</span><span class="ov-card__title">贡献指南</span><span class="ov-card__desc">提交 PR、通过测试与规范。</span></a>
+          <a class="ov-card" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener"><span class="ov-card__emoji">🐙</span><span class="ov-card__title">GitHub 仓库</span><span class="ov-card__desc">源码、Issue 与 Release。</span></a>
+        </div>
+      </section>
+
+      <!-- 入门 -->
+      <section class="doc-page" id="getting-started">
+        <header class="page-head">
+          <h1>🚀 入门</h1>
+          <p class="page-lead">从源码构建并运行 NyaLauncher。请确保已安装 <code>.NET 10 SDK</code>，并在 Windows / macOS / Linux 上操作。</p>
+        </header>
+        <div class="doc-block">
+          <h2>克隆与构建</h2>
+          <pre class="code-block" data-lang="bash">git clone https://github.com/redstore-noob/NyaLauncher
+cd NyaLauncher
+dotnet build NyaLauncher.slnx
+dotnet run --project NyaLauncher.Avalonia</pre>
+          <p>环境准备、依赖说明与常见故障排查将在后续补充。</p>
+        </div>
+      </section>
+
+      <!-- 架构总览 -->
+      <section class="doc-page" id="architecture">
+        <header class="page-head">
+          <h1>🧭 架构总览</h1>
+          <p class="page-lead">NyaLauncher 采用分层架构：GUI 与核心逻辑解耦，通过插件契约向社区开放扩展能力。</p>
+        </header>
+        <div class="doc-block">
+          <h2>分层设计</h2>
+          <p>整体以解决方案 <code>NyaLauncher.slnx</code> 组织，包含前端、核心、插件、令牌保护与测试等多个模块。前端（Avalonia）只负责界面与交互，核心（Core）承载游戏管理、账号与版本解析等逻辑，二者通过清晰边界通信；插件契约（Plugin.Abstractions）则把扩展能力以稳定接口暴露给第三方。</p>
+          <p>完整的模块职责见 <a href="#modules" style="color:var(--neon-cyan)">模块说明</a>；想自己写插件请看 <a href="#plugins" style="color:var(--neon-cyan)">插件开发</a>。</p>
+        </div>
+      </section>
+
+      <!-- 模块说明 -->
+      <section class="doc-page" id="modules">
+        <header class="page-head">
+          <h1>📦 模块说明</h1>
+          <p class="page-lead">解决方案由以下六个模块组成。</p>
+        </header>
+        <div class="doc-block">
+          <div class="mod-grid">
+            <div class="mod-card"><span class="mod-card__icon">🖥️</span><div class="mod-card__body"><span class="mod-card__name">NyaLauncher.Avalonia</span><span class="mod-card__desc">前端 GUI，由 Avalonia 编写。</span></div></div>
+            <div class="mod-card"><span class="mod-card__icon">✨</span><div class="mod-card__body"><span class="mod-card__name">NyaLauncher.Avalonia.Animations</span><span class="mod-card__desc">前端动画实现。</span></div></div>
+            <div class="mod-card"><span class="mod-card__icon">⚙️</span><div class="mod-card__body"><span class="mod-card__name">NyaLauncher.Core</span><span class="mod-card__desc">核心功能实现。</span></div></div>
+            <div class="mod-card"><span class="mod-card__icon">🧩</span><div class="mod-card__body"><span class="mod-card__name">NyaLauncher.Plugin.Abstractions</span><span class="mod-card__desc">插件契约，开放扩展接口。</span></div></div>
+            <div class="mod-card"><span class="mod-card__icon">🔐</span><div class="mod-card__body"><span class="mod-card__name">NyaLauncher.MinecraftTokenCrypto</span><span class="mod-card__desc">对 Minecraft 令牌的保护。</span></div></div>
+            <div class="mod-card"><span class="mod-card__icon">🧪</span><div class="mod-card__body"><span class="mod-card__name">NyaLauncher.Tests</span><span class="mod-card__desc">专门用于测试部分功能。</span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 插件开发（已精简） -->
+      <section class="doc-page" id="plugins">
+        <header class="page-head">
+          <h1>🧩 插件开发 <span class="doc-tag">API v1</span></h1>
+          <p class="page-lead">通过 <code>NyaLauncher.Plugin.Abstractions</code>（SDK <code>0.1.0-ppre2</code>，契约 <code>1.0</code>）扩展启动器：注册工作区组件、Minecraft 实例扩展与启动贡献。插件与宿主<strong>同进程</strong>运行。</p>
+        </header>
+
+        <div class="doc-note">⚠️ <strong>安全：</strong>插件 DLL 与启动器同进程，能力授权<strong>不是沙箱</strong>，插件仍能调用 .NET 的文件 / 网络 / 进程 API。仅安装可信来源，并独立审查源码与依赖。</div>
+
+        <div class="doc-block">
+          <h2>核心能力</h2>
+          <p>在 <code>plugin.json</code> 声明所需能力，缺一项授权即无法启动。能力代表<em>用户授权意图</em>，并非宿主已实现的服务（当前 <code>GetService&lt;T&gt;()</code> 恒返回 <code>null</code>）。</p>
+          <div class="cap-chips">
+            <span class="cap">ui.components</span>
+            <span class="cap">ui.native</span>
+            <span class="cap">network.http</span>
+            <span class="cap">system.info.read</span>
+            <span class="cap">user-files.read</span>
+            <span class="cap">user-files.write</span>
+            <span class="cap">process.start</span>
+            <span class="cap">minecraft.instance.read</span>
+            <span class="cap">minecraft.instance.modify</span>
+            <span class="cap">minecraft.launch.modify</span>
+          </div>
+        </div>
+
+        <div class="doc-block">
+          <h2>快速开始</h2>
+          <p>从与目标 NyaLauncher <strong>同版本</strong>的发布包取 <code>NyaLauncher.Plugin.Abstractions.dll</code>（通常随启动器可执行文件同目录），仅引用此 SDK DLL，<strong>不要</strong>引用 Avalonia / Core。</p>
+          <pre class="code-block" data-lang="text">Example.Hello/
+├─ sdk/NyaLauncher.Plugin.Abstractions.dll
+├─ PluginEntry.cs
+├─ plugin.json
+└─ Example.Hello.csproj</pre>
+          <pre class="code-block" data-lang="json">{
+  "manifestVersion": 1,
+  "id": "dev.example.hello",
+  "name": "Hello NyaLauncher",
+  "version": "1.0.0",
+  "apiVersion": "1.0",
+  "entryAssembly": "Example.Hello.dll",
+  "entryType": "Example.Hello.PluginEntry",
+  "requiredCapabilities": ["ui.components"]
+}</pre>
+          <pre class="code-block" data-lang="csharp">public sealed class PluginEntry : PluginBase
+{
+    protected override ValueTask OnStartAsync(CancellationToken ct)
+    {
+        var def = new PolygonComponentBuilder(
+                $"{Context.Manifest.Id}/hello", "Hello World")
+            .AddText("msg", new ComponentRect(0.08, 0.3, 0.84, 0.4),
+                "Hello, NyaLauncher!", ComponentTextRole.Title, 22)
+            .Build();
+        Context.Registrar.AddComponentArea(new PluginComponentArea
+        {
+            Id = $"{Context.Manifest.Id}/area",
+            Title = "Hello 插件",
+            Components = [ new PolygonComponentRegistration { Definition = def } ]
+        });
+        return ValueTask.CompletedTask;
+    }
+}</pre>
+          <p>构建 <code>dotnet build -c Debug</code> 后，把 <code>plugin.json</code> 与 DLL 放入插件包目录（Windows 默认 <code>%LOCALAPPDATA%\NyaLauncher\plugins\packages\&lt;id&gt;</code>），在启动器「插件列表」点击「重新扫描」即可。修改代码需先禁用 → 替换 DLL → 重新扫描 → 启用。</p>
+        </div>
+
+        <div class="doc-block">
+          <h2>核心 API</h2>
+          <div class="api-grid">
+            <div class="api-card"><span class="api-card__name">PluginManifest</span><span class="api-card__desc">插件元数据（id / name / version / entryType / capabilities…），来自 plugin.json。</span></div>
+            <div class="api-card"><span class="api-card__name">IPluginContext</span><span class="api-card__desc">提供 Manifest、Storage、Settings、Registrar 与 <code>IsCapabilityGranted</code>。</span></div>
+            <div class="api-card"><span class="api-card__name">PolygonComponentBuilder</span><span class="api-card__desc">流式构建工作区组件（文本/按钮/进度/滑块…），<code>Build()</code> 自动校验。</span></div>
+            <div class="api-card"><span class="api-card__name">Minecraft 集成</span><span class="api-card__desc"><code>IMinecraftInstanceExtension</code> 与 <code>IMinecraftLaunchContributor</code> 修改实例与启动参数。</span></div>
+          </div>
+        </div>
+
+        <div class="doc-cta">
+          <h3>想深入？完整手册已就绪 📖</h3>
+          <p>能力详细行为、设置 Schema、组件全部方法、Minecraft 集成示例、打包发布与配额，全部写在官方手册里。</p>
+          <a class="doc-cta__btn" href="https://github.com/redstore-noob/NyaLauncher/blob/testplug/NyaLauncher.Plugin.Abstractions/README.md" target="_blank" rel="noopener">阅读完整插件开发手册 →</a>
+        </div>
+      </section>
+
+      <!-- 贡献指南 -->
+      <section class="doc-page" id="contributing">
+        <header class="page-head">
+          <h1>🤝 贡献指南</h1>
+          <p class="page-lead">欢迎参与 NyaLauncher 的开发！</p>
+        </header>
+        <div class="doc-block">
+          <h2>标准流程</h2>
+          <p> Fork 仓库 → 新建分支 → 提交改动 → 发起 Pull Request。请确保改动通过 CI 与 <code>NyaLauncher.Tests</code> 中的测试。代码风格与提交规范将在此补充。</p>
+        </div>
+      </section>
+
+      <div class="docs-foot">
+        <div class="footer__qq">
+          <span class="footer__qq-label">加入 QQ 交流群</span>
+          <button class="qq-copy" type="button" data-qq="1108330006" aria-label="点击复制 QQ 群号 1108330006">
+            <span class="qq-icon">💬</span>
+            <span class="qq-num mono">1108330006</span>
+            <span class="qq-hint">点击复制</span>
+          </button>
+        </div>
+        <a class="docs-return" href="../index.html">← 返回首页</a>
+        <p>用 ❤️ 与 🐱 构建 · Licensed under Apache 2.0</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // 仅处理页面切换、QQ 复制，不依赖主站脚本
+    (function () {
+      var pages = Array.prototype.slice.call(document.querySelectorAll(".doc-page"));
+      var links = Array.prototype.slice.call(document.querySelectorAll(".docs__sidebar a"));
+      var main = document.querySelector(".docs__main");
+
+      function setPage(id) {
+        var target = document.getElementById(id);
+        if (!target) target = document.getElementById("overview");
+        pages.forEach(function (p) { p.classList.toggle("is-active", p === target); });
+        links.forEach(function (l) {
+          l.classList.toggle("active", l.getAttribute("href") === "#" + target.id);
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (history.replaceState) history.replaceState(null, "", "#" + target.id);
+      }
+
+      // 拦截所有内部 # 锚点跳转
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          setPage(a.getAttribute("href").slice(1));
+        });
+      });
+
+      // 初始化：读取 URL hash
+      var initial = location.hash ? location.hash.slice(1) : "overview";
+      setPage(initial);
+
+      // QQ 群号一键复制
+      var qqBtn = document.querySelector(".qq-copy");
+      if (qqBtn) {
+        var qqNum = qqBtn.getAttribute("data-qq");
+        var qqHint = qqBtn.querySelector(".qq-hint");
+        qqBtn.addEventListener("click", function () {
+          var done = function () {
+            qqBtn.classList.add("copied");
+            if (qqHint) qqHint.textContent = "已复制 ✓";
+            setTimeout(function () { qqBtn.classList.remove("copied"); if (qqHint) qqHint.textContent = "点击复制"; }, 1800);
+          };
+          var fallback = function () {
+            var ta = document.createElement("textarea");
+            ta.value = qqNum; ta.style.position = "fixed"; ta.style.opacity = "0";
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand("copy"); done(); } catch (err) {}
+            document.body.removeChild(ta);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(qqNum).then(done).catch(fallback);
+          } else { fallback(); }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

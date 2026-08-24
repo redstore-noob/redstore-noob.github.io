@@ -1,1 +1,385 @@
-棍母
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NyaLauncher · 跨平台 Minecraft 启动器</title>
+  <meta name="description" content="NyaLauncher —— 基于 .NET 10 与 Avalonia UI 构建的现代、轻量、跨平台 Minecraft 启动器。隐私优先，插件生态，AI 辅助。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===== 背景层 ===== -->
+  <div class="bg-gradient" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="bg-vignette" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--3" aria-hidden="true"></div>
+
+  <!-- ===== 顶部导航 ===== -->
+  <header class="nav" id="nav">
+    <a class="nav__brand" href="#home">
+      <span class="nav__logo">🐱</span>
+      <span class="nav__name">Nya<span class="grad-text">Launcher</span></span>
+    </a>
+    <nav class="nav__links">
+      <a href="#about">关于</a>
+      <a href="#features">特性</a>
+      <a href="#tech">技术栈</a>
+      <a href="#structure">结构</a>
+      <a href="#updates">进度</a>
+      <a href="#community">社区</a>
+      <a href="docs/index.html">文档</a>
+      <a class="nav__cta" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+    <button class="nav__toggle" id="navToggle" type="button" aria-label="打开菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ===== 英雄区 ===== -->
+  <section class="hero" id="home">
+    <div class="hero__inner">
+      <span class="hero__badge reveal">v0.1.0-preview4 · 为自由而生</span>
+      <h1 class="hero__title reveal" data-parallax="0.15">
+        <span class="hero__cat">🐱</span> Nya<span class="grad-text">Launcher</span>
+      </h1>
+      <p class="hero__subtitle reveal" data-parallax="0.08">
+        现代 · 轻量 · 跨平台 · 高度自定义 · <span class="neon-cyan">为自由而生</span>
+      </p>
+      <p class="hero__desc reveal">
+        一个用 <span class="mono">.NET 10</span> + <span class="mono">Avalonia UI</span> 打造的
+        开源 Minecraft 启动器。无遥测、无广告，把控制权还给你。
+      </p>
+      <div class="hero__actions reveal">
+        <a class="btn btn--primary btn--pulse" href="https://github.com/redstore-noob/NyaLauncher/releases" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+          下载最新版
+        </a>
+        <a class="btn btn--primary" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5A11.5 11.5 0 0 0 23.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>
+          GitHub 仓库
+        </a>
+        <a class="btn btn--ghost" href="#features">了解更多 ↓</a>
+      </div>
+      <div class="hero__stats reveal">
+        <div class="stat"><span class="stat__num">3</span><span class="stat__label">支持平台</span></div>
+        <div class="stat"><span class="stat__num">0</span><span class="stat__label">遥测请求</span></div>
+        <div class="stat"><span class="stat__num">∞</span><span class="stat__label">插件可能</span></div>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- ===== 关于项目 ===== -->
+  <section class="section" id="about">
+    <div class="section__head reveal">
+      <span class="section__kicker mono">// about</span>
+      <h2 class="section__title">关于 <span class="grad-text">NyaLauncher</span></h2>
+      <p class="section__lead">一个由社区驱动、为玩家而生、支持高度自定义的现代 Minecraft 启动器。</p>
+    </div>
+
+    <div class="about__intro">
+      <div class="about__statement reveal">
+        市面上的启动器不少，<br>但<span class="grad-text">真正属于玩家自己</span>的，很少。
+      </div>
+      <div class="about__story reveal" style="--delay:100ms">
+        <p>NyaLauncher 始于一个朴素的念头：游戏要怎么启动，<strong>应该由你说了算</strong>。我们不做埋点、不挂广告、不强制账号，只交付一套干净、开源、可以被改造的代码。</p>
+        <p>无论你是只想一键进服的休闲玩家，还是折腾整合包、魔改客户端的硬核党，底层能力都向你完整敞开 —— 多版本共存、账户隔离、离线畅玩、界面与玩法高度自定义，一个都不落下。</p>
+      </div>
+    </div>
+
+    <div class="about__creed">
+      <article class="card tilt reveal" style="--delay:0ms">
+        <div class="card__icon glow-pink">🗽</div>
+        <h3 class="card__title">自由至上</h3>
+        <p class="card__text">Apache 2.0 完全开源，代码可审计、可二次开发，永远不会被厂商锁死。</p>
+      </article>
+      <article class="card tilt reveal" style="--delay:80ms">
+        <div class="card__icon glow-cyan">🛡️</div>
+        <h3 class="card__title">隐私守护</h3>
+        <p class="card__text">零遥测、零追踪，账号令牌本地加密存储，离线也能玩得安心。</p>
+      </article>
+      <article class="card tilt reveal" style="--delay:160ms">
+        <div class="card__icon glow-pink">🔌</div>
+        <h3 class="card__title">开放生态</h3>
+        <p class="card__text">清晰的插件契约接口，皮肤、模组、工具链高度自定义，社区玩法无限。</p>
+      </article>
+      <article class="card tilt reveal" style="--delay:240ms">
+        <div class="card__icon glow-cyan">🤝</div>
+        <h3 class="card__title">玩家友好</h3>
+        <p class="card__text">AI 辅助诊断启动问题、推荐最优 JVM 参数，新手也能少踩坑、省时间。</p>
+      </article>
+    </div>
+
+    <!-- 高度自定义 专属亮点 -->
+    <div class="about__custom reveal">
+      <div class="about__custom-head">
+        <span class="about__custom-badge mono">// customize</span>
+        <h3 class="about__custom-title">高度自定义 · <span class="grad-text">你的启动器你做主</span></h3>
+        <p class="about__custom-lead">从外观到行为，每一处都能按你的习惯调。</p>
+      </div>
+      <div class="about__custom-grid">
+        <div class="custom-item">
+          <span class="custom-ico glow-pink">🎨</span>
+          <div>
+            <span class="custom-name">主题与外观</span>
+            <span class="custom-desc">深色 / 浅色、强调色、毛玻璃强度随心切换。</span>
+          </div>
+        </div>
+        <div class="custom-item">
+          <span class="custom-ico glow-cyan">⌨️</span>
+          <div>
+            <span class="custom-name">按键与快捷键</span>
+            <span class="custom-desc">启动、截图、切换账户一键绑定，手感由你定。</span>
+          </div>
+        </div>
+        <div class="custom-item">
+          <span class="custom-ico glow-pink">⚙️</span>
+          <div>
+            <span class="custom-name">启动流程</span>
+            <span class="custom-desc">JVM 参数、前置库、内存分配全部可配可控。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 核心特性 ===== -->
+  <section class="section" id="features">
+    <div class="section__head reveal">
+      <span class="section__kicker mono">// features</span>
+      <h2 class="section__title">为什么选择 <span class="grad-text">NyaLauncher</span>？</h2>
+      <p class="section__lead">不是又一个启动器，而是一套为你量身打造的自由工具箱。</p>
+    </div>
+
+    <div class="features">
+      <article class="card tilt reveal" style="--delay:0ms">
+        <div class="card__icon glow-pink">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01"/></svg>
+        </div>
+        <h3 class="card__title">跨平台支持</h3>
+        <p class="card__text">一套代码，处处运行。Windows、macOS、Linux 原生体验，界面与性能零妥协。</p>
+      </article>
+
+      <article class="card tilt reveal" style="--delay:80ms">
+        <div class="card__icon glow-cyan">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
+        </div>
+        <h3 class="card__title">隐私优先</h3>
+        <p class="card__text">无遥测、无追踪、无账号墙。你的游戏数据只属于你，离线也能畅玩。</p>
+      </article>
+
+      <article class="card tilt reveal" style="--delay:160ms">
+        <div class="card__icon glow-pink">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4a2 2 0 1 0-4 0v2H6a2 2 0 0 0-2 2v2h12V8a2 2 0 0 0-2-2z"/><path d="M4 14h16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 4v16"/></svg>
+        </div>
+        <h3 class="card__title">插件生态</h3>
+        <p class="card__text">基于 <span class="mono">NyaLauncher.Plugin.Abstractions</span> 的开放接口，社区能轻松扩展任意功能。</p>
+      </article>
+
+      <article class="card tilt reveal" style="--delay:240ms">
+        <div class="card__icon glow-cyan">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z"/><path d="M18 14l.9 2.1L21 17l-2.1.9L18 20l-.9-2.1L15 17l2.1-.9z"/></svg>
+        </div>
+        <h3 class="card__title">AI 辅助</h3>
+        <p class="card__text">智能诊断启动失败、推荐最优 JVM 参数、自动整理 mod 冲突，省心又高效。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== 技术栈 ===== -->
+  <section class="section" id="tech">
+    <div class="section__head reveal">
+      <span class="section__kicker mono">// tech-stack</span>
+      <h2 class="section__title">坚实的<span class="grad-text">技术底座</span></h2>
+      <p class="section__lead">现代、成熟、开源优先的技术选型。</p>
+    </div>
+
+    <div class="badges">
+      <div class="badge reveal" style="--delay:0ms"><span class="badge__main">.NET 10</span><span class="badge__sub mono">runtime</span></div>
+      <div class="badge reveal" style="--delay:60ms"><span class="badge__main">Avalonia UI</span><span class="badge__sub mono">frontend</span></div>
+      <div class="badge reveal" style="--delay:120ms"><span class="badge__main">C# 13</span><span class="badge__sub mono">language</span></div>
+      <div class="badge reveal" style="--delay:180ms"><span class="badge__main">XAML</span><span class="badge__sub mono">ui-markup</span></div>
+      <div class="badge reveal" style="--delay:240ms"><span class="badge__main">Apache 2.0</span><span class="badge__sub mono">license</span></div>
+      <div class="badge reveal" style="--delay:300ms"><span class="badge__main">MVVM</span><span class="badge__sub mono">pattern</span></div>
+      <div class="badge reveal" style="--delay:360ms"><span class="badge__main">DI</span><span class="badge__sub mono">architecture</span></div>
+      <div class="badge reveal" style="--delay:420ms"><span class="badge__main">Cross-Platform</span><span class="badge__sub mono">native-aot-ready</span></div>
+    </div>
+  </section>
+
+  <!-- ===== 项目结构 ===== -->
+  <section class="section" id="structure">
+    <div class="section__head reveal">
+      <span class="section__kicker mono">// architecture</span>
+      <h2 class="section__title">清晰优雅的<span class="grad-text">项目结构</span></h2>
+      <p class="section__lead">分层解耦，核心与界面分离，插件即插即用。</p>
+    </div>
+
+    <div class="tree">
+      <div class="tree__node tree__root reveal">
+        <div class="folder">
+          <span class="folder__icon">📦</span>
+          <span class="folder__name mono">NyaLauncher.slnx</span>
+        </div>
+      </div>
+
+      <ul class="module-list">
+        <li class="module-row reveal" style="--delay:60ms">
+          <span class="m-icon">🖥️</span>
+          <div class="m-body">
+            <span class="m-name mono">NyaLauncher.Avalonia</span>
+            <span class="m-desc">前端 GUI · 由 Avalonia 编写</span>
+          </div>
+        </li>
+        <li class="module-row reveal" style="--delay:120ms">
+          <span class="m-icon">✨</span>
+          <div class="m-body">
+            <span class="m-name mono">NyaLauncher.Avalonia.Animations</span>
+            <span class="m-desc">前端动画实现</span>
+          </div>
+        </li>
+        <li class="module-row reveal" style="--delay:180ms">
+          <span class="m-icon">⚙️</span>
+          <div class="m-body">
+            <span class="m-name mono">NyaLauncher.Core</span>
+            <span class="m-desc">核心功能实现</span>
+          </div>
+        </li>
+        <li class="module-row reveal" style="--delay:240ms">
+          <span class="m-icon">🧩</span>
+          <div class="m-body">
+            <span class="m-name mono">NyaLauncher.Plugin.Abstractions</span>
+            <span class="m-desc">插件契约 · 开放扩展接口</span>
+          </div>
+        </li>
+        <li class="module-row reveal" style="--delay:300ms">
+          <span class="m-icon">🔐</span>
+          <div class="m-body">
+            <span class="m-name mono">NyaLauncher.MinecraftTokenCrypto</span>
+            <span class="m-desc">对 Minecraft 令牌的保护</span>
+          </div>
+        </li>
+        <li class="module-row reveal" style="--delay:360ms">
+          <span class="m-icon">🧪</span>
+          <div class="m-body">
+            <span class="m-name mono">NyaLauncher.Tests</span>
+            <span class="m-desc">专门用于测试部分功能</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 更新状态 ===== -->
+  <section class="section" id="updates">
+    <div class="section__head reveal">
+      <span class="section__kicker mono">// roadmap</span>
+      <h2 class="section__title">开发<span class="grad-text">进度与计划</span></h2>
+      <p class="section__lead">稳步向前，每一次提交都更接近 release。</p>
+    </div>
+
+    <div class="progress reveal">
+      <div class="progress__track">
+        <div class="progress__fill" style="--pct:52%"></div>
+      </div>
+      <div class="progress__labels">
+        <span>0.1.0beta</span>
+        <span>0.1.0rc1</span>
+        <span>0.1.0</span>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl__item tl--done reveal" style="--delay:0ms">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__ver mono">v0.1.0beta</span>
+          <h4>项目诞生</h4>
+          <p>核心框架与 Avalonia 界面骨架落地。</p>
+        </div>
+      </div>
+      <div class="tl__item tl--done reveal" style="--delay:80ms">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__ver mono">v0.1.0-preview4</span>
+          <h4>当前版本 ★</h4>
+          <p>插件系统雏形、账户管理与基础启动流程可用。</p>
+        </div>
+      </div>
+      <div class="tl__item tl--next reveal" style="--delay:160ms">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__ver mono">v0.1.0rc1</span>
+          <h4>公开测试</h4>
+          <p>AI 辅助诊断、mod 管理器与稳定更新通道。</p>
+        </div>
+      </div>
+      <div class="tl__item tl--future reveal" style="--delay:240ms">
+        <div class="tl__dot"></div>
+        <div class="tl__card">
+          <span class="tl__ver mono">v0.1.0</span>
+          <h4>正式发布 · 9月30日</h4>
+          <p>多平台原生打包、完整文档与社区插件市场。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 社区与链接 ===== -->
+  <section class="section" id="community">
+    <div class="section__head reveal">
+      <span class="section__kicker mono">// community</span>
+      <h2 class="section__title">社区与<span class="grad-text">链接</span></h2>
+      <p class="section__lead">一起把 NyaLauncher 做得更好 —— 代码、反馈、闲聊都欢迎。</p>
+    </div>
+
+    <div class="community">
+      <a class="community__card community__github reveal" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener">
+        <span class="community__icon">🐙</span>
+        <div class="community__body">
+          <span class="community__title">GitHub 仓库</span>
+          <span class="community__desc">源码 · Issues · 贡献指南 · 插件市场</span>
+          <span class="community__meta mono">github.com/redstore-noob/NyaLauncher</span>
+        </div>
+        <span class="community__cta">前往仓库 →</span>
+      </a>
+
+      <div class="community__card community__qq reveal" style="--delay:90ms">
+        <span class="community__icon">💬</span>
+        <div class="community__body">
+          <span class="community__title">QQ 交流群</span>
+          <span class="community__desc">实时答疑 · 版本速递 · 一起摸鱼</span>
+          <span class="community__meta mono">群号 1108330006</span>
+        </div>
+        <button class="qq-copy community__cta" type="button" data-qq="1108330006" aria-label="点击复制 QQ 群号 1108330006">
+          <span class="qq-num mono">1108330006</span>
+          <span class="qq-hint">点击复制</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 页脚 ===== -->
+  <footer class="footer">
+    <div class="footer__inner reveal">
+      <div class="footer__brand">
+        <span class="footer__logo">🐱</span>
+        <span class="footer__name">Nya<span class="grad-text">Launcher</span></span>
+      </div>
+      <p class="footer__license mono">Licensed under Apache 2.0</p>
+      <p class="footer__built">用 <span class="heart">❤️</span> 与 <span class="cat">🐱</span> 构建</p>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" type="button" aria-label="回到顶部">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
