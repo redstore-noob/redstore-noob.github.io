@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NyaLauncher · 文档中心</title>
-<meta name="description" content="NyaLauncher 开发者文档中心 · 概览：架构、主题、布局、动画、插件、多边形组件与通知框架。" />
+<title>布局与间距 · NyaLauncher 文档中心</title>
+<meta name="description" content="NyaLauncher 开发者文档中心 · 布局与间距：架构、主题、布局、动画、插件、多边形组件与通知框架。" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -352,10 +352,10 @@ a:hover{text-decoration:underline;}
 <div class="layout">
   <nav class="rail" id="rail" aria-label="文档导航">
     <div class="rail__head">文档地图</div>
-    <a class="nav-item active" href="index.html" aria-current="page"><span class="nav-ico" aria-hidden="true">🏠</span><span class="nav-label">概览</span></a>
+    <a class="nav-item" href="index.html"><span class="nav-ico" aria-hidden="true">🏠</span><span class="nav-label">概览</span></a>
 <a class="nav-item" href="01-architecture.html"><span class="nav-ico" aria-hidden="true">🧭</span><span class="nav-label">架构总览</span></a>
 <a class="nav-item" href="02-theming.html"><span class="nav-ico" aria-hidden="true">🎨</span><span class="nav-label">主题开发</span></a>
-<a class="nav-item" href="03-layout-and-spacing.html"><span class="nav-ico" aria-hidden="true">📐</span><span class="nav-label">布局与间距</span></a>
+<a class="nav-item active" href="03-layout-and-spacing.html" aria-current="page"><span class="nav-ico" aria-hidden="true">📐</span><span class="nav-label">布局与间距</span></a>
 <a class="nav-item" href="04-animations.html"><span class="nav-ico" aria-hidden="true">✨</span><span class="nav-label">动画系统</span></a>
 <a class="nav-item" href="05-plugin-development.html"><span class="nav-ico" aria-hidden="true">🧩</span><span class="nav-label">插件与功能区</span></a>
 <a class="nav-item" href="06-polygon-components.html"><span class="nav-ico" aria-hidden="true">🔷</span><span class="nav-label">多边形组件</span></a>
@@ -363,216 +363,691 @@ a:hover{text-decoration:underline;}
   </nav>
   <main class="main">
     <div class="doc-grid">
-      <article class="doc-card md-content"><h1>NyaLauncher 开发者文档中心</h1>
+      <article class="doc-card md-content"><h1>03 · 布局与间距规范</h1>
 <blockquote>
-<p>这里汇总了 NyaLauncher 所有<strong>可扩展子系统</strong>的教程：主题、动画、布局、插件、多边形组件、通知框架。
-插件作者、主题作者、UI 贡献者都可以从这里出发。</p>
+<p>本规范定义 NyaLauncher Avalonia 应用中所有控件的间距标准，基于实际项目代码分析制定。
+目的是保证界面一致性与可维护性——<strong>新写页面时请对照本表取值，不要凭感觉填数字</strong>。</p>
 </blockquote>
 <hr />
-<h2 id="g-readme-h1">📚 文档地图</h2>
+<h2 id="g-03-h1">1. 基础间距系统</h2>
+<p>采用 <strong>2px 为基础单位</strong> 的间距系统。</p>
+<h3 id="g-03-h2">1.1 间距变量</h3>
 <table>
 <thead>
 <tr>
-<th>#</th>
-<th>文档</th>
-<th>你会学到什么</th>
-<th>主要受众</th>
+<th>变量名</th>
+<th>值</th>
+<th>用途</th>
+<th>使用频率</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>01</td>
-<td><a href="01-architecture.html">项目架构总览</a></td>
-<td>四个工程的职责与依赖方向、启动流程、配置与数据目录、构建与发布</td>
-<td>所有人（建议先读）</td>
+<td><code>xxs</code></td>
+<td>2px</td>
+<td>极小间距，图标与文字微调、紧密元素</td>
+<td>高</td>
 </tr>
 <tr>
-<td>02</td>
-<td><a href="02-theming.html">主题开发指南</a></td>
-<td>主题家族与明暗变体、全部资源键释义、热重载原理、从零创建新主题</td>
-<td>主题作者 / UI 贡献者</td>
+<td><code>xs</code></td>
+<td>4px</td>
+<td>最小间距，紧凑元素内部、小分隔</td>
+<td>高</td>
 </tr>
 <tr>
-<td>03</td>
-<td><a href="03-layout-and-spacing.html">布局与间距规范</a></td>
-<td>2px 基础间距系统、各控件 Padding/Margin 标准、卡片与页面布局</td>
-<td>UI 贡献者</td>
+<td><code>sm</code></td>
+<td>8px</td>
+<td>小间距，相关元素之间、按钮组间距</td>
+<td>高</td>
 </tr>
 <tr>
-<td>04</td>
-<td><a href="04-animations.html">动画系统指南</a></td>
-<td>动画模块化约定、<code>nya-*</code> 声明式 class、编程式 helper、编写新动画的规范</td>
-<td>UI 贡献者 / 插件作者</td>
+<td><code>md</code></td>
+<td>12px</td>
+<td>中等间距，一般元素分隔、卡片内边距</td>
+<td>高</td>
 </tr>
 <tr>
-<td>05</td>
-<td><a href="05-plugin-development.html">插件与功能区开发</a></td>
-<td>功能区注册、工作区停靠与侧栏、用户个性化、持久化、跨平台发布</td>
-<td><strong>插件作者</strong></td>
+<td><code>lg</code></td>
+<td>16px</td>
+<td>大间距，区块内部 padding、主要分隔</td>
+<td>高</td>
 </tr>
 <tr>
-<td>06</td>
-<td><a href="06-polygon-components.html">多边形组件开发</a></td>
-<td>与 UI 框架无关的组件契约、Builder API、状态快照、生命周期、校验规则</td>
-<td><strong>插件作者</strong></td>
+<td><code>xl</code></td>
+<td>24px</td>
+<td>超大间距，区块之间分隔、标题下方</td>
+<td>中</td>
 </tr>
 <tr>
-<td>07</td>
-<td><a href="07-notifications.html">通知框架 NyaNotice</a></td>
-<td>警示条 <code>NyaAlert</code> 与弹窗 <code>NyaPrompt</code> 的完整 API</td>
-<td>插件作者 / UI 贡献者</td>
+<td><code>xxl</code></td>
+<td>32px</td>
+<td>特大间距，页面级布局、大区域分隔</td>
+<td>中</td>
+</tr>
+<tr>
+<td><code>xxxl</code></td>
+<td>48px</td>
+<td>巨大间距，特殊场景</td>
+<td>低</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="g-readme-h2">🧭 按角色选择阅读路径</h2>
-<h3 id="g-readme-h3">🔌 我想写一个插件</h3>
-<ol>
-<li><a href="01-architecture.html">项目架构总览</a> —— 先搞清楚哪些东西能碰、哪些不能碰</li>
-<li><a href="05-plugin-development.html">插件与功能区开发</a> —— 功能区是怎么注册进主界面的</li>
-<li><a href="06-polygon-components.html">多边形组件开发</a> —— 组件契约与 Builder 用法</li>
-<li><a href="07-notifications.html">通知框架</a> —— 用 <code>NyaAlert</code> / <code>NyaPrompt</code> 与用户交互</li>
-</ol>
-<blockquote>
-<p>关键约束：插件契约工程 <code>NyaLauncher.Plugin.Abstractions</code> <strong>不引用 Avalonia</strong>，
-目标是 <code>net10.0</code>。你在组件里拿不到 Avalonia 控件，宿主负责渲染。</p>
-</blockquote>
-<h3 id="g-readme-h4">🎨 我想做一套主题</h3>
-<ol>
-<li><a href="02-theming.html">主题开发指南</a> —— 资源键全集 + 新建主题步骤</li>
-<li><a href="03-layout-and-spacing.html">布局与间距规范</a> —— 保证你的主题不改崩布局</li>
-<li><a href="04-animations.html">动画系统指南</a> —— 可选，了解主题切换时的过渡处理</li>
-</ol>
-<h3 id="g-readme-h5">🖥️ 我想改主界面 / 写页面</h3>
-<ol>
-<li><a href="01-architecture.html">项目架构总览</a></li>
-<li><a href="03-layout-and-spacing.html">布局与间距规范</a></li>
-<li><a href="04-animations.html">动画系统指南</a></li>
-<li><a href="07-notifications.html">通知框架</a></li>
-</ol>
-<hr />
-<h2 id="g-readme-h6">📖 术语表</h2>
-<p>文档里反复出现的几个词，先对齐一下：</p>
+<h3 id="g-03-h3">1.2 常用特殊值</h3>
 <table>
 <thead>
 <tr>
-<th>术语</th>
-<th>英文</th>
-<th>含义</th>
+<th>值</th>
+<th>用途</th>
+<th>使用场景</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>功能区</td>
-<td>Feature Area</td>
-<td>主界面工作区里的一块可停靠区域，例如「启动中心」「资源与实例」</td>
+<td><code>3px</code></td>
+<td>微调间距</td>
+<td>图标与文字、小元素间距</td>
 </tr>
 <tr>
-<td>动作</td>
-<td>Action</td>
-<td>功能区里的一个按钮型条目，点击执行一段代码</td>
+<td><code>5px</code></td>
+<td>小间距</td>
+<td>紧凑布局中的分隔</td>
 </tr>
 <tr>
-<td>组件</td>
-<td>Component</td>
-<td>可被拖进功能区的卡片，分传统矩形与多边形两种形态</td>
+<td><code>7px</code></td>
+<td>中小间距</td>
+<td>按钮内边距、小卡片</td>
 </tr>
 <tr>
-<td>多边形组件</td>
-<td>Polygon Component</td>
-<td>用与 UI 框架无关的声明式契约描述的组件，宿主负责渲染</td>
+<td><code>9px</code></td>
+<td>中间距</td>
+<td>状态指示器间距</td>
 </tr>
 <tr>
-<td>主题家族</td>
-<td>Theme Family</td>
-<td>一套配色的集合（如 <code>HatsuneMiku</code>），内含 Dark / Light 两个变体</td>
+<td><code>10px</code></td>
+<td>中间距</td>
+<td>对话框内容间距、列间距</td>
 </tr>
 <tr>
-<td>变体</td>
-<td>Variant</td>
-<td>一个家族下的明暗分支，对应 Avalonia 的 <code>ThemeVariant</code></td>
+<td><code>14px</code></td>
+<td>中大间距</td>
+<td>卡片内边距、列表项间距</td>
 </tr>
 <tr>
-<td>宿主</td>
-<td>Host</td>
-<td>启动器主程序，负责加载插件、渲染组件、管理生命周期</td>
+<td><code>18px</code></td>
+<td>大间距</td>
+<td>滚动区域边距、大卡片</td>
 </tr>
 <tr>
-<td>工作区</td>
-<td>Workspace</td>
-<td>主界面中承载功能区与组件拖拽的可停靠画布</td>
+<td><code>20px</code></td>
+<td>大间距</td>
+<td>页面区域分隔</td>
+</tr>
+<tr>
+<td><code>22px</code></td>
+<td>超大间距</td>
+<td>对话框内边距</td>
+</tr>
+<tr>
+<td><code>26px</code></td>
+<td>超大间距</td>
+<td>对话框内容边距</td>
+</tr>
+<tr>
+<td><code>28px</code></td>
+<td>巨大间距</td>
+<td>登录框内边距</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="g-readme-h7">⚙️ 全局约定</h2>
-<h3 id="g-readme-h8">分层依赖（不可逆向）</h3>
-<div class="code-wrap"><pre><code>NyaLauncher.Avalonia            ← 主程序（UI、页面、主题、控件）
-   ├── NyaLauncher.Core         ← 业务逻辑（下载/启动/配置/账号），不含 UI
-   ├── NyaLauncher.Avalonia.Animations  ← 全部动效实现
-   └── NyaLauncher.Plugin.Abstractions  ← 插件契约，不依赖 Avalonia
+<h2 id="g-03-h4">2. 控件间距规范</h2>
+<h3 id="g-03-h5">按钮（Button）</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>Padding</th>
+<th>CornerRadius</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主要按钮</td>
+<td><code>12, 6</code></td>
+<td>4px</td>
+<td>标准按钮</td>
+</tr>
+<tr>
+<td>窗口按钮</td>
+<td><code>10, 0</code> 或 <code>14, 7</code></td>
+<td>7px</td>
+<td>窗口控制按钮</td>
+</tr>
+<tr>
+<td>小按钮</td>
+<td><code>8, 4</code></td>
+<td>4px</td>
+<td>紧凑场景</td>
+</tr>
+<tr>
+<td>按钮组间距</td>
+<td><code>0, 0, 8, 0</code></td>
+<td>—</td>
+<td>按钮之间水平间距</td>
+</tr>
+<tr>
+<td>单独按钮下方</td>
+<td><code>0, 4, 0, 0</code></td>
+<td>—</td>
+<td>单独按钮下方间距</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h6">文本框（TextBox）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Padding</code></td>
+<td><code>8, 6</code></td>
+</tr>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0, 4, 0, 0</code></td>
+</tr>
+<tr>
+<td><code>CornerRadius</code></td>
+<td>4px</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h7">复选框 / 单选按钮</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0, 2, 0, 0</code></td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td><code>4, 0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h8">滑块（Slider）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0, 8, 0, 0</code></td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td><code>0, 4</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h9">进度条（ProgressBar）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0, 8, 0, 0</code></td>
+</tr>
+<tr>
+<td><code>Height</code></td>
+<td>4px</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h10">列表框 / 组合框</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0, 4, 0, 0</code></td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td><code>8, 4</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h11">滚动视图（ScrollViewer）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><code>App.axaml</code> 已全局把 <code>ScrollViewer</code> 的 <code>Background</code> 设为 <code>Transparent</code>。</p>
+</blockquote>
+<h3 id="g-03-h12">分组框（GroupBox）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0, 0, 0, 16</code></td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td><code>12, 8</code></td>
+</tr>
+<tr>
+<td>Header 间距</td>
+<td><code>0, 0, 0, 8</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h13">选项卡控件（TabControl）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td><code>0, 8</code></td>
+</tr>
+<tr>
+<td><code>TabItem</code> 间距</td>
+<td><code>0, 0, 4, 0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h14">菜单 / 上下文菜单</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Padding</code></td>
+<td><code>4, 2</code></td>
+</tr>
+<tr>
+<td><code>MenuItem</code> 间距</td>
+<td><code>0, 2, 0, 0</code></td>
+</tr>
+<tr>
+<td><code>Separator</code> 边距</td>
+<td><code>4, 2</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h15">工具栏（ToolBar）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Padding</code></td>
+<td><code>4, 2</code></td>
+</tr>
+<tr>
+<td>Button 间距</td>
+<td><code>0, 0, 2, 0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h16">状态栏（StatusBar）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Padding</code></td>
+<td><code>8, 4</code></td>
+</tr>
+<tr>
+<td>Item 间距</td>
+<td><code>0, 0, 12, 0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h17">树视图（TreeView）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td><code>4, 0</code></td>
+</tr>
+<tr>
+<td><code>TreeViewItem</code> 间距</td>
+<td><code>0, 2, 0, 0</code></td>
+</tr>
+<tr>
+<td>缩进</td>
+<td>16px</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h18">图片（Image）</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>Stretch</code></td>
+<td><code>Uniform</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h19">面板（Panel）</h3>
+<table>
+<thead>
+<tr>
+<th>面板</th>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StackPanel</code></td>
+<td><code>Spacing</code></td>
+<td><code>8</code>（常用值：2,3,4,5,6,7,8,9,10,12,14,16）</td>
+</tr>
+<tr>
+<td><code>StackPanel</code></td>
+<td><code>Margin</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>Grid</code></td>
+<td><code>Margin</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>Grid</code></td>
+<td><code>RowSpacing</code></td>
+<td><code>8</code></td>
+</tr>
+<tr>
+<td><code>Grid</code></td>
+<td><code>ColumnSpacing</code></td>
+<td><code>8</code>（常用值：10,12,14,16）</td>
+</tr>
+<tr>
+<td><code>WrapPanel</code></td>
+<td><code>Margin</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>WrapPanel</code></td>
+<td><code>ItemWidth</code> / <code>ItemHeight</code></td>
+<td>自动</td>
+</tr>
+<tr>
+<td><code>Canvas</code></td>
+<td><code>Margin</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="g-03-h20">3. 页面布局规范</h2>
+<h3 id="g-03-h21">3.1 页面容器</h3>
+<table>
+<thead>
+<tr>
+<th>页面类型</th>
+<th>Margin</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主页面</td>
+<td><code>40, 40, 40, 32</code></td>
+<td>设置中心、下载页、账户管理页</td>
+</tr>
+<tr>
+<td>版本管理</td>
+<td><code>26, 22</code></td>
+<td><code>VersionManagerPage</code></td>
+</tr>
+<tr>
+<td>对话框</td>
+<td><code>26</code></td>
+<td>各类对话框</td>
+</tr>
+<tr>
+<td>个人化窗口</td>
+<td><code>26, 22</code></td>
+<td><code>PersonalizationWindow</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h22">3.2 页面标题区域</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>0, 0, 0, 24</code></td>
+<td>标题下方间距（启动页为 32px）</td>
+</tr>
+<tr>
+<td><code>Spacing</code></td>
+<td><code>8</code></td>
+<td>标题子元素间距</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h23">3.3 卡片 / 面板</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>Margin</th>
+<th>Padding</th>
+<th>CornerRadius</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标准卡片</td>
+<td><code>8</code></td>
+<td><code>16</code></td>
+<td><code>8</code></td>
+<td>通用卡片</td>
+</tr>
+<tr>
+<td>下载项卡片</td>
+<td><code>0,0,0,4</code></td>
+<td><code>16,12</code></td>
+<td><code>10</code></td>
+<td>下载页项目</td>
+</tr>
+<tr>
+<td>设置卡片</td>
+<td>—</td>
+<td><code>24,20</code></td>
+<td><code>8</code></td>
+<td>设置页区块</td>
+</tr>
+<tr>
+<td>对话框内容</td>
+<td><code>26</code></td>
+<td>—</td>
+<td>—</td>
+<td>对话框内容边距</td>
+</tr>
+<tr>
+<td>小卡片</td>
+<td>—</td>
+<td><code>14,10</code></td>
+<td><code>8</code></td>
+<td>紧凑卡片</td>
+</tr>
+<tr>
+<td>标签</td>
+<td>—</td>
+<td><code>7,2</code></td>
+<td><code>7</code></td>
+<td>版本标签等</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-03-h24">3.4 对话框</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Margin</code></td>
+<td><code>26</code></td>
+</tr>
+<tr>
+<td><code>Spacing</code></td>
+<td><code>10</code></td>
+</tr>
+<tr>
+<td><code>Padding</code></td>
+<td><code>26,22</code>（<code>PersonalizationWindow</code>）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="g-03-h25">4. 间距使用原则</h2>
+<ol>
+<li><strong>一致性</strong>：相同类型的元素使用相同的间距值</li>
+<li><strong>层次感</strong>：通过不同间距值创建视觉层次</li>
+<li><strong>呼吸感</strong>：保持足够的留白，避免界面拥挤</li>
+<li><strong>对齐</strong>：使用网格系统确保元素对齐</li>
+<li><strong>响应式</strong>：在不同屏幕尺寸下保持间距比例</li>
+</ol>
+<hr />
+<h2 id="g-03-h26">5. 示例</h2>
+<div class="code-wrap"><pre><code class="language-xml">&lt;StackPanel Spacing=&quot;8&quot;&gt;
+    &lt;TextBlock Text=&quot;用户名&quot; Margin=&quot;0, 0, 0, 4&quot;/&gt;
+    &lt;TextBox Watermark=&quot;请输入用户名&quot; Margin=&quot;0, 0, 0, 16&quot;/&gt;
+
+    &lt;TextBlock Text=&quot;密码&quot; Margin=&quot;0, 0, 0, 4&quot;/&gt;
+    &lt;TextBox Watermark=&quot;请输入密码&quot; Margin=&quot;0, 0, 0, 16&quot;/&gt;
+
+    &lt;StackPanel Orientation=&quot;Horizontal&quot; Spacing=&quot;8&quot;&gt;
+        &lt;Button Content=&quot;登录&quot; Classes=&quot;accent&quot;/&gt;
+        &lt;Button Content=&quot;取消&quot;/&gt;
+    &lt;/StackPanel&gt;
+&lt;/StackPanel&gt;
 </code></pre></div>
-<ul>
-<li><code>Core</code> 与 <code>Plugin.Abstractions</code> <strong>都不知道 Avalonia 的存在</strong></li>
-<li>主工程可以引用下层，下层<strong>永远不引用</strong>上层</li>
-<li>详见 <a href="01-architecture.html">架构总览</a></li>
-</ul>
-<h3 id="g-readme-h9">动画模块化（硬性规则）</h3>
-<p>所有动画实现（附加属性、行为、helper、计时器）<strong>必须</strong>写在
-<code>NyaLauncher.Avalonia.Animations/Helpers/</code> 下。主工程的页面与控件 <code>.cs</code>
-里禁止直接写动画循环或 <code>RenderTransform</code> 逻辑，只能通过：</p>
-<ul>
-<li><code>App.axaml</code> 全局 <code>Style</code> 绑定附加属性</li>
-<li>给元素加 <code>nya-*</code> class 触发</li>
-<li>调用 <code>Animations</code> 模块里的静态 helper</li>
-</ul>
-<p>详见 <a href="04-animations.html">动画系统指南</a>。</p>
-<h3 id="g-readme-h10">颜色不硬编码</h3>
-<p>任何 UI 代码里都不要写死颜色。一律引用主题资源键（<code>{DynamicResource ...Brush}</code>），
-这样主题热重载才能实时生效。详见 <a href="02-theming.html">主题开发指南</a>。</p>
 <hr />
-<h2 id="g-readme-h11">🗂️ 文档迁移说明</h2>
-<p>本目录下的文档由仓库中散落的文件整合而来，原位置已移除：</p>
-<table>
-<thead>
-<tr>
-<th>原路径</th>
-<th>现路径</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>THEME_REFERENCE.md</code></td>
-<td><a href="02-theming.html">Guides/02-theming.md</a></td>
-</tr>
-<tr>
-<td><code>NyaLauncher.Avalonia/Themes/Spacing_Guidelines.md</code></td>
-<td><a href="03-layout-and-spacing.html">Guides/03-layout-and-spacing.md</a></td>
-</tr>
-<tr>
-<td><code>NyaLauncher.Avalonia/Framework/README.md</code></td>
-<td>拆分为 <a href="05-plugin-development.html">Guides/05-plugin-development.md</a> 与 <a href="06-polygon-components.html">Guides/06-polygon-components.md</a></td>
-</tr>
-<tr>
-<td><code>PolygonMake_Guide.md</code></td>
-<td><a href="06-polygon-components.html">Guides/06-polygon-components.md</a></td>
-</tr>
-<tr>
-<td><code>NyaNotice-API.md</code></td>
-<td><a href="07-notifications.html">Guides/07-notifications.md</a></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="g-readme-h12">❓ 找不到想要的内容？</h2>
+<h2 id="g-03-h27">6. 与主题系统的配合</h2>
 <ul>
-<li>组件契约的具体类型 → 直接看 <code>NyaLauncher.Plugin.Abstractions/Components/</code>，只有 7 个文件</li>
-<li>内置组件怎么写 → <code>NyaLauncher.Avalonia/Framework/BuiltIn*Component.cs</code> 是 8 个活样例</li>
-<li>主题资源键清单 → <code>NyaLauncher.Avalonia/Themes/HatsuneMiku_Resources.axaml</code> 是最完整的参考实现</li>
+<li>间距与圆角是<strong>布局常量</strong>，不随主题变化；只有颜色走主题资源</li>
+<li>卡片的背景/边框请引用 <code>PanelBgBrush</code> / <code>SubtleBorderBrush</code> 等资源键，
+  具体语义见 <a href="02-theming.html">主题开发指南</a></li>
+<li>设置页已有 <code>Border.card</code> / <code>Border.sub-card</code> / <code>TextBlock.card-title</code> 等样式类，
+  新页面优先复用而不是重新定一套</li>
+</ul>
+<hr />
+<h2 id="g-03-h28">7. 更新记录</h2>
+<ul>
+<li>2026-08-18：初始版本，定义基础间距系统和控件规范</li>
+<li>2026-08-18：基于实际项目代码分析更新，添加常用特殊值和页面布局规范</li>
+<li>2026-08-29：整合进 <code>Guides/</code>，原路径 <code>NyaLauncher.Avalonia/Themes/Spacing_Guidelines.md</code></li>
 </ul></article>
-      <aside class="doc-toc"><div class="toc-inner"><p class="toc-title">本页目录</p><ul class="toc-list"><li><a href="#g-readme-h1">📚 文档地图</a></li><li><a href="#g-readme-h2">🧭 按角色选择阅读路径</a></li><li class="toc-sub"><a href="#g-readme-h3">🔌 我想写一个插件</a></li><li class="toc-sub"><a href="#g-readme-h4">🎨 我想做一套主题</a></li><li class="toc-sub"><a href="#g-readme-h5">🖥️ 我想改主界面 / 写页面</a></li><li><a href="#g-readme-h6">📖 术语表</a></li><li><a href="#g-readme-h7">⚙️ 全局约定</a></li><li class="toc-sub"><a href="#g-readme-h8">分层依赖（不可逆向）</a></li><li class="toc-sub"><a href="#g-readme-h9">动画模块化（硬性规则）</a></li><li class="toc-sub"><a href="#g-readme-h10">颜色不硬编码</a></li><li><a href="#g-readme-h11">🗂️ 文档迁移说明</a></li><li><a href="#g-readme-h12">❓ 找不到想要的内容？</a></li></ul></div></aside>
+      <aside class="doc-toc"><div class="toc-inner"><p class="toc-title">本页目录</p><ul class="toc-list"><li><a href="#g-03-h1">1. 基础间距系统</a></li><li class="toc-sub"><a href="#g-03-h2">1.1 间距变量</a></li><li class="toc-sub"><a href="#g-03-h3">1.2 常用特殊值</a></li><li><a href="#g-03-h4">2. 控件间距规范</a></li><li class="toc-sub"><a href="#g-03-h5">按钮（Button）</a></li><li class="toc-sub"><a href="#g-03-h6">文本框（TextBox）</a></li><li class="toc-sub"><a href="#g-03-h7">复选框 / 单选按钮</a></li><li class="toc-sub"><a href="#g-03-h8">滑块（Slider）</a></li><li class="toc-sub"><a href="#g-03-h9">进度条（ProgressBar）</a></li><li class="toc-sub"><a href="#g-03-h10">列表框 / 组合框</a></li><li class="toc-sub"><a href="#g-03-h11">滚动视图（ScrollViewer）</a></li><li class="toc-sub"><a href="#g-03-h12">分组框（GroupBox）</a></li><li class="toc-sub"><a href="#g-03-h13">选项卡控件（TabControl）</a></li><li class="toc-sub"><a href="#g-03-h14">菜单 / 上下文菜单</a></li><li class="toc-sub"><a href="#g-03-h15">工具栏（ToolBar）</a></li><li class="toc-sub"><a href="#g-03-h16">状态栏（StatusBar）</a></li><li class="toc-sub"><a href="#g-03-h17">树视图（TreeView）</a></li><li class="toc-sub"><a href="#g-03-h18">图片（Image）</a></li><li class="toc-sub"><a href="#g-03-h19">面板（Panel）</a></li><li><a href="#g-03-h20">3. 页面布局规范</a></li><li class="toc-sub"><a href="#g-03-h21">3.1 页面容器</a></li><li class="toc-sub"><a href="#g-03-h22">3.2 页面标题区域</a></li><li class="toc-sub"><a href="#g-03-h23">3.3 卡片 / 面板</a></li><li class="toc-sub"><a href="#g-03-h24">3.4 对话框</a></li><li><a href="#g-03-h25">4. 间距使用原则</a></li><li><a href="#g-03-h26">5. 示例</a></li><li><a href="#g-03-h27">6. 与主题系统的配合</a></li><li><a href="#g-03-h28">7. 更新记录</a></li></ul></div></aside>
     </div>
-    <nav class="page-nav" aria-label="章节翻页"><span class="page-nav__spacer"></span><a class="page-nav__link page-nav__next" href="01-architecture.html"><span class="page-nav__dir">下一章 →</span><span class="page-nav__title">🧭 架构总览</span></a></nav>
+    <nav class="page-nav" aria-label="章节翻页"><a class="page-nav__link page-nav__prev" href="02-theming.html"><span class="page-nav__dir">← 上一章</span><span class="page-nav__title">🎨 主题开发</span></a><a class="page-nav__link page-nav__next" href="04-animations.html"><span class="page-nav__dir">下一章 →</span><span class="page-nav__title">✨ 动画系统</span></a></nav>
     <footer class="doc-foot">
       <a class="tonal-btn" href="../index.html">← 返回首页</a>
       <p>文档由 <code>NyaLauncher/Guides</code> 生成 · 采用 Material Design 3 样式 · Licensed under Apache 2.0</p>

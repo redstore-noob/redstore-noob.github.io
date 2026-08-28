@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>主题开发 · NyaLauncher 文档中心</title>
+<meta name="description" content="NyaLauncher 开发者文档中心 · 主题开发：架构、主题、布局、动画、插件、多边形组件与通知框架。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  /* ===== Material 3 暗色令牌（默认）· 与首页 styles.css 主色保持一致 ===== */
+  --md-sys-color-primary:#AEC6FF;
+  --md-sys-color-on-primary:#0A2F66;
+  --md-sys-color-primary-container:#284785;
+  --md-sys-color-on-primary-container:#DCE6FF;
+  --md-sys-color-secondary:#C2C8DA;
+  --md-sys-color-on-secondary:#2B3042;
+  --md-sys-color-secondary-container:#424759;
+  --md-sys-color-on-secondary-container:#E1E2F4;
+  --md-sys-color-tertiary:#9CE7FF;
+  --md-sys-color-tertiary-container:#004E63;
+  --md-sys-color-surface:#0E131C;
+  --md-sys-color-on-surface:#E4EAF6;
+  --md-sys-color-surface-variant:#424759;
+  --md-sys-color-on-surface-variant:#C2C8D6;
+  --md-sys-color-surface-container:#1A2030;
+  --md-sys-color-surface-container-high:#232A3B;
+  --md-sys-color-surface-container-highest:#2E3650;
+  --md-sys-color-surface-dim:#0E131C;
+  --md-sys-color-outline:#8A92A6;
+  --md-sys-color-outline-variant:#3D4459;
+  --md-sys-color-background:#0E131C;
+  --md-sys-color-on-background:#E4EAF6;
+  --md-sys-color-error:#FFB4AB;
+  --md-sys-color-on-error:#690005;
+  --md-sys-color-error-container:#93000A;
+  --md-sys-color-on-error-container:#FFDAD6;
+  --md-sys-color-scrim:rgba(0,0,0,.55);
+  --md-sys-color-code-bg:#0A0E15;
+  --md-sys-color-code-text:#DCE6FF;
+  --md-sys-elevation-1:0 1px 2px rgba(0,0,0,.30),0 1px 3px 1px rgba(0,0,0,.15);
+  --md-sys-elevation-2:0 1px 2px rgba(0,0,0,.30),0 2px 6px 2px rgba(0,0,0,.15);
+  --md-sys-elevation-3:0 4px 8px 3px rgba(0,0,0,.30),0 1px 3px rgba(0,0,0,.15);
+  --md-sys-radius-small:8px;
+  --md-sys-radius-medium:12px;
+  --md-sys-radius-large:16px;
+  --md-sys-radius-xlarge:28px;
+}
+[data-theme="light"]{
+  --md-sys-color-primary:#3B63C4;
+  --md-sys-color-on-primary:#FFFFFF;
+  --md-sys-color-primary-container:#DCE6FF;
+  --md-sys-color-on-primary-container:#0A2F66;
+  --md-sys-color-secondary:#5A6076;
+  --md-sys-color-on-secondary:#FFFFFF;
+  --md-sys-color-secondary-container:#E1E2F4;
+  --md-sys-color-on-secondary-container:#171C2B;
+  --md-sys-color-tertiary:#00658A;
+  --md-sys-color-tertiary-container:#C7EFFF;
+  --md-sys-color-surface:#F8FAFF;
+  --md-sys-color-on-surface:#1A2030;
+  --md-sys-color-surface-variant:#E0E2EC;
+  --md-sys-color-on-surface-variant:#444A5A;
+  --md-sys-color-surface-container:#ECEEF6;
+  --md-sys-color-surface-container-high:#E6E8F2;
+  --md-sys-color-surface-container-highest:#E0E2EC;
+  --md-sys-color-surface-dim:#F8FAFF;
+  --md-sys-color-outline:#747A8C;
+  --md-sys-color-outline-variant:#C4C6D0;
+  --md-sys-color-background:#F8FAFF;
+  --md-sys-color-on-background:#1A2030;
+  --md-sys-color-error:#BA1A1A;
+  --md-sys-color-on-error:#FFFFFF;
+  --md-sys-color-error-container:#FFDAD6;
+  --md-sys-color-on-error-container:#410002;
+  --md-sys-color-scrim:rgba(0,0,0,.32);
+  --md-sys-color-code-bg:#0E131C;
+  --md-sys-color-code-text:#DCE6FF;
+  --md-sys-elevation-1:0 1px 2px rgba(0,0,0,.12),0 1px 3px 1px rgba(0,0,0,.08);
+  --md-sys-elevation-2:0 1px 2px rgba(0,0,0,.12),0 2px 6px 2px rgba(0,0,0,.10);
+  --md-sys-elevation-3:0 4px 8px 3px rgba(0,0,0,.12),0 1px 3px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--md-sys-color-background);color:var(--md-sys-color-on-surface);
+  font-family:"Roboto","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--md-sys-color-primary);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ===== 顶栏 (Material top app bar) ===== */
+.app-bar{
+  position:sticky;top:0;z-index:50;height:64px;
+  display:flex;align-items:center;gap:12px;padding:0 16px;
+  background:var(--md-sys-color-surface-container);
+  color:var(--md-sys-color-on-surface);
+  box-shadow:var(--md-sys-elevation-2);
+  border-bottom:1px solid var(--md-sys-color-outline-variant);
+}
+.app-bar__brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;letter-spacing:.2px;}
+.app-bar__brand .cat{font-size:1.4rem;}
+.app-bar__brand .grad{color:var(--md-sys-color-primary);}
+.app-bar__spacer{flex:1;}
+.icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;
+  background:transparent;color:var(--md-sys-color-on-surface);font-size:1.25rem;
+  transition:background .2s;
+}
+.icon-btn:hover{background:var(--md-sys-color-surface-container-high);}
+.filled-btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;
+  border:none;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem;
+  background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);
+  box-shadow:var(--md-sys-elevation-1);transition:box-shadow .2s,filter .2s;
+}
+.filled-btn:hover{box-shadow:var(--md-sys-elevation-2);filter:brightness(1.05);}
+.tonal-btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;
+  border:none;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem;
+  background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);
+  transition:filter .2s;
+}
+.tonal-btn:hover{filter:brightness(1.05);}
+
+/* ===== 主题开关 (Material switch) ===== */
+.theme-switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.theme-switch input{position:absolute;opacity:0;width:0;height:0;}
+.switch-track{
+  position:relative;width:52px;height:32px;border-radius:999px;
+  background:var(--md-sys-color-surface-variant);
+  border:2px solid var(--md-sys-color-outline);transition:.25s;
+}
+.switch-thumb{
+  position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+  background:var(--md-sys-color-outline);transition:.25s;
+}
+.theme-switch input:checked + .switch-track{background:var(--md-sys-color-primary);border-color:var(--md-sys-color-primary);}
+.theme-switch input:checked + .switch-track .switch-thumb{left:25px;background:var(--md-sys-color-on-primary);}
+
+/* ===== 布局 ===== */
+.layout{display:flex;align-items:flex-start;min-height:calc(100vh - 64px);}
+
+/* 左侧永久导航栏 (Material navigation rail / drawer) */
+.rail{
+  position:sticky;top:64px;align-self:flex-start;
+  width:260px;flex-shrink:0;height:calc(100vh - 64px);
+  overflow-y:auto;padding:16px 12px;
+  background:var(--md-sys-color-surface-container);
+  border-right:1px solid var(--md-sys-color-outline-variant);
+}
+.rail__head{
+  font-size:.72rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--md-sys-color-on-surface-variant);padding:8px 12px 12px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:14px;width:100%;
+  padding:12px 14px;margin-bottom:4px;border:none;cursor:pointer;
+  background:transparent;color:var(--md-sys-color-on-surface);
+  border-radius:var(--md-sys-radius-large);font-size:.95rem;font-weight:500;
+  text-align:left;text-decoration:none;transition:background .18s,color .18s;
+}
+.nav-item .nav-ico{font-size:1.25rem;line-height:1;width:24px;text-align:center;}
+.nav-item:hover{background:var(--md-sys-color-surface-container-high);text-decoration:none;}
+.nav-item.active{
+  background:var(--md-sys-color-secondary-container);
+  color:var(--md-sys-color-on-secondary-container);font-weight:700;
+}
+
+/* 主内容 */
+.main{flex:1;min-width:0;padding:28px clamp(16px,4vw,40px) 64px;}
+.doc-section{scroll-margin-top:88px;margin-bottom:8px;}
+/* 锚点跳转避开 sticky 顶栏，标题留更多余量 */
+.md-content h1,.md-content h2,.md-content h3,.md-content h4{scroll-margin-top:104px;}
+.doc-grid{display:grid;grid-template-columns:minmax(0,1fr) 232px;gap:40px;align-items:start;}
+
+/* 文档卡片 (Material large card) */
+.doc-card{
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  border-radius:var(--md-sys-radius-xlarge);
+  padding:clamp(20px,3vw,40px);
+  box-shadow:var(--md-sys-elevation-1);
+}
+
+/* ===== Markdown 内容排版 ===== */
+.md-content > :first-child{margin-top:0;}
+.md-content h1{
+  font-size:clamp(1.7rem,4vw,2.3rem);font-weight:700;line-height:1.2;
+  margin:0 0 8px;color:var(--md-sys-color-on-surface);letter-spacing:.3px;
+}
+.md-content h2{
+  font-size:1.4rem;font-weight:700;margin:36px 0 14px;
+  padding-bottom:10px;color:var(--md-sys-color-on-surface);
+  border-bottom:2px solid var(--md-sys-color-primary-container);
+}
+.md-content h3{
+  font-size:1.12rem;font-weight:600;margin:26px 0 10px;
+  color:var(--md-sys-color-primary);
+}
+.md-content h4{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--md-sys-color-on-surface);}
+.md-content p{margin:12px 0;color:var(--md-sys-color-on-surface);}
+.md-content ul,.md-content ol{margin:12px 0;padding-left:24px;}
+.md-content li{margin:6px 0;}
+.md-content hr{border:0;border-top:1px solid var(--md-sys-color-outline-variant);margin:28px 0;}
+
+/* 行内代码 */
+.md-content code{
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.86em;background:var(--md-sys-color-surface-variant);
+  color:var(--md-sys-color-primary);border-radius:6px;padding:2px 6px;
+}
+/* 代码块 + 复制按钮 */
+.md-content .code-wrap{position:relative;margin:16px 0;}
+.md-content pre{
+  background:var(--md-sys-color-code-bg);color:var(--md-sys-color-code-text);
+  border-radius:var(--md-sys-radius-medium);padding:16px 18px;
+  overflow-x:auto;margin:0;font-size:.84rem;line-height:1.6;
+  border:1px solid var(--md-sys-color-outline-variant);
+}
+.code-copy{
+  position:absolute;top:8px;right:8px;height:28px;padding:0 12px;
+  display:inline-flex;align-items:center;
+  border:1px solid var(--md-sys-color-outline-variant);border-radius:8px;cursor:pointer;
+  background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);
+  font-family:inherit;font-size:.72rem;font-weight:600;letter-spacing:.3px;
+  opacity:0;transition:opacity .18s,background .18s;
+}
+.md-content .code-wrap:hover .code-copy{opacity:1;}
+.code-copy:focus-visible{opacity:1;}
+.code-copy:hover{background:var(--md-sys-color-surface-container-highest);}
+.code-copy.copied{
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);opacity:1;
+}
+.md-content pre code{
+  background:transparent;color:inherit;padding:0;border-radius:0;font-size:inherit;
+}
+.md-content blockquote{
+  margin:16px 0;padding:14px 18px;
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);
+  border-left:5px solid var(--md-sys-color-primary);
+  border-radius:0 var(--md-sys-radius-medium) var(--md-sys-radius-medium) 0;
+}
+.md-content blockquote p{color:inherit;margin:6px 0;}
+.md-content blockquote code{background:rgba(0,0,0,.18);color:var(--md-sys-color-on-primary-container);}
+
+/* 表格 (Material data table) */
+.md-content .table-wrap{overflow-x:auto;margin:18px 0;border-radius:var(--md-sys-radius-medium);border:1px solid var(--md-sys-color-outline-variant);}
+.md-content table{border-collapse:collapse;width:100%;font-size:.9rem;}
+.md-content thead{background:var(--md-sys-color-surface-variant);}
+.md-content th{
+  text-align:left;font-weight:600;color:var(--md-sys-color-on-surface-variant);
+  padding:12px 16px;border-bottom:1px solid var(--md-sys-color-outline-variant);white-space:nowrap;
+}
+.md-content td{padding:11px 16px;border-bottom:1px solid var(--md-sys-color-outline-variant);color:var(--md-sys-color-on-surface);vertical-align:top;}
+.md-content tbody tr{transition:background .15s;}
+.md-content tbody tr:hover{background:var(--md-sys-color-surface-container-high);}
+.md-content tbody tr:last-child td{border-bottom:none;}
+
+/* ===== 本页目录 (table of contents) ===== */
+.doc-toc{position:sticky;top:88px;align-self:start;font-size:.85rem;}
+.toc-inner{
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  border-radius:var(--md-sys-radius-large);padding:16px 14px;
+}
+.toc-title{margin:0 0 10px;font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--md-sys-color-on-surface-variant);}
+.toc-list{list-style:none;margin:0;padding:0;}
+.toc-list li{margin:2px 0;}
+.toc-list a{display:block;padding:6px 10px;border-radius:8px;color:var(--md-sys-color-on-surface-variant);transition:background .15s,color .15s;}
+.toc-list a:hover{background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);text-decoration:none;}
+.toc-sub a{padding-left:22px;font-size:.82rem;}
+.toc-list a.active{
+  background:var(--md-sys-color-secondary-container);
+  color:var(--md-sys-color-on-secondary-container);font-weight:600;
+}
+
+/* ===== 章节翻页（上一章 / 下一章） ===== */
+.page-nav{display:flex;gap:16px;margin-top:24px;}
+.page-nav__link{
+  flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:4px;
+  padding:16px 20px;border-radius:var(--md-sys-radius-large);
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  box-shadow:var(--md-sys-elevation-1);text-decoration:none;
+  transition:box-shadow .2s,background .2s,transform .2s;
+}
+.page-nav__link:hover{
+  box-shadow:var(--md-sys-elevation-2);
+  background:var(--md-sys-color-surface-container-high);
+  transform:translateY(-2px);text-decoration:none;
+}
+.page-nav__next{text-align:right;align-items:flex-end;}
+.page-nav__dir{font-size:.72rem;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant);}
+.page-nav__title{font-size:.95rem;font-weight:600;color:var(--md-sys-color-primary);word-break:break-word;}
+.page-nav__spacer{flex:1 1 0;}
+
+/* ===== 页脚 ===== */
+.doc-foot{
+  margin-top:32px;padding-top:28px;border-top:1px solid var(--md-sys-color-outline-variant);
+  display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  color:var(--md-sys-color-on-surface-variant);font-size:.85rem;
+}
+
+/* ===== 抽屉遮罩 (移动端) ===== */
+.scrim{position:fixed;inset:0;background:var(--md-sys-color-scrim);z-index:45;opacity:0;visibility:hidden;transition:.25s;}
+
+/* ===== 响应式 ===== */
+@media (max-width:1180px){
+  .doc-grid{grid-template-columns:minmax(0,1fr);}
+  .doc-toc{display:none;}
+}
+@media (max-width:620px){
+  .page-nav{flex-direction:column;}
+  .page-nav__next{text-align:left;align-items:flex-start;}
+}
+@media (max-width:880px){
+  .rail{
+    position:fixed;top:64px;left:0;z-index:46;height:calc(100vh - 64px);
+    transform:translateX(-100%);transition:transform .28s cubic-bezier(.22,1,.36,1);
+    box-shadow:var(--md-sys-elevation-3);
+  }
+  .rail.open{transform:translateX(0);}
+  .scrim.show{opacity:1;visibility:visible;}
+  .app-bar__brand .label-long{display:none;}
+}
+</style>
+</head>
+<body>
+<header class="app-bar">
+  <button class="icon-btn" id="hamburger" aria-label="打开导航">☰</button>
+  <a class="app-bar__brand" href="../index.html">
+    <span class="cat">🐱</span>
+    <span><span class="label-long">Nya</span><span class="grad">Launcher</span> <span class="label-long">· 文档中心</span></span>
+  </a>
+  <span class="app-bar__spacer"></span>
+  <label class="theme-switch" title="切换明暗主题">
+    <span aria-hidden="true">🌙</span>
+    <input type="checkbox" id="themeToggle" />
+    <span class="switch-track"><span class="switch-thumb"></span></span>
+    <span aria-hidden="true">☀️</span>
+  </label>
+  <a class="filled-btn" href="../index.html">← 返回首页</a>
+</header>
+
+<div class="layout">
+  <nav class="rail" id="rail" aria-label="文档导航">
+    <div class="rail__head">文档地图</div>
+    <a class="nav-item" href="index.html"><span class="nav-ico" aria-hidden="true">🏠</span><span class="nav-label">概览</span></a>
+<a class="nav-item" href="01-architecture.html"><span class="nav-ico" aria-hidden="true">🧭</span><span class="nav-label">架构总览</span></a>
+<a class="nav-item active" href="02-theming.html" aria-current="page"><span class="nav-ico" aria-hidden="true">🎨</span><span class="nav-label">主题开发</span></a>
+<a class="nav-item" href="03-layout-and-spacing.html"><span class="nav-ico" aria-hidden="true">📐</span><span class="nav-label">布局与间距</span></a>
+<a class="nav-item" href="04-animations.html"><span class="nav-ico" aria-hidden="true">✨</span><span class="nav-label">动画系统</span></a>
+<a class="nav-item" href="05-plugin-development.html"><span class="nav-ico" aria-hidden="true">🧩</span><span class="nav-label">插件与功能区</span></a>
+<a class="nav-item" href="06-polygon-components.html"><span class="nav-ico" aria-hidden="true">🔷</span><span class="nav-label">多边形组件</span></a>
+<a class="nav-item" href="07-notifications.html"><span class="nav-ico" aria-hidden="true">🔔</span><span class="nav-label">通知框架</span></a>
+  </nav>
+  <main class="main">
+    <div class="doc-grid">
+      <article class="doc-card md-content"><h1>02 · 主题开发指南</h1>
+<blockquote>
+<p>本文档描述 NyaLauncher 主题系统的全部资源绑定、热重载原理，以及创建新主题的完整步骤。
+同时作为新建主题的编写规范——<strong>缺任何一个资源键都可能导致运行时异常</strong>。</p>
+</blockquote>
+<hr />
+<h2 id="g-02-h1">1. 系统总览</h2>
+<p>主题系统由 5 个部分组成：</p>
+<table>
+<thead>
+<tr>
+<th>组成</th>
+<th>位置</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>家族资源文件</td>
+<td><code>Themes/{Family}_Resources.axaml</code></td>
+<td>定义该家族的全部 Color + Brush，含 Dark / Light 两个变体</td>
+</tr>
+<tr>
+<td><code>StyleAlter</code></td>
+<td><code>Themes/StyleAlter.cs</code></td>
+<td>加载家族资源 → 复制到 <code>Application.Resources</code> → 同步 Material 强调色</td>
+</tr>
+<tr>
+<td><code>ThemeManager</code></td>
+<td><code>Themes/ThemeManager.cs</code></td>
+<td>热应用主题：设置明暗 + 调 <code>StyleAlter</code> + 广播 <code>ThemeChanged</code></td>
+</tr>
+<tr>
+<td><code>ThemeSettings</code></td>
+<td><code>Pages/ThemeSettings.cs</code></td>
+<td>读写 <code>config.json</code> 里的主题家族、模式与各项开关</td>
+</tr>
+<tr>
+<td>画刷辅助类</td>
+<td><code>Themes/ThemeBrushes.cs</code>、<code>ThemePolygonHelper.cs</code></td>
+<td>在 C# 代码里按资源键取画刷（带兜底值）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h2">主题文件结构</h3>
+<div class="code-wrap"><pre><code>NyaLauncher.Avalonia/Themes/
+  HatsuneMiku_Resources.axaml      初音未来（青绿 / 粉红）
+  DeepSeekPurple_Resources.axaml   DeepSeek 紫
+  ZhiShuBlue_Resources.axaml       植树蓝
+  MojangRed_Resources.axaml        Mojang 红
+</code></pre></div>
+<p>每个家族文件是<strong>一个</strong> <code>ResourceDictionary</code>，内部用 <code>ThemeDictionaries</code> 承载明暗两个变体：</p>
+<div class="code-wrap"><pre><code class="language-xml">&lt;ResourceDictionary xmlns=&quot;https://github.com/avaloniaui&quot;
+                    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;&gt;
+    &lt;ResourceDictionary.ThemeDictionaries&gt;
+        &lt;ResourceDictionary x:Key=&quot;Dark&quot;&gt;
+            &lt;!-- 全部 Color + Brush --&gt;
+        &lt;/ResourceDictionary&gt;
+        &lt;ResourceDictionary x:Key=&quot;Light&quot;&gt;
+            &lt;!-- 同样的键，另一套值 --&gt;
+        &lt;/ResourceDictionary&gt;
+    &lt;/ResourceDictionary.ThemeDictionaries&gt;
+&lt;/ResourceDictionary&gt;
+</code></pre></div>
+<blockquote>
+<p>变体字典的 <code>x:Key</code> 必须是 <code>Dark</code> / <code>Light</code>，对应 Avalonia 的 <code>ThemeVariant</code>。
+加载时 <code>StyleAlter</code> 会按当前模式挑一个变体，把它的条目<strong>复制</strong>进
+<code>Application.Current.Resources</code>，因此界面上用 <code>{DynamicResource XxxBrush}</code> 就能实时跟随。</p>
+</blockquote>
+<hr />
+<h2 id="g-02-h3">2. 资源键全集</h2>
+<p>以下每个 Color 键都有对应的 Brush 键（<code>&lt;Name&gt;Color</code> → <code>&lt;Name&gt;Brush</code>），
+Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticResource XxxColor}"/&gt;</code>。</p>
+<h3 id="g-02-h4">2.1 背景色（Background）</h3>
+<p>从最深到最浅，构成界面的纵深层次。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WindowBgColor</code></td>
+<td><strong>最底层背景</strong></td>
+<td>Window 根背景、页面背景</td>
+</tr>
+<tr>
+<td><code>BaseBgColor</code></td>
+<td><strong>基底背景</strong></td>
+<td>顶部标题栏、底部状态栏、侧边栏底色</td>
+</tr>
+<tr>
+<td><code>CardBgColor</code></td>
+<td><strong>卡片内部背景</strong></td>
+<td>设置页内嵌子面板（比 PanelBg 更深一层）</td>
+</tr>
+<tr>
+<td><code>PanelBgColor</code></td>
+<td><strong>面板/卡片背景</strong></td>
+<td>设置卡片、列表容器、可折叠区域</td>
+</tr>
+<tr>
+<td><code>SurfaceBgColor</code></td>
+<td><strong>表面层背景</strong></td>
+<td>选中态标签、弹出面板、hover 展开区</td>
+</tr>
+<tr>
+<td><code>HighlightBgColor</code></td>
+<td><strong>高亮背景</strong></td>
+<td>hover 状态、行选中</td>
+</tr>
+<tr>
+<td><code>ButtonBgColor</code></td>
+<td><strong>按钮背景</strong></td>
+<td>次要按钮、工具栏按钮（非主色调按钮）</td>
+</tr>
+<tr>
+<td><code>ControlBgColor</code></td>
+<td><strong>控件背景</strong></td>
+<td>输入框、下拉框、滑块轨道</td>
+</tr>
+<tr>
+<td><code>BadgeBgColor</code></td>
+<td><strong>徽章/标签背景</strong></td>
+<td>版本标签、状态徽章、数字角标</td>
+</tr>
+</tbody>
+</table>
+<p>层级关系（暗色主题）：</p>
+<div class="code-wrap"><pre><code>WindowBg ← 最深（几乎看不见）
+  └─ BaseBg ← 标题栏/状态栏
+       └─ PanelBg ← 卡片/面板
+            └─ SurfaceBg ← 选中/展开
+                 └─ HighlightBg ← hover 高亮
+</code></pre></div>
+<blockquote>
+<p><strong>亮色主题是反过来的</strong>：<code>WindowBg</code> 最浅，<code>HighlightBg</code> 较深。</p>
+</blockquote>
+<h3 id="g-02-h5">2.2 边框色（Border）</h3>
+<p>从最弱到最强，控制边框的可见程度。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SubtleBorderColor</code></td>
+<td><strong>最弱边框</strong></td>
+<td>卡片外框、分隔线、设置区卡片边框</td>
+</tr>
+<tr>
+<td><code>DefaultBorderColor</code></td>
+<td><strong>默认边框</strong></td>
+<td>通用组件边框</td>
+</tr>
+<tr>
+<td><code>MediumBorderColor</code></td>
+<td><strong>中等边框</strong></td>
+<td>输入框边框、面板分隔</td>
+</tr>
+<tr>
+<td><code>StrongBorderColor</code></td>
+<td><strong>强调边框</strong></td>
+<td>焦点状态、激活态边框</td>
+</tr>
+<tr>
+<td><code>EmphasizedBorderColor</code></td>
+<td><strong>最强边框</strong></td>
+<td>次要按钮边框、选中项边框</td>
+</tr>
+</tbody>
+</table>
+<p>使用建议：</p>
+<ul>
+<li>卡片/面板外框 → <code>SubtleBorderBrush</code></li>
+<li>输入控件默认态 → <code>MediumBorderBrush</code></li>
+<li>输入控件聚焦态 → 用 <code>AccentBrush</code> 替代</li>
+<li>次要按钮 → <code>EmphasizedBorderBrush</code> + <code>ButtonBgBrush</code> 背景</li>
+</ul>
+<h3 id="g-02-h6">2.3 文字色（Text）</h3>
+<p>从最醒目到最弱，控制文字的信息层级。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PrimaryTextColor</code></td>
+<td><strong>最高优先级文字</strong></td>
+<td>标题、选中标签、重要数值</td>
+</tr>
+<tr>
+<td><code>SecondaryTextColor</code></td>
+<td><strong>次要标题</strong></td>
+<td>设置项标签、卡片标题</td>
+</tr>
+<tr>
+<td><code>TertiaryTextColor</code></td>
+<td><strong>三级文字</strong></td>
+<td>辅助说明</td>
+</tr>
+<tr>
+<td><code>LinkTextColor</code></td>
+<td><strong>链接/可交互文字</strong></td>
+<td>超链接、可点击标签、"实例管理 ▸" 按钮</td>
+</tr>
+<tr>
+<td><code>BodyTextColor</code></td>
+<td><strong>正文文字</strong></td>
+<td>段落、描述、默认 TextBlock</td>
+</tr>
+<tr>
+<td><code>AccentTextColor</code></td>
+<td><strong>强调文字</strong></td>
+<td>数值高亮（如内存值）、状态提示</td>
+</tr>
+<tr>
+<td><code>MutedTextColor</code></td>
+<td><strong>弱化文字</strong></td>
+<td>标签栏未选中项、次要信息</td>
+</tr>
+<tr>
+<td><code>SubtextTextColor</code></td>
+<td><strong>子文字</strong></td>
+<td>列表副标题、目录模式标识</td>
+</tr>
+<tr>
+<td><code>HintTextColor</code></td>
+<td><strong>提示文字</strong></td>
+<td>输入框下方说明、卡片描述</td>
+</tr>
+<tr>
+<td><code>DisabledTextColor</code></td>
+<td><strong>禁用文字</strong></td>
+<td>不可操作的文字</td>
+</tr>
+<tr>
+<td><code>PlaceholderTextColor</code></td>
+<td><strong>占位符文字</strong></td>
+<td>输入框水印</td>
+</tr>
+</tbody>
+</table>
+<p>层级关系（暗色主题）：</p>
+<div class="code-wrap"><pre><code>PrimaryText ← 最亮最醒目
+  SecondaryText
+    TertiaryText
+      BodyText ← 默认正文
+        MutedText
+          SubtextText
+            HintText ← 最暗最弱
+              DisabledText
+                PlaceholderText ← 几乎看不见
+</code></pre></div>
+<blockquote>
+<p><strong>亮色主题是反过来的</strong>：<code>PrimaryText</code> 最深（接近黑色），<code>PlaceholderText</code> 最浅（接近灰色）。</p>
+</blockquote>
+<h3 id="g-02-h7">2.4 强调色（Accent）</h3>
+<p>主题的核心品牌色，从深到亮排列。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccentDeepDarkColor</code></td>
+<td><strong>最深强调</strong></td>
+<td>深色按钮 hover 底色、任务进度条底色</td>
+</tr>
+<tr>
+<td><code>AccentDeepColor</code></td>
+<td><strong>深强调</strong></td>
+<td>设置页装饰条（下载设置）、任务指示器底色</td>
+</tr>
+<tr>
+<td><code>AccentDarkColor</code></td>
+<td><strong>暗强调</strong></td>
+<td>按钮 pressed 态、窗口图标底色</td>
+</tr>
+<tr>
+<td><code>AccentDarkerColor</code></td>
+<td><strong>较暗强调</strong></td>
+<td>组件主色按钮</td>
+</tr>
+<tr>
+<td><code>AccentColor</code></td>
+<td><strong>主题主色</strong></td>
+<td>主按钮、焦点边框、滑块、进度条、设置页装饰条（游戏设置）</td>
+</tr>
+<tr>
+<td><code>AccentLightColor</code></td>
+<td><strong>亮强调</strong></td>
+<td>按钮 hover 态</td>
+</tr>
+<tr>
+<td><code>AccentBrightColor</code></td>
+<td><strong>最亮强调</strong></td>
+<td>任务指示器边框、高亮闪烁</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>主题家族</th>
+<th>Accent 色调</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HatsuneMiku Dark</td>
+<td>青绿 <code>#3EC9A0</code></td>
+</tr>
+<tr>
+<td>HatsuneMiku Light</td>
+<td>粉红 <code>#E94196</code></td>
+</tr>
+<tr>
+<td>DeepSeekPurple</td>
+<td>紫色 <code>#A78BFA</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h8">2.5 语义色（Semantic）</h3>
+<p>不随主题色调变化的固定语义色。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SuccessColor</code></td>
+<td><strong>成功/在线</strong></td>
+<td>账户管理装饰条、连接状态指示灯、下载完成</td>
+</tr>
+<tr>
+<td><code>ErrorColor</code></td>
+<td><strong>错误/危险</strong></td>
+<td>错误提示、删除确认按钮</td>
+</tr>
+<tr>
+<td><code>ErrorDarkColor</code></td>
+<td><strong>深色错误</strong></td>
+<td>错误背景</td>
+</tr>
+<tr>
+<td><code>WarningColor</code></td>
+<td><strong>警告</strong></td>
+<td>警告提示</td>
+</tr>
+<tr>
+<td><code>InfoColor</code></td>
+<td><strong>信息</strong></td>
+<td>信息提示</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h9">2.6 主题特色色</h3>
+<p>每个家族可定义独有的特色色（键名自取，Brush 同理）。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>初音未来 Dark</th>
+<th>初音未来 Light</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MikuTeal</code></td>
+<td><code>#30C0A0</code></td>
+<td><code>#39C5BB</code></td>
+<td>青绿</td>
+</tr>
+<tr>
+<td><code>MikuPink</code></td>
+<td><code>#E94196</code></td>
+<td><code>#E94196</code></td>
+<td>粉红</td>
+</tr>
+</tbody>
+</table>
+<p>其他家族用自己的命名（如 <code>MojangRed</code> / <code>ZhiShuBlue</code> 系列）。
+<strong>注意</strong>：<code>StyleAlter</code> 在同步 Material 时会优先取 <code>MikuPink</code> 作为次色，
+缺失时依次退回 <code>AccentLightColor</code> → 主色。想让 Material 控件有漂亮的次色，
+建议定义一个 <code>MikuPink</code> 之类的特色键。</p>
+<h3 id="g-02-h10">2.7 叠加层色（Overlay）</h3>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OverlayBgColor</code></td>
+<td>全屏蒙层背景（半透明黑色）</td>
+</tr>
+<tr>
+<td><code>DialogBgColor</code></td>
+<td>对话框背景</td>
+</tr>
+<tr>
+<td><code>DialogAltBgColor</code></td>
+<td>对话框交替区域背景</td>
+</tr>
+<tr>
+<td><code>DropPreviewBgColor</code></td>
+<td>拖放预览背景（半透明强调色）</td>
+</tr>
+<tr>
+<td><code>DropPreviewBorderColor</code></td>
+<td>拖放预览边框</td>
+</tr>
+<tr>
+<td><code>DockHintBgColor</code></td>
+<td>停靠提示背景</td>
+</tr>
+<tr>
+<td><code>SidebarDropPreviewBgColor</code></td>
+<td>侧边栏拖放预览背景</td>
+</tr>
+<tr>
+<td><code>SidebarDropPreviewBorderColor</code></td>
+<td>侧边栏拖放预览边框</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h11">2.8 工作区色（Workspace）</h3>
+<p>用于组件工作区的拖拽、停靠、卡片等。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CardBgColor2</code></td>
+<td>卡片内部区域背景（比 PanelBg 更深）</td>
+</tr>
+<tr>
+<td><code>HeaderBgColor</code></td>
+<td>组件头部背景</td>
+</tr>
+<tr>
+<td><code>CardBorderColor</code></td>
+<td>卡片边框</td>
+</tr>
+<tr>
+<td><code>SeamIdleColor</code></td>
+<td>停靠缝隙空闲态</td>
+</tr>
+<tr>
+<td><code>DragHandleBgColor</code></td>
+<td>拖拽手柄背景</td>
+</tr>
+<tr>
+<td><code>DragHandleActiveColor</code></td>
+<td>拖拽手柄激活态</td>
+</tr>
+<tr>
+<td><code>DragHandleGlyphColor</code></td>
+<td>拖拽手柄图标色</td>
+</tr>
+<tr>
+<td><code>IconBoxBgColor</code></td>
+<td>图标盒子背景</td>
+</tr>
+<tr>
+<td><code>ComponentBgColor</code></td>
+<td>组件条目背景</td>
+</tr>
+<tr>
+<td><code>ComponentBorderColor</code></td>
+<td>组件条目边框</td>
+</tr>
+<tr>
+<td><code>ComponentHoverBgColor</code></td>
+<td>组件条目 hover 态</td>
+</tr>
+<tr>
+<td><code>ComponentPrimaryBgColor</code></td>
+<td>主要组件按钮背景</td>
+</tr>
+<tr>
+<td><code>ComponentPrimaryBorderColor</code></td>
+<td>主要组件按钮边框</td>
+</tr>
+<tr>
+<td><code>ComponentPrimaryHoverBgColor</code></td>
+<td>主要组件按钮 hover</td>
+</tr>
+<tr>
+<td><code>SidebarBorderColor</code></td>
+<td>侧边栏边框</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h12">2.9 Polygon 组件色</h3>
+<p>主界面工作区中 Polygon 组件的专用颜色。<strong>必须定义</strong>，否则主界面组件会崩溃。</p>
+<h4>背景与表面</h4>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>Brush Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PolygonSurfaceColor</code></td>
+<td><code>PolygonSurfaceBrush</code></td>
+<td>组件表面背景（对应 SurfaceBg）</td>
+</tr>
+<tr>
+<td><code>PolygonSurfaceHoverColor</code></td>
+<td>—</td>
+<td>组件表面 hover 态</td>
+</tr>
+<tr>
+<td><code>PolygonComponentCardBg</code></td>
+<td><code>PolygonComponentCardBgBrush</code></td>
+<td>组件卡片背景</td>
+</tr>
+<tr>
+<td><code>PolygonComponentCardBorder</code></td>
+<td><code>PolygonComponentCardBorderBrush</code></td>
+<td>组件卡片边框</td>
+</tr>
+<tr>
+<td><code>PolygonIconBoxBg</code></td>
+<td><code>PolygonIconBoxBgBrush</code></td>
+<td>图标盒子背景</td>
+</tr>
+<tr>
+<td><code>PolygonEditorSurface</code></td>
+<td><code>PolygonEditorSurfaceBrush</code></td>
+<td>编辑器表面背景</td>
+</tr>
+<tr>
+<td><code>PolygonCardBg</code></td>
+<td><code>PolygonCardBgBrush</code></td>
+<td>多边形卡片背景</td>
+</tr>
+<tr>
+<td><code>PolygonCardBorder</code></td>
+<td><code>PolygonCardBorderBrush</code></td>
+<td>多边形卡片边框</td>
+</tr>
+</tbody>
+</table>
+<h4>边框与交互</h4>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>Brush Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PolygonBorderColor</code></td>
+<td>—</td>
+<td>组件默认边框</td>
+</tr>
+<tr>
+<td><code>PolygonBorderHoverColor</code></td>
+<td>—</td>
+<td>组件 hover 边框（用主题强调色）</td>
+</tr>
+<tr>
+<td><code>PolygonEditorBorder</code></td>
+<td><code>PolygonEditorBorderBrush</code></td>
+<td>编辑器边框</td>
+</tr>
+<tr>
+<td><code>PolygonProgressTrackColor</code></td>
+<td>—</td>
+<td>进度条轨道</td>
+</tr>
+</tbody>
+</table>
+<h4>拖拽</h4>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>Brush Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PolygonDragGlyph</code></td>
+<td><code>PolygonDragGlyphBrush</code></td>
+<td>拖拽手柄图标色</td>
+</tr>
+<tr>
+<td><code>PolygonDragPreviewBg</code></td>
+<td><code>PolygonDragPreviewBgBrush</code></td>
+<td>拖拽预览背景（半透明强调色）</td>
+</tr>
+</tbody>
+</table>
+<h4>启动按钮</h4>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PolygonLaunchSurface</code></td>
+<td>启动按钮背景</td>
+</tr>
+<tr>
+<td><code>PolygonLaunchSurfaceHover</code></td>
+<td>启动按钮 hover</td>
+</tr>
+<tr>
+<td><code>PolygonLaunchBorder</code></td>
+<td>启动按钮边框</td>
+</tr>
+<tr>
+<td><code>PolygonLaunchBorderHover</code></td>
+<td>启动按钮 hover 边框</td>
+</tr>
+<tr>
+<td><code>PolygonLaunchProgressTrack</code></td>
+<td>启动进度条轨道</td>
+</tr>
+<tr>
+<td><code>PolygonLaunchAccentFg</code></td>
+<td>启动按钮强调前景</td>
+</tr>
+</tbody>
+</table>
+<h4>删除操作</h4>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>Brush Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PolygonDeleteBg</code></td>
+<td><code>PolygonDeleteBgBrush</code></td>
+<td>删除按钮/区域背景</td>
+</tr>
+<tr>
+<td><code>PolygonDeleteBorder</code></td>
+<td><code>PolygonDeleteBorderBrush</code></td>
+<td>删除边框（Error 色）</td>
+</tr>
+<tr>
+<td><code>PolygonDeleteFg</code></td>
+<td><code>PolygonDeleteFgBrush</code></td>
+<td>删除前景文字</td>
+</tr>
+</tbody>
+</table>
+<h4>预设与皮肤</h4>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>Brush Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PolygonPresetBg</code></td>
+<td><code>PolygonPresetBgBrush</code></td>
+<td>预设按钮背景</td>
+</tr>
+<tr>
+<td><code>PolygonPresetBorder</code></td>
+<td><code>PolygonPresetBorderBrush</code></td>
+<td>预设按钮边框</td>
+</tr>
+<tr>
+<td><code>PolygonSkinButtonBg</code></td>
+<td><code>PolygonSkinButtonBgBrush</code></td>
+<td>皮肤按钮背景</td>
+</tr>
+<tr>
+<td><code>PolygonSkinButtonBgCurrent</code></td>
+<td><code>PolygonSkinButtonBgCurrentBrush</code></td>
+<td>当前皮肤按钮背景</td>
+</tr>
+<tr>
+<td><code>PolygonSkinButtonBorder</code></td>
+<td><code>PolygonSkinButtonBorderBrush</code></td>
+<td>皮肤按钮边框</td>
+</tr>
+<tr>
+<td><code>PolygonSkinButtonBorderCurrent</code></td>
+<td><code>PolygonSkinButtonBorderCurrentBrush</code></td>
+<td>当前皮肤按钮边框</td>
+</tr>
+<tr>
+<td><code>PolygonSkinAvatarBg</code></td>
+<td><code>PolygonSkinAvatarBgBrush</code></td>
+<td>头像背景</td>
+</tr>
+</tbody>
+</table>
+<h4>任务指示器</h4>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>Brush Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PolygonTaskActivityDownloadingBg</code></td>
+<td><code>PolygonTaskDownloadingBgBrush</code></td>
+<td>下载中指示器背景（绿色）</td>
+</tr>
+<tr>
+<td><code>PolygonTaskActivityDownloadingBorder</code></td>
+<td><code>PolygonTaskDownloadingBorderBrush</code></td>
+<td>下载中指示器边框</td>
+</tr>
+<tr>
+<td><code>PolygonTaskActivityLaunchingBg</code></td>
+<td><code>PolygonTaskLaunchingBgBrush</code></td>
+<td>启动中指示器背景（主题色）</td>
+</tr>
+<tr>
+<td><code>PolygonTaskActivityLaunchingBorder</code></td>
+<td><code>PolygonTaskLaunchingBorderBrush</code></td>
+<td>启动中指示器边框</td>
+</tr>
+<tr>
+<td><code>PolygonDisabledText</code></td>
+<td><code>PolygonDisabledTextBrush</code></td>
+<td>组件禁用文字色</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h13">2.10 系统色覆盖</h3>
+<p>Avalonia 框架级的系统强调色，影响原生控件（进度条、选区高亮等）。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>典型值（Dark）</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SystemAccentColor</code></td>
+<td>与主题 Accent 相同</td>
+<td>系统主强调色</td>
+</tr>
+<tr>
+<td><code>SystemAccentColorDark1</code></td>
+<td>Accent 稍暗</td>
+<td>变体</td>
+</tr>
+<tr>
+<td><code>SystemAccentColorDark2</code></td>
+<td>Accent 更暗</td>
+<td>变体</td>
+</tr>
+<tr>
+<td><code>SystemAccentColorLight1</code></td>
+<td>Accent 稍亮</td>
+<td>变体</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h14">2.11 基础色</h3>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TransparentColor</code></td>
+<td><code>#00000000</code></td>
+<td>完全透明，所有主题相同</td>
+</tr>
+<tr>
+<td><code>WhiteColor</code></td>
+<td><code>#FFFFFF</code></td>
+<td>纯白，所有主题相同</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h15">2.12 汇总</h3>
+<p>一份完整的家族文件需要定义（每个变体）：</p>
+<table>
+<thead>
+<tr>
+<th>分组</th>
+<th>数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>基础色</td>
+<td>2</td>
+</tr>
+<tr>
+<td>背景色</td>
+<td>9 Color + 9 Brush</td>
+</tr>
+<tr>
+<td>边框色</td>
+<td>5 Color + 5 Brush</td>
+</tr>
+<tr>
+<td>文字色</td>
+<td>11 Color + 11 Brush</td>
+</tr>
+<tr>
+<td>强调色</td>
+<td>7 Color + 7 Brush</td>
+</tr>
+<tr>
+<td>语义色</td>
+<td>5 Color + 5 Brush</td>
+</tr>
+<tr>
+<td>特色色</td>
+<td>≥2 Color + 2 Brush（可复用 Accent 色）</td>
+</tr>
+<tr>
+<td>叠加层色</td>
+<td>8 Color + 8 Brush</td>
+</tr>
+<tr>
+<td>工作区色</td>
+<td>15 Color + 15 Brush</td>
+</tr>
+<tr>
+<td><strong>Polygon 组件色</strong></td>
+<td><strong>35 Color + 24 Brush</strong></td>
+</tr>
+<tr>
+<td>系统色覆盖</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>总计 <strong>110+ 个 Color 与 Brush</strong>。最省事的做法是复制
+<code>HatsuneMiku_Resources.axaml</code> 再逐项改值——它是最完整的参考实现。</p>
+</blockquote>
+<hr />
+<h2 id="g-02-h16">3. 颜色取值规则</h2>
+<h3 id="g-02-h17">3.1 层级规则</h3>
+<ul>
+<li><strong>暗色主题</strong>：<code>WindowBg</code> 最暗（约 5% 亮度），逐级递增至 <code>BadgeBg</code>（约 20% 亮度）</li>
+<li><strong>亮色主题</strong>：<code>WindowBg</code> 最亮（约 97% 亮度），逐级递减至 <code>BadgeBg</code>（约 85% 亮度）</li>
+<li><strong>边框色</strong>：暗色主题比对应背景亮 5–15%；亮色主题比对应背景暗 5–15%</li>
+<li><strong>文字色</strong>：暗色主题从白到灰递减；亮色主题从黑到灰递减</li>
+</ul>
+<h3 id="g-02-h18">3.2 强调色梯度</h3>
+<p>从深到亮保持 7 级梯度：</p>
+<div class="code-wrap"><pre><code>AccentDeepDark  →  最深（约比主色暗 25%）
+AccentDeep      →  深（约比主色暗 15%）
+AccentDark      →  较暗（pressed 态）
+AccentDarker    →  稍暗
+Accent          →  主色
+AccentLight     →  稍亮（hover 态）
+AccentBright    →  最亮
+</code></pre></div>
+<hr />
+<h2 id="g-02-h19">4. 创建新主题</h2>
+<h3 id="g-02-h20">步骤 1：新建资源文件</h3>
+<p>在 <code>NyaLauncher.Avalonia/Themes/</code> 下创建 <code>{Family}_Resources.axaml</code>。
+<strong>推荐做法</strong>：复制 <code>HatsuneMiku_Resources.axaml</code>，改文件名，再逐项替换颜色值。</p>
+<p>结构要求：</p>
+<div class="code-wrap"><pre><code class="language-xml">&lt;ResourceDictionary xmlns=&quot;https://github.com/avaloniaui&quot;
+                    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;&gt;
+    &lt;ResourceDictionary.ThemeDictionaries&gt;
+        &lt;ResourceDictionary x:Key=&quot;Dark&quot;&gt;
+            &lt;Color x:Key=&quot;TransparentColor&quot;&gt;#00000000&lt;/Color&gt;
+            &lt;Color x:Key=&quot;WhiteColor&quot;&gt;#FFFFFF&lt;/Color&gt;
+            &lt;!-- ... 全部 Color ... --&gt;
+
+            &lt;SolidColorBrush x:Key=&quot;WindowBgBrush&quot; Color=&quot;{StaticResource WindowBgColor}&quot;/&gt;
+            &lt;!-- ... 全部 Brush ... --&gt;
+
+            &lt;Color x:Key=&quot;SystemAccentColor&quot;&gt;#XXXXXX&lt;/Color&gt;
+            &lt;!-- ... 4 个系统色 ... --&gt;
+        &lt;/ResourceDictionary&gt;
+
+        &lt;ResourceDictionary x:Key=&quot;Light&quot;&gt;
+            &lt;!-- 同样的键，另一套值 --&gt;
+        &lt;/ResourceDictionary&gt;
+    &lt;/ResourceDictionary.ThemeDictionaries&gt;
+&lt;/ResourceDictionary&gt;
+</code></pre></div>
+<h3 id="g-02-h21">步骤 2：注册家族名</h3>
+<p>在 <code>NyaLauncher.Avalonia/Pages/SettingsPage.axaml.cs</code> 的 <code>_themeFamilies</code> 字典里加一项：</p>
+<div class="code-wrap"><pre><code class="language-csharp">private readonly Dictionary&lt;string, string&gt; _themeFamilies = new()
+{
+    { &quot;HatsuneMiku&quot;, &quot;初音未来&quot; },
+    { &quot;DeepSeekPurple&quot;, &quot;DeepSeek紫&quot; },
+    { &quot;ZhiShuBlue&quot;, &quot;植树蓝&quot; },
+    { &quot;MojangRed&quot;, &quot;Mojang红&quot; },
+    { &quot;MyFamily&quot;, &quot;我的主题&quot; }      // ← 新增：键 = axaml 文件名前缀，值 = 显示名
+};
+</code></pre></div>
+<blockquote>
+<p>字典的<strong>键必须与文件名前缀完全一致</strong>（<code>MyFamily</code> ↔ <code>MyFamily_Resources.axaml</code>），
+因为 <code>StyleAlter</code> 是按 <code>avares://NyaLauncher.Avalonia/Themes/{Family}_Resources.axaml</code>
+拼 URI 去加载的。</p>
+</blockquote>
+<h3 id="g-02-h22">步骤 3：确保资源文件参与编译</h3>
+<p>主题文件通过 <code>avares://</code> 从程序集资源加载，确认 <code>.csproj</code> 把它作为
+<code>AvaloniaResource</code> 包含（现有主题文件自动包含，新增文件通常无需手动配置）。</p>
+<h3 id="g-02-h23">步骤 4：验证</h3>
+<ul>
+<li>明暗两个变体都要切一遍，逐页检查：设置页、下载页、版本管理、主界面组件、所有弹窗</li>
+<li>重点看：文字对比度、边框可见性、进度条/滑块轨道、组件 hover 与选中态</li>
+<li>家族文件缺失或加载失败时，<code>StyleAlter</code> 会<strong>自动降级到 HatsuneMiku</strong> 并在调试输出中记录原因</li>
+</ul>
+<hr />
+<h2 id="g-02-h24">5. 运行时机制</h2>
+<h3 id="g-02-h25">5.1 热重载流程</h3>
+<div class="code-wrap"><pre><code>用户切换主题
+   ↓
+ThemeManager.ApplyTheme(family, mode)
+   ├── 1. Application.RequestedThemeVariant = Dark / Light   （标准控件明暗）
+   ├── 2. StyleAlter.ApplyTheme(family, mode)                （资源字典换血）
+   │        ├── 加载 Themes/{Family}_Resources.axaml
+   │        ├── 挑出当前变体字典，逐条复制到 Application.Resources
+   │        └── SyncMaterialTheme() 同步 Material 强调色
+   └── 3. ThemeChanged?.Invoke()                             （广播）
+            ↓
+       MainWindow.OnThemeHotReload
+            ├── AmbientGradient.RecreateAll()     重建背景渐变
+            └── ThemeManager.RemountRootAsync()   淡出 → 重挂载根元素 → 淡入
+</code></pre></div>
+<h3 id="g-02-h26">5.2 为什么要重挂载根元素</h3>
+<p>资源复制进 <code>Application.Resources</code> 后，<code>DynamicResource</code> 引用会自动刷新，
+但已经解析过的 <code>StaticResource</code> 不会。因此宿主重挂载窗口根元素，
+强制所有 <code>StaticResource</code> 重新解析。<code>RemountRootAsync</code> 会：</p>
+<ol>
+<li>保存视觉状态（<code>ScrollViewer</code> 偏移等）</li>
+<li>淡出（默认 120ms）</li>
+<li><code>window.Content = null</code> → 重新赋值</li>
+<li>延迟一帧后恢复视觉状态</li>
+<li>淡入（默认 200ms）</li>
+</ol>
+<h3 id="g-02-h27">5.3 Material 控件如何跟随</h3>
+<p>两层机制配合：</p>
+<p><strong>第一层</strong> —— <code>App.axaml</code> 里的静态桥接，把 Material 画刷指向主题资源键：</p>
+<div class="code-wrap"><pre><code class="language-xml">&lt;SolidColorBrush x:Key=&quot;MaterialPaperBrush&quot; Color=&quot;{DynamicResource PanelBgColor}&quot; /&gt;
+&lt;SolidColorBrush x:Key=&quot;MaterialBodyBrush&quot; Color=&quot;{DynamicResource PrimaryTextColor}&quot; /&gt;
+&lt;!-- 共 20+ 项，覆盖输入框、分隔线、Snackbar、DataGrid、验证错误等 --&gt;
+</code></pre></div>
+<p><strong>第二层</strong> —— <code>StyleAlter.SyncMaterialTheme()</code> 动态注入强调色：</p>
+<div class="code-wrap"><pre><code class="language-csharp">var primary   = ExtractColor(source, &quot;AccentColor&quot;) ?? Colors.Teal;
+var secondary = ExtractColor(source, &quot;MikuPink&quot;)
+             ?? ExtractColor(source, &quot;AccentLightColor&quot;)
+             ?? primary;
+var theme = Theme.Create(baseTheme, primary, secondary);
+materialTheme.CurrentTheme = theme;
+</code></pre></div>
+<blockquote>
+<p>⚠️ <strong>绝对不要设置 <code>MaterialTheme.BaseTheme</code> 属性</strong>。
+该属性任何变化都会调度内部私有主题（XAML 里的 Teal/Pink 枚举占位）
+在 100ms 后回写 <code>CurrentTheme</code>，把注入的家族强调色覆盖掉。
+中性画刷的明暗由 <code>Theme.Create</code> 传入的 <code>IBaseTheme</code> 自带并全量刷新。</p>
+</blockquote>
+<p>启动期还有一个竞态：<code>MaterialThemeBase.OnResourcedAccessed</code> 会在首个控件首次查询
+主题资源时用占位主题回写 <code>CurrentTheme</code>，导致"重启后 Material 控件回到默认绿"。
+<code>StyleAlter.InjectWithStartupGuard</code> 通过订阅 <code>CurrentThemeChanged</code> 检测偏离并补注一次，
+守卫触发的补注必然与目标一致而自然止停，不会形成循环。</p>
+<hr />
+<h2 id="g-02-h28">6. 在 C# 代码里取色</h2>
+<p>代码构建的 UI 无法用 <code>{DynamicResource}</code>，用这两个辅助类：</p>
+<table>
+<thead>
+<tr>
+<th>类</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ThemeBrushes</code>（<code>public</code>）</td>
+<td>工作区通用画刷：<code>CardBackground</code>、<code>HeaderBackground</code>、<code>Accent</code>、<code>Component*</code>、<code>DragHandle*</code> 等</td>
+</tr>
+<tr>
+<td><code>ThemePolygonHelper</code>（<code>internal</code>）</td>
+<td>Polygon 组件专用：<code>EditorSurface</code>、<code>DeleteBg</code>、<code>SkinButton*</code> 等</td>
+</tr>
+</tbody>
+</table>
+<p>它们内部都是 <code>GetBrush(key, fallback)</code>：先从 <code>Application.Resources</code> 取，取不到就用兜底色。
+因此主题切换后重新读取即可拿到新值：</p>
+<div class="code-wrap"><pre><code class="language-csharp">myBorder.Background = ThemeBrushes.CardBackground;
+myRing.ProgressBrush = ThemeBrushes.Accent;
+</code></pre></div>
+<p><strong>新增画刷时</strong>，在对应辅助类里加一个带兜底值的属性，不要直接在业务代码里 <code>Brush.Parse("#...")</code>。</p>
+<hr />
+<h2 id="g-02-h29">7. 页面内样式类</h2>
+<p>页面可以用 <code>UserControl.Styles</code> 定义页面级样式类。因为它们全部引用
+<code>{StaticResource ...Brush}</code>，新建主题<strong>不需要修改这些样式类</strong>，
+只要保证所有 Brush 绑定存在即可。</p>
+<p>设置页的现有样式类：</p>
+<table>
+<thead>
+<tr>
+<th>Style Selector</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Border.card</code></td>
+<td>设置卡片外框（PanelBg + SubtleBorder + 圆角 14）</td>
+</tr>
+<tr>
+<td><code>Border.sub-card</code></td>
+<td>内嵌子面板（CardBg + 圆角 10）</td>
+</tr>
+<tr>
+<td><code>Border.accent-bar</code></td>
+<td>左侧装饰条（5px 宽、左圆角 14）</td>
+</tr>
+<tr>
+<td><code>TextBlock.card-title</code></td>
+<td>卡片标题（17px SemiBold PrimaryText）</td>
+</tr>
+<tr>
+<td><code>TextBlock.card-subtitle</code></td>
+<td>副标题（11px HintText）</td>
+</tr>
+<tr>
+<td><code>TextBlock.field-label</code></td>
+<td>设置项标签（14px SemiBold SecondaryText）</td>
+</tr>
+<tr>
+<td><code>TextBlock.hint</code></td>
+<td>提示文字（11px HintText Wrap）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="g-02-h30">8. 常见坑</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>切换主题后某处颜色没变</td>
+<td>用了 <code>StaticResource</code> 且未参与重挂载，或硬编码了颜色</td>
+<td>改用 <code>DynamicResource</code>；代码里走 <code>ThemeBrushes</code></td>
+</tr>
+<tr>
+<td>新增家族后设置页选了没反应</td>
+<td><code>_themeFamilies</code> 字典键与文件名前缀不一致</td>
+<td>两者必须完全一致</td>
+</tr>
+<tr>
+<td>Material 控件显示成默认绿</td>
+<td>误设了 <code>MaterialTheme.BaseTheme</code>，或注入早于首帧</td>
+<td>只注入 <code>CurrentTheme</code>；守卫会自动补注</td>
+</tr>
+<tr>
+<td>跨家族串色（保留了上个家族的颜色）</td>
+<td>资源是<strong>复制</strong>进 <code>Application.Resources</code> 的，未清理旧键</td>
+<td><code>StyleAlter</code> 取色严格认当前变体字典，别从 <code>Application.Resources</code> 反查</td>
+</tr>
+<tr>
+<td>亮色主题下层次反了</td>
+<td>直接把暗色值复制过去没反转</td>
+<td>亮色主题 <code>WindowBg</code> 最浅、<code>PrimaryText</code> 最深</td>
+</tr>
+<tr>
+<td>主题加载失败</td>
+<td>家族文件缺失或 XML 有误</td>
+<td>查看调试输出 <code>[StyleAlter] Failed to load theme family ...</code>；会自动降级到 HatsuneMiku</td>
+</tr>
+<tr>
+<td>组件卡片崩溃</td>
+<td>Polygon 组件色未定义全</td>
+<td>对照 <a href="#g-02-h12">2.9 节</a> 补全 35 Color + 24 Brush</td>
+</tr>
+</tbody>
+</table></article>
+      <aside class="doc-toc"><div class="toc-inner"><p class="toc-title">本页目录</p><ul class="toc-list"><li><a href="#g-02-h1">1. 系统总览</a></li><li class="toc-sub"><a href="#g-02-h2">主题文件结构</a></li><li><a href="#g-02-h3">2. 资源键全集</a></li><li class="toc-sub"><a href="#g-02-h4">2.1 背景色（Background）</a></li><li class="toc-sub"><a href="#g-02-h5">2.2 边框色（Border）</a></li><li class="toc-sub"><a href="#g-02-h6">2.3 文字色（Text）</a></li><li class="toc-sub"><a href="#g-02-h7">2.4 强调色（Accent）</a></li><li class="toc-sub"><a href="#g-02-h8">2.5 语义色（Semantic）</a></li><li class="toc-sub"><a href="#g-02-h9">2.6 主题特色色</a></li><li class="toc-sub"><a href="#g-02-h10">2.7 叠加层色（Overlay）</a></li><li class="toc-sub"><a href="#g-02-h11">2.8 工作区色（Workspace）</a></li><li class="toc-sub"><a href="#g-02-h12">2.9 Polygon 组件色</a></li><li class="toc-sub"><a href="#g-02-h13">2.10 系统色覆盖</a></li><li class="toc-sub"><a href="#g-02-h14">2.11 基础色</a></li><li class="toc-sub"><a href="#g-02-h15">2.12 汇总</a></li><li><a href="#g-02-h16">3. 颜色取值规则</a></li><li class="toc-sub"><a href="#g-02-h17">3.1 层级规则</a></li><li class="toc-sub"><a href="#g-02-h18">3.2 强调色梯度</a></li><li><a href="#g-02-h19">4. 创建新主题</a></li><li class="toc-sub"><a href="#g-02-h20">步骤 1：新建资源文件</a></li><li class="toc-sub"><a href="#g-02-h21">步骤 2：注册家族名</a></li><li class="toc-sub"><a href="#g-02-h22">步骤 3：确保资源文件参与编译</a></li><li class="toc-sub"><a href="#g-02-h23">步骤 4：验证</a></li><li><a href="#g-02-h24">5. 运行时机制</a></li><li class="toc-sub"><a href="#g-02-h25">5.1 热重载流程</a></li><li class="toc-sub"><a href="#g-02-h26">5.2 为什么要重挂载根元素</a></li><li class="toc-sub"><a href="#g-02-h27">5.3 Material 控件如何跟随</a></li><li><a href="#g-02-h28">6. 在 C# 代码里取色</a></li><li><a href="#g-02-h29">7. 页面内样式类</a></li><li><a href="#g-02-h30">8. 常见坑</a></li></ul></div></aside>
+    </div>
+    <nav class="page-nav" aria-label="章节翻页"><a class="page-nav__link page-nav__prev" href="01-architecture.html"><span class="page-nav__dir">← 上一章</span><span class="page-nav__title">🧭 架构总览</span></a><a class="page-nav__link page-nav__next" href="03-layout-and-spacing.html"><span class="page-nav__dir">下一章 →</span><span class="page-nav__title">📐 布局与间距</span></a></nav>
+    <footer class="doc-foot">
+      <a class="tonal-btn" href="../index.html">← 返回首页</a>
+      <p>文档由 <code>NyaLauncher/Guides</code> 生成 · 采用 Material Design 3 样式 · Licensed under Apache 2.0</p>
+    </footer>
+  </main>
+</div>
+<div class="scrim" id="scrim"></div>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var rail = document.getElementById('rail');
+  var scrim = document.getElementById('scrim');
+  var hamburger = document.getElementById('hamburger');
+
+  // 主题切换
+  var tgl = document.getElementById('themeToggle');
+  var saved = null;
+  try { saved = localStorage.getItem('nya-docs-theme'); } catch(e){}
+  if (saved === 'light') { root.setAttribute('data-theme','light'); tgl.checked = true; }
+  tgl.addEventListener('change', function(){
+    if (tgl.checked) { root.setAttribute('data-theme','light'); }
+    else { root.setAttribute('data-theme','dark'); }
+    try { localStorage.setItem('nya-docs-theme', tgl.checked ? 'light' : 'dark'); } catch(e){}
+  });
+
+  // 移动端抽屉
+  function closeDrawer(){ rail.classList.remove('open'); scrim.classList.remove('show'); }
+  hamburger.addEventListener('click', function(){
+    rail.classList.toggle('open'); scrim.classList.toggle('show');
+  });
+  scrim.addEventListener('click', closeDrawer);
+
+  // 移动端：点导航后收起抽屉（多页架构下导航是普通链接跳转）
+  document.querySelectorAll('.nav-item').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (window.innerWidth <= 880) closeDrawer();
+    });
+  });
+
+  // 本页目录：高亮当前标题
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc-list a'));
+  var LINE = 132;                       // sticky 顶栏 64px + 判断余量
+  function absTop(el){ return el.getBoundingClientRect().top + window.pageYOffset; }
+  var ticking = false;
+  function updateToc(){
+    ticking = false;
+    if (!tocLinks.length) return;
+    var best = tocLinks[0];
+    for (var i = 0; i < tocLinks.length; i++){
+      var t = document.getElementById(tocLinks[i].getAttribute('href').slice(1));
+      if (t && absTop(t) <= window.pageYOffset + LINE) best = tocLinks[i];
+    }
+    for (var j = 0; j < tocLinks.length; j++){
+      tocLinks[j].classList.toggle('active', tocLinks[j] === best);
+    }
+  }
+  function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(updateToc); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  updateToc();
+
+  // URL hash 定位
+  if (location.hash) {
+    var t = document.getElementById(location.hash.slice(1));
+    if (t) setTimeout(function(){ t.scrollIntoView(); }, 60);
+  }
+
+  // 代码块复制按钮
+  function copyText(text, btn){
+    var done = function(){
+      btn.classList.add('copied');
+      btn.textContent = '已复制 ✓';
+      setTimeout(function(){
+        btn.classList.remove('copied');
+        btn.textContent = '复制';
+      }, 1600);
+    };
+    var fallback = function(){
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else { fallback(); }
+  }
+  document.querySelectorAll('.md-content .code-wrap').forEach(function(wrap){
+    var btn = document.createElement('button');
+    btn.className = 'code-copy';
+    btn.type = 'button';
+    btn.textContent = '复制';
+    btn.setAttribute('aria-label', '复制代码');
+    btn.addEventListener('click', function(){
+      var code = wrap.querySelector('code') || wrap;
+      copyText(code.textContent, btn);
+    });
+    wrap.appendChild(btn);
+  });
+})();
+</script>
+</body>
+</html>

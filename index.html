@@ -7,18 +7,18 @@
   <meta name="description" content="NyaLauncher —— 基于 .NET 10 与 Avalonia UI 构建的现代、轻量、跨平台 Minecraft 启动器。隐私优先，插件生态，AI 辅助。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- ===== 背景层 ===== -->
-  <div class="bg-gradient" aria-hidden="true"></div>
-  <div class="bg-grid" aria-hidden="true"></div>
-  <canvas id="particles" aria-hidden="true"></canvas>
-  <div class="bg-vignette" aria-hidden="true"></div>
-  <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
-  <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
-  <div class="bg-orb bg-orb--3" aria-hidden="true"></div>
+  <!-- ===== 背景层：英雄背景图 + Canvas 粒子网络 + 暗角 ===== -->
+  <div class="md-bg" aria-hidden="true">
+    <div class="md-bg__img"></div>
+    <canvas class="md-bg__particles" id="particleCanvas" aria-hidden="true"></canvas>
+    <div class="md-bg__vignette"></div>
+    <div class="md-bg__scrim"></div>
+    <div class="md-bg__spotlight"></div>
+  </div>
 
   <!-- ===== 顶部导航 ===== -->
   <header class="nav" id="nav">
@@ -34,7 +34,7 @@
       <a href="#updates">进度</a>
       <a href="#community">社区</a>
       <a href="docs/index.html">文档</a>
-      <a class="nav__cta" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener">GitHub</a>
+      <a class="nav__cta md-btn md-btn--filled" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <button class="nav__toggle" id="navToggle" type="button" aria-label="打开菜单" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -44,7 +44,7 @@
   <!-- ===== 英雄区 ===== -->
   <section class="hero" id="home">
     <div class="hero__inner">
-      <span class="hero__badge reveal">v0.1.0-preview4 · 为自由而生</span>
+      <span class="hero__badge reveal">v0.1.0-preview · 为自由而生</span>
       <h1 class="hero__title reveal" data-parallax="0.15">
         <span class="hero__cat">🐱</span> Nya<span class="grad-text">Launcher</span>
       </h1>
@@ -56,15 +56,15 @@
         开源 Minecraft 启动器。无遥测、无广告，把控制权还给你。
       </p>
       <div class="hero__actions reveal">
-        <a class="btn btn--primary btn--pulse" href="https://github.com/redstore-noob/NyaLauncher/releases" target="_blank" rel="noopener">
+        <a class="md-btn md-btn--filled" href="https://github.com/redstore-noob/NyaLauncher/releases" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
           下载最新版
         </a>
-        <a class="btn btn--primary" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener">
+        <a class="md-btn md-btn--tonal" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5A11.5 11.5 0 0 0 23.5 12C23.5 5.7 18.3.5 12 .5z"/></svg>
           GitHub 仓库
         </a>
-        <a class="btn btn--ghost" href="#features">了解更多 ↓</a>
+        <a class="md-btn md-btn--text" href="#features">了解更多 ↓</a>
       </div>
       <div class="hero__stats reveal">
         <div class="stat"><span class="stat__num">3</span><span class="stat__label">支持平台</span></div>
@@ -128,7 +128,7 @@
           <span class="custom-ico glow-pink">🎨</span>
           <div>
             <span class="custom-name">主题与外观</span>
-            <span class="custom-desc">深色 / 浅色、强调色、毛玻璃强度随心切换。</span>
+            <span class="custom-desc">深色 / 浅色、强调色随心切换。</span>
           </div>
         </div>
         <div class="custom-item">
@@ -306,7 +306,7 @@
       <div class="tl__item tl--done reveal" style="--delay:80ms">
         <div class="tl__dot"></div>
         <div class="tl__card">
-          <span class="tl__ver mono">v0.1.0-preview4</span>
+          <span class="tl__ver mono">v0.1.0-preview</span>
           <h4>当前版本 ★</h4>
           <p>插件系统雏形、账户管理与基础启动流程可用。</p>
         </div>
@@ -346,7 +346,7 @@
           <span class="community__desc">源码 · Issues · 贡献指南 · 插件市场</span>
           <span class="community__meta mono">github.com/redstore-noob/NyaLauncher</span>
         </div>
-        <span class="community__cta">前往仓库 →</span>
+        <span class="community__cta md-btn md-btn--text">前往仓库 →</span>
       </a>
 
       <div class="community__card community__qq reveal" style="--delay:90ms">
@@ -356,7 +356,7 @@
           <span class="community__desc">实时答疑 · 版本速递 · 一起摸鱼</span>
           <span class="community__meta mono">群号 1108330006</span>
         </div>
-        <button class="qq-copy community__cta" type="button" data-qq="1108330006" aria-label="点击复制 QQ 群号 1108330006">
+        <button class="qq-copy md-btn md-btn--tonal community__cta" type="button" data-qq="1108330006" aria-label="点击复制 QQ 群号 1108330006">
           <span class="qq-num mono">1108330006</span>
           <span class="qq-hint">点击复制</span>
         </button>

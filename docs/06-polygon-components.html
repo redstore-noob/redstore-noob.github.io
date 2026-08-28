@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>多边形组件 · NyaLauncher 文档中心</title>
+<meta name="description" content="NyaLauncher 开发者文档中心 · 多边形组件：架构、主题、布局、动画、插件、多边形组件与通知框架。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  /* ===== Material 3 暗色令牌（默认）· 与首页 styles.css 主色保持一致 ===== */
+  --md-sys-color-primary:#AEC6FF;
+  --md-sys-color-on-primary:#0A2F66;
+  --md-sys-color-primary-container:#284785;
+  --md-sys-color-on-primary-container:#DCE6FF;
+  --md-sys-color-secondary:#C2C8DA;
+  --md-sys-color-on-secondary:#2B3042;
+  --md-sys-color-secondary-container:#424759;
+  --md-sys-color-on-secondary-container:#E1E2F4;
+  --md-sys-color-tertiary:#9CE7FF;
+  --md-sys-color-tertiary-container:#004E63;
+  --md-sys-color-surface:#0E131C;
+  --md-sys-color-on-surface:#E4EAF6;
+  --md-sys-color-surface-variant:#424759;
+  --md-sys-color-on-surface-variant:#C2C8D6;
+  --md-sys-color-surface-container:#1A2030;
+  --md-sys-color-surface-container-high:#232A3B;
+  --md-sys-color-surface-container-highest:#2E3650;
+  --md-sys-color-surface-dim:#0E131C;
+  --md-sys-color-outline:#8A92A6;
+  --md-sys-color-outline-variant:#3D4459;
+  --md-sys-color-background:#0E131C;
+  --md-sys-color-on-background:#E4EAF6;
+  --md-sys-color-error:#FFB4AB;
+  --md-sys-color-on-error:#690005;
+  --md-sys-color-error-container:#93000A;
+  --md-sys-color-on-error-container:#FFDAD6;
+  --md-sys-color-scrim:rgba(0,0,0,.55);
+  --md-sys-color-code-bg:#0A0E15;
+  --md-sys-color-code-text:#DCE6FF;
+  --md-sys-elevation-1:0 1px 2px rgba(0,0,0,.30),0 1px 3px 1px rgba(0,0,0,.15);
+  --md-sys-elevation-2:0 1px 2px rgba(0,0,0,.30),0 2px 6px 2px rgba(0,0,0,.15);
+  --md-sys-elevation-3:0 4px 8px 3px rgba(0,0,0,.30),0 1px 3px rgba(0,0,0,.15);
+  --md-sys-radius-small:8px;
+  --md-sys-radius-medium:12px;
+  --md-sys-radius-large:16px;
+  --md-sys-radius-xlarge:28px;
+}
+[data-theme="light"]{
+  --md-sys-color-primary:#3B63C4;
+  --md-sys-color-on-primary:#FFFFFF;
+  --md-sys-color-primary-container:#DCE6FF;
+  --md-sys-color-on-primary-container:#0A2F66;
+  --md-sys-color-secondary:#5A6076;
+  --md-sys-color-on-secondary:#FFFFFF;
+  --md-sys-color-secondary-container:#E1E2F4;
+  --md-sys-color-on-secondary-container:#171C2B;
+  --md-sys-color-tertiary:#00658A;
+  --md-sys-color-tertiary-container:#C7EFFF;
+  --md-sys-color-surface:#F8FAFF;
+  --md-sys-color-on-surface:#1A2030;
+  --md-sys-color-surface-variant:#E0E2EC;
+  --md-sys-color-on-surface-variant:#444A5A;
+  --md-sys-color-surface-container:#ECEEF6;
+  --md-sys-color-surface-container-high:#E6E8F2;
+  --md-sys-color-surface-container-highest:#E0E2EC;
+  --md-sys-color-surface-dim:#F8FAFF;
+  --md-sys-color-outline:#747A8C;
+  --md-sys-color-outline-variant:#C4C6D0;
+  --md-sys-color-background:#F8FAFF;
+  --md-sys-color-on-background:#1A2030;
+  --md-sys-color-error:#BA1A1A;
+  --md-sys-color-on-error:#FFFFFF;
+  --md-sys-color-error-container:#FFDAD6;
+  --md-sys-color-on-error-container:#410002;
+  --md-sys-color-scrim:rgba(0,0,0,.32);
+  --md-sys-color-code-bg:#0E131C;
+  --md-sys-color-code-text:#DCE6FF;
+  --md-sys-elevation-1:0 1px 2px rgba(0,0,0,.12),0 1px 3px 1px rgba(0,0,0,.08);
+  --md-sys-elevation-2:0 1px 2px rgba(0,0,0,.12),0 2px 6px 2px rgba(0,0,0,.10);
+  --md-sys-elevation-3:0 4px 8px 3px rgba(0,0,0,.12),0 1px 3px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--md-sys-color-background);color:var(--md-sys-color-on-surface);
+  font-family:"Roboto","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--md-sys-color-primary);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ===== 顶栏 (Material top app bar) ===== */
+.app-bar{
+  position:sticky;top:0;z-index:50;height:64px;
+  display:flex;align-items:center;gap:12px;padding:0 16px;
+  background:var(--md-sys-color-surface-container);
+  color:var(--md-sys-color-on-surface);
+  box-shadow:var(--md-sys-elevation-2);
+  border-bottom:1px solid var(--md-sys-color-outline-variant);
+}
+.app-bar__brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;letter-spacing:.2px;}
+.app-bar__brand .cat{font-size:1.4rem;}
+.app-bar__brand .grad{color:var(--md-sys-color-primary);}
+.app-bar__spacer{flex:1;}
+.icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;
+  background:transparent;color:var(--md-sys-color-on-surface);font-size:1.25rem;
+  transition:background .2s;
+}
+.icon-btn:hover{background:var(--md-sys-color-surface-container-high);}
+.filled-btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;
+  border:none;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem;
+  background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);
+  box-shadow:var(--md-sys-elevation-1);transition:box-shadow .2s,filter .2s;
+}
+.filled-btn:hover{box-shadow:var(--md-sys-elevation-2);filter:brightness(1.05);}
+.tonal-btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;
+  border:none;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem;
+  background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);
+  transition:filter .2s;
+}
+.tonal-btn:hover{filter:brightness(1.05);}
+
+/* ===== 主题开关 (Material switch) ===== */
+.theme-switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.theme-switch input{position:absolute;opacity:0;width:0;height:0;}
+.switch-track{
+  position:relative;width:52px;height:32px;border-radius:999px;
+  background:var(--md-sys-color-surface-variant);
+  border:2px solid var(--md-sys-color-outline);transition:.25s;
+}
+.switch-thumb{
+  position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+  background:var(--md-sys-color-outline);transition:.25s;
+}
+.theme-switch input:checked + .switch-track{background:var(--md-sys-color-primary);border-color:var(--md-sys-color-primary);}
+.theme-switch input:checked + .switch-track .switch-thumb{left:25px;background:var(--md-sys-color-on-primary);}
+
+/* ===== 布局 ===== */
+.layout{display:flex;align-items:flex-start;min-height:calc(100vh - 64px);}
+
+/* 左侧永久导航栏 (Material navigation rail / drawer) */
+.rail{
+  position:sticky;top:64px;align-self:flex-start;
+  width:260px;flex-shrink:0;height:calc(100vh - 64px);
+  overflow-y:auto;padding:16px 12px;
+  background:var(--md-sys-color-surface-container);
+  border-right:1px solid var(--md-sys-color-outline-variant);
+}
+.rail__head{
+  font-size:.72rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--md-sys-color-on-surface-variant);padding:8px 12px 12px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:14px;width:100%;
+  padding:12px 14px;margin-bottom:4px;border:none;cursor:pointer;
+  background:transparent;color:var(--md-sys-color-on-surface);
+  border-radius:var(--md-sys-radius-large);font-size:.95rem;font-weight:500;
+  text-align:left;text-decoration:none;transition:background .18s,color .18s;
+}
+.nav-item .nav-ico{font-size:1.25rem;line-height:1;width:24px;text-align:center;}
+.nav-item:hover{background:var(--md-sys-color-surface-container-high);text-decoration:none;}
+.nav-item.active{
+  background:var(--md-sys-color-secondary-container);
+  color:var(--md-sys-color-on-secondary-container);font-weight:700;
+}
+
+/* 主内容 */
+.main{flex:1;min-width:0;padding:28px clamp(16px,4vw,40px) 64px;}
+.doc-section{scroll-margin-top:88px;margin-bottom:8px;}
+/* 锚点跳转避开 sticky 顶栏，标题留更多余量 */
+.md-content h1,.md-content h2,.md-content h3,.md-content h4{scroll-margin-top:104px;}
+.doc-grid{display:grid;grid-template-columns:minmax(0,1fr) 232px;gap:40px;align-items:start;}
+
+/* 文档卡片 (Material large card) */
+.doc-card{
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  border-radius:var(--md-sys-radius-xlarge);
+  padding:clamp(20px,3vw,40px);
+  box-shadow:var(--md-sys-elevation-1);
+}
+
+/* ===== Markdown 内容排版 ===== */
+.md-content > :first-child{margin-top:0;}
+.md-content h1{
+  font-size:clamp(1.7rem,4vw,2.3rem);font-weight:700;line-height:1.2;
+  margin:0 0 8px;color:var(--md-sys-color-on-surface);letter-spacing:.3px;
+}
+.md-content h2{
+  font-size:1.4rem;font-weight:700;margin:36px 0 14px;
+  padding-bottom:10px;color:var(--md-sys-color-on-surface);
+  border-bottom:2px solid var(--md-sys-color-primary-container);
+}
+.md-content h3{
+  font-size:1.12rem;font-weight:600;margin:26px 0 10px;
+  color:var(--md-sys-color-primary);
+}
+.md-content h4{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--md-sys-color-on-surface);}
+.md-content p{margin:12px 0;color:var(--md-sys-color-on-surface);}
+.md-content ul,.md-content ol{margin:12px 0;padding-left:24px;}
+.md-content li{margin:6px 0;}
+.md-content hr{border:0;border-top:1px solid var(--md-sys-color-outline-variant);margin:28px 0;}
+
+/* 行内代码 */
+.md-content code{
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.86em;background:var(--md-sys-color-surface-variant);
+  color:var(--md-sys-color-primary);border-radius:6px;padding:2px 6px;
+}
+/* 代码块 + 复制按钮 */
+.md-content .code-wrap{position:relative;margin:16px 0;}
+.md-content pre{
+  background:var(--md-sys-color-code-bg);color:var(--md-sys-color-code-text);
+  border-radius:var(--md-sys-radius-medium);padding:16px 18px;
+  overflow-x:auto;margin:0;font-size:.84rem;line-height:1.6;
+  border:1px solid var(--md-sys-color-outline-variant);
+}
+.code-copy{
+  position:absolute;top:8px;right:8px;height:28px;padding:0 12px;
+  display:inline-flex;align-items:center;
+  border:1px solid var(--md-sys-color-outline-variant);border-radius:8px;cursor:pointer;
+  background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);
+  font-family:inherit;font-size:.72rem;font-weight:600;letter-spacing:.3px;
+  opacity:0;transition:opacity .18s,background .18s;
+}
+.md-content .code-wrap:hover .code-copy{opacity:1;}
+.code-copy:focus-visible{opacity:1;}
+.code-copy:hover{background:var(--md-sys-color-surface-container-highest);}
+.code-copy.copied{
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);opacity:1;
+}
+.md-content pre code{
+  background:transparent;color:inherit;padding:0;border-radius:0;font-size:inherit;
+}
+.md-content blockquote{
+  margin:16px 0;padding:14px 18px;
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);
+  border-left:5px solid var(--md-sys-color-primary);
+  border-radius:0 var(--md-sys-radius-medium) var(--md-sys-radius-medium) 0;
+}
+.md-content blockquote p{color:inherit;margin:6px 0;}
+.md-content blockquote code{background:rgba(0,0,0,.18);color:var(--md-sys-color-on-primary-container);}
+
+/* 表格 (Material data table) */
+.md-content .table-wrap{overflow-x:auto;margin:18px 0;border-radius:var(--md-sys-radius-medium);border:1px solid var(--md-sys-color-outline-variant);}
+.md-content table{border-collapse:collapse;width:100%;font-size:.9rem;}
+.md-content thead{background:var(--md-sys-color-surface-variant);}
+.md-content th{
+  text-align:left;font-weight:600;color:var(--md-sys-color-on-surface-variant);
+  padding:12px 16px;border-bottom:1px solid var(--md-sys-color-outline-variant);white-space:nowrap;
+}
+.md-content td{padding:11px 16px;border-bottom:1px solid var(--md-sys-color-outline-variant);color:var(--md-sys-color-on-surface);vertical-align:top;}
+.md-content tbody tr{transition:background .15s;}
+.md-content tbody tr:hover{background:var(--md-sys-color-surface-container-high);}
+.md-content tbody tr:last-child td{border-bottom:none;}
+
+/* ===== 本页目录 (table of contents) ===== */
+.doc-toc{position:sticky;top:88px;align-self:start;font-size:.85rem;}
+.toc-inner{
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  border-radius:var(--md-sys-radius-large);padding:16px 14px;
+}
+.toc-title{margin:0 0 10px;font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--md-sys-color-on-surface-variant);}
+.toc-list{list-style:none;margin:0;padding:0;}
+.toc-list li{margin:2px 0;}
+.toc-list a{display:block;padding:6px 10px;border-radius:8px;color:var(--md-sys-color-on-surface-variant);transition:background .15s,color .15s;}
+.toc-list a:hover{background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);text-decoration:none;}
+.toc-sub a{padding-left:22px;font-size:.82rem;}
+.toc-list a.active{
+  background:var(--md-sys-color-secondary-container);
+  color:var(--md-sys-color-on-secondary-container);font-weight:600;
+}
+
+/* ===== 章节翻页（上一章 / 下一章） ===== */
+.page-nav{display:flex;gap:16px;margin-top:24px;}
+.page-nav__link{
+  flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:4px;
+  padding:16px 20px;border-radius:var(--md-sys-radius-large);
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  box-shadow:var(--md-sys-elevation-1);text-decoration:none;
+  transition:box-shadow .2s,background .2s,transform .2s;
+}
+.page-nav__link:hover{
+  box-shadow:var(--md-sys-elevation-2);
+  background:var(--md-sys-color-surface-container-high);
+  transform:translateY(-2px);text-decoration:none;
+}
+.page-nav__next{text-align:right;align-items:flex-end;}
+.page-nav__dir{font-size:.72rem;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant);}
+.page-nav__title{font-size:.95rem;font-weight:600;color:var(--md-sys-color-primary);word-break:break-word;}
+.page-nav__spacer{flex:1 1 0;}
+
+/* ===== 页脚 ===== */
+.doc-foot{
+  margin-top:32px;padding-top:28px;border-top:1px solid var(--md-sys-color-outline-variant);
+  display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  color:var(--md-sys-color-on-surface-variant);font-size:.85rem;
+}
+
+/* ===== 抽屉遮罩 (移动端) ===== */
+.scrim{position:fixed;inset:0;background:var(--md-sys-color-scrim);z-index:45;opacity:0;visibility:hidden;transition:.25s;}
+
+/* ===== 响应式 ===== */
+@media (max-width:1180px){
+  .doc-grid{grid-template-columns:minmax(0,1fr);}
+  .doc-toc{display:none;}
+}
+@media (max-width:620px){
+  .page-nav{flex-direction:column;}
+  .page-nav__next{text-align:left;align-items:flex-start;}
+}
+@media (max-width:880px){
+  .rail{
+    position:fixed;top:64px;left:0;z-index:46;height:calc(100vh - 64px);
+    transform:translateX(-100%);transition:transform .28s cubic-bezier(.22,1,.36,1);
+    box-shadow:var(--md-sys-elevation-3);
+  }
+  .rail.open{transform:translateX(0);}
+  .scrim.show{opacity:1;visibility:visible;}
+  .app-bar__brand .label-long{display:none;}
+}
+</style>
+</head>
+<body>
+<header class="app-bar">
+  <button class="icon-btn" id="hamburger" aria-label="打开导航">☰</button>
+  <a class="app-bar__brand" href="../index.html">
+    <span class="cat">🐱</span>
+    <span><span class="label-long">Nya</span><span class="grad">Launcher</span> <span class="label-long">· 文档中心</span></span>
+  </a>
+  <span class="app-bar__spacer"></span>
+  <label class="theme-switch" title="切换明暗主题">
+    <span aria-hidden="true">🌙</span>
+    <input type="checkbox" id="themeToggle" />
+    <span class="switch-track"><span class="switch-thumb"></span></span>
+    <span aria-hidden="true">☀️</span>
+  </label>
+  <a class="filled-btn" href="../index.html">← 返回首页</a>
+</header>
+
+<div class="layout">
+  <nav class="rail" id="rail" aria-label="文档导航">
+    <div class="rail__head">文档地图</div>
+    <a class="nav-item" href="index.html"><span class="nav-ico" aria-hidden="true">🏠</span><span class="nav-label">概览</span></a>
+<a class="nav-item" href="01-architecture.html"><span class="nav-ico" aria-hidden="true">🧭</span><span class="nav-label">架构总览</span></a>
+<a class="nav-item" href="02-theming.html"><span class="nav-ico" aria-hidden="true">🎨</span><span class="nav-label">主题开发</span></a>
+<a class="nav-item" href="03-layout-and-spacing.html"><span class="nav-ico" aria-hidden="true">📐</span><span class="nav-label">布局与间距</span></a>
+<a class="nav-item" href="04-animations.html"><span class="nav-ico" aria-hidden="true">✨</span><span class="nav-label">动画系统</span></a>
+<a class="nav-item" href="05-plugin-development.html"><span class="nav-ico" aria-hidden="true">🧩</span><span class="nav-label">插件与功能区</span></a>
+<a class="nav-item active" href="06-polygon-components.html" aria-current="page"><span class="nav-ico" aria-hidden="true">🔷</span><span class="nav-label">多边形组件</span></a>
+<a class="nav-item" href="07-notifications.html"><span class="nav-ico" aria-hidden="true">🔔</span><span class="nav-label">通知框架</span></a>
+  </nav>
+  <main class="main">
+    <div class="doc-grid">
+      <article class="doc-card md-content"><h1>06 · 多边形组件开发</h1>
+<blockquote>
+<p>多边形组件（Polygon Component）框架完整教程。
+适用对象：内置 Dashboard 小组件开发者、NyaLauncher 插件作者。
+参考实现：<code>NyaLauncher.Avalonia/Framework/BuiltIn*Component.cs</code>（8 个内置组件都是活样例）。</p>
+</blockquote>
+<hr />
+<h2 id="g-06-h1">1. 核心概念</h2>
+<p>一个多边形组件 = <strong>声明式定义（Definition）</strong> + <strong>运行时实例（Instance）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>职责</th>
+<th>生命周期</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PolygonComponentDefinition</code></td>
+<td>描述组件长什么样：形状、元素、动作、尺寸、主题变体</td>
+<td>一次构建，全局共享，不可变</td>
+</tr>
+<tr>
+<td><code>IPolygonComponentInstance</code></td>
+<td>提供状态与行为：响应点击、发布状态</td>
+<td>每个工作区卡片一个实例（实例池管理）</td>
+</tr>
+</tbody>
+</table>
+<p>宿主（<code>PolygonComponentView</code>）负责渲染、拖拽、缩放、hover 与长按拖动手势——
+<strong>你不需要写任何 UI 布局代码，只做「声明 + 状态」</strong>。</p>
+<h3 id="g-06-h2">1.1 契约工程</h3>
+<p>公共契约位于 <code>NyaLauncher.Plugin.Abstractions</code>，目标框架 <code>net10.0</code>，
+<strong>不引用 Avalonia</strong>。第三方扩展可以独立描述形状、尺寸、内容、动作和运行时状态，
+再由启动器宿主负责渲染与工作区交互。</p>
+<p>开发期间可直接添加项目引用：</p>
+<div class="code-wrap"><pre><code class="language-xml">&lt;ProjectReference Include=&quot;../NyaLauncher.Plugin.Abstractions/NyaLauncher.Plugin.Abstractions.csproj&quot; /&gt;
+</code></pre></div>
+<p>当前契约版本：<code>PolygonComponentDefinition.CurrentContractVersion</code>（现为 <code>1</code>）。
+宿主会拒绝不支持的契约版本、重复的组件 ID 或非法定义。</p>
+<hr />
+<h2 id="g-06-h3">2. 归一化坐标系</h2>
+<p>所有元素的定位使用 <code>ComponentRect(x, y, width, height)</code>，
+四个值都是 <strong>0~1 的归一化比例</strong>，相对组件当前尺寸：</p>
+<div class="code-wrap"><pre><code class="language-csharp">new ComponentRect(0.05, 0.07, 0.44, 0.42)
+// x=5%  y=7%  宽=44%  高=42%
+</code></pre></div>
+<p>组件被拖大缩小时，内部布局自动按比例适配。</p>
+<p>经验法则：</p>
+<ul>
+<li>边距留 <code>0.04</code> ~ <code>0.07</code></li>
+<li>字号是<strong>固定像素</strong>，不随缩放变化；小卡片慎用大字号</li>
+<li>想让进度条高约 10px：<code>高度比例 = 10 / 组件首选高度</code></li>
+</ul>
+<hr />
+<h2 id="g-06-h4">3. 最小可用组件</h2>
+<div class="code-wrap"><pre><code class="language-csharp">using NyaLauncher.Plugin.Abstractions.Components;
+
+public static PolygonComponentRegistration Create()
+{
+    var definition = new PolygonComponentBuilder(
+            &quot;mycompany.builtin/hello&quot;,       // 全局唯一 ID，建议 域名/名称 格式
+            &quot;你好卡片&quot;)                       // 组件库中显示的标题
+        .WithDescription(&quot;第一个多边形组件&quot;)
+        .WithGlyph(&quot;👋&quot;)                     // 组件库图标
+        .WithSize(240, 120)                  // 首选尺寸
+        .WithSizeLimits(180, 90, 480, 240)   // 允许的缩放范围
+        .WithShape(PolygonShapeDefinition.Rectangle())
+        .WithDragHandle(new ComponentRect(0.02, 0.35, 0.05, 0.30))
+        // 组件不再自带颜色：所有画刷由宿主绑定主题资源（ComponentBgBrush / PrimaryTextBrush 等）
+        .WithTheme(new PolygonComponentTheme())
+        .AddText(&quot;hello-text&quot;, new ComponentRect(0.1, 0.4, 0.8, 0.2),
+            &quot;Hello Polygon!&quot;, ComponentTextRole.Title, fontSize: 14)
+        .Build();
+
+    return new PolygonComponentRegistration
+    {
+        Definition = definition,
+        Factory = new DelegatePolygonComponentFactory(_ =&gt; new HelloInstance())
+    };
+}
+</code></pre></div>
+<blockquote>
+<p><strong>主题</strong>：不要在组件里硬编码或快照任何颜色。
+<code>PolygonComponentTheme</code> 只保留 <code>Variant</code>（<code>Default</code> / <code>Launch</code>）与 <code>BorderThickness</code>，
+具体颜色由宿主映射到主题资源键（<code>DynamicResource</code> 绑定），明暗与主题切换实时跟随。</p>
+</blockquote>
+<hr />
+<h2 id="g-06-h5">4. Builder API 速查</h2>
+<h3 id="g-06-h6">4.1 元信息</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WithDescription(string)</code></td>
+<td>组件库副标题</td>
+</tr>
+<tr>
+<td><code>WithGlyph(string)</code></td>
+<td>组件库图标（支持 Emoji 与 <code>material:xxx</code>）</td>
+</tr>
+<tr>
+<td><code>WithSize(double w, double h)</code></td>
+<td>首选尺寸（DIP，单边 16~8192）</td>
+</tr>
+<tr>
+<td><code>WithSizeLimits(minW, minH, maxW, maxH)</code></td>
+<td>缩放边界，必须满足 <code>Minimum ≤ Preferred ≤ Maximum</code></td>
+</tr>
+<tr>
+<td><code>WithShape(PolygonShapeDefinition)</code></td>
+<td>形状轮廓</td>
+</tr>
+<tr>
+<td><code>WithDragHandle(ComponentRect)</code></td>
+<td>兼容旧契约的拖拽把手区（当前工作区已改为长按任意位置拖动）</td>
+</tr>
+<tr>
+<td><code>WithTheme(PolygonComponentTheme)</code></td>
+<td>主题变体与边框厚度</td>
+</tr>
+<tr>
+<td><code>Build()</code></td>
+<td>构建并执行校验</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-06-h7">4.2 动作</h3>
+<div class="code-wrap"><pre><code class="language-csharp">.AddAction(&quot;do-thing&quot;)                       // 声明动作 ID
+.AddAction(&quot;streaming&quot;, allowReentry: true)  // 允许重入（连续触发）
+.UseSurfaceAction(&quot;do-thing&quot;)                // 可选：整卡可点，等同触发该动作
+</code></pre></div>
+<ul>
+<li><strong>动作必须先声明</strong>，元素引用未声明的动作会被验证器拒绝</li>
+<li>未设置 <code>allowReentry</code> 的动作在执行期间自动防重入（连点只生效一次）</li>
+</ul>
+<h3 id="g-06-h8">4.3 元素</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>签名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AddText</code></td>
+<td><code>(string id, ComponentRect bounds, string text, ComponentTextRole role = Body, double fontSize = 12)</code></td>
+</tr>
+<tr>
+<td><code>AddProgress</code></td>
+<td><code>(string id, ComponentRect bounds, string label, double value = 0, double minimum = 0, double maximum = 100)</code></td>
+</tr>
+<tr>
+<td><code>AddTextInput</code></td>
+<td><code>(string id, ComponentRect bounds, string actionId, string value = "", string placeholder = "", int maximumLength = 256, bool isMultiline = false)</code></td>
+</tr>
+<tr>
+<td><code>AddToggle</code></td>
+<td><code>(string id, ComponentRect bounds, string label, string actionId, bool isChecked = false)</code></td>
+</tr>
+<tr>
+<td><code>AddSlider</code></td>
+<td><code>(string id, ComponentRect bounds, string label, string actionId, double minimum = 0, double maximum = 100, double value = 0, double step = 1)</code></td>
+</tr>
+<tr>
+<td><code>AddImage</code></td>
+<td><code>(string id, ComponentRect bounds, string source = "", ComponentRect? sourceRect = null, ComponentImageStretch stretch = UniformToFill, string fallbackText = "?", double cornerRadius = 0, bool pixelated = false, ComponentPixelRect? sourcePixelRect = null, bool isSkinHead = false)</code></td>
+</tr>
+<tr>
+<td><code>AddButton</code></td>
+<td><code>(string id, ComponentRect bounds, string text, string actionId, string glyph = "", bool isPrimary = false)</code></td>
+</tr>
+<tr>
+<td><code>AddDropdown</code></td>
+<td><code>(string id, ComponentRect bounds, string glyph = "⌄", IEnumerable&lt;ComponentMenuItem&gt;? pinnedItems = null, bool alignRight = false)</code></td>
+</tr>
+</tbody>
+</table>
+<p>补充说明：</p>
+<ul>
+<li><code>ComponentTextRole</code>：<code>Title</code> / <code>Body</code> / <code>Caption</code> / <code>Emphasis</code></li>
+<li><strong>按钮文字不能为空</strong>（校验器会拒绝）</li>
+<li>text + glyph 同时给按钮时会拼成 <code>" glyph text"</code>；只想要图标按钮就传 glyph 为主的文字</li>
+<li><code>ComponentImageStretch</code>：<code>Uniform</code> / <code>UniformToFill</code> / <code>Fill</code> / <code>None</code></li>
+<li>下拉菜单的 <code>alignRight</code> 让触发按钮内容右对齐（整卡下拉场景中 chevron 靠右）</li>
+</ul>
+<hr />
+<h2 id="g-06-h9">5. 形状与几何</h2>
+<p><code>PolygonShapeDefinition</code> 使用 <code>[0,1]</code> 归一化坐标，可描述凸或凹的<strong>简单多边形</strong>。</p>
+<div class="code-wrap"><pre><code class="language-csharp">PolygonShapeDefinition.Rectangle()                 // 矩形
+PolygonShapeDefinition.CutCorner(double inset = 0.12)  // 切角矩形
+PolygonShapeDefinition.RegularPolygon(6)           // 正六边形
+PolygonShapeDefinition.FromPoints(...)             // 自定义顶点
+</code></pre></div>
+<p>约束：</p>
+<ul>
+<li>顶点数必须为 <strong>3–64</strong></li>
+<li><strong>不支持</strong>孔洞、自相交、相邻重复点或近零面积形状</li>
+<li>宿主使用相同轮廓裁剪视觉并执行指针命中测试，<strong>包围矩形中的透明角不会抢占悬停或点击</strong></li>
+<li><code>DragHandleBounds</code> 为兼容旧契约保留，要求其中心位于轮廓内；但工作区不再显示或要求固定拖动把手</li>
+</ul>
+<p>尺寸：</p>
+<ul>
+<li><code>PreferredSize</code>、<code>MinimumSize</code>、<code>MaximumSize</code> 使用设备无关像素，必须满足 <code>Minimum ≤ Preferred ≤ Maximum</code></li>
+<li>单边尺寸范围 <strong>16–8192 DIP</strong></li>
+<li>元素和动作数量也有宿主保护上限</li>
+</ul>
+<hr />
+<h2 id="g-06-h10">6. 实例与状态</h2>
+<h3 id="g-06-h11">6.1 推荐做法：继承基类</h3>
+<p><code>PolygonComponentInstanceBase</code> 已封装 revision 递增、状态发布与释放检查：</p>
+<div class="code-wrap"><pre><code class="language-csharp">private sealed class HelloInstance : PolygonComponentInstanceBase
+{
+    public HelloInstance()
+    {
+        SetState(CreateState(&quot;Hello!&quot;));   // 构造函数中发布初始状态
+    }
+
+    public override async ValueTask&lt;ComponentActionResult&gt; InvokeAsync(
+        ComponentActionInvocation invocation,
+        CancellationToken cancellationToken)
+    {
+        if (invocation.ActionId != &quot;do-thing&quot;)
+            return ComponentActionResult.Failed($&quot;未知动作：{invocation.ActionId}&quot;);
+
+        // 动作参数：文本输入框提交（回车）携带 [&quot;elementId&quot;, &quot;value&quot;]；
+        // 按钮与表面点击会自动附带当前所有输入框的值（键为元素 Id），
+        // 因此按钮动作同样能读取输入框内容（显式参数优先）
+        invocation.Arguments?.TryGetValue(&quot;some-input&quot;, out var inputValue);
+
+        SetState(CreateState(&quot;Done!&quot;));
+        return ComponentActionResult.Completed(&quot;搞定了。&quot;);
+    }
+
+    public override ValueTask DisposeAsync()
+    {
+        // 退订外部事件等清理，最后调用 base（基类负责释放标记与事件清空）
+        return base.DisposeAsync();
+    }
+
+    private static ComponentStateSnapshot CreateState(string text) =&gt; new()
+    {
+        // Revision 留空即可，SetState 自动分配
+        Elements = new Dictionary&lt;string, ComponentElementState&gt;(
+            StringComparer.OrdinalIgnoreCase)
+        {
+            [&quot;hello-text&quot;] = new() { Text = text }
+        }
+    };
+}
+</code></pre></div>
+<p>也可以直接实现 <code>IPolygonComponentInstance</code>（基类本身也实现它），但不推荐——
+样板代码多且容易漏释放检查。</p>
+<h3 id="g-06-h12">6.2 状态覆盖语义</h3>
+<p><code>ComponentElementState</code> 的每个字段都是<strong>可空覆盖项</strong>，
+<strong><code>null</code> = 回退到声明默认值</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>作用</th>
+<th>适用元素</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Text</code></td>
+<td><code>string?</code></td>
+<td>覆盖文字</td>
+<td>文本 / 按钮 / 标签</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>string?</code></td>
+<td>覆盖输入值 / 滑块值（滑块用不变文化数字字符串）</td>
+<td>输入框 / 滑块</td>
+</tr>
+<tr>
+<td><code>IsChecked</code></td>
+<td><code>bool?</code></td>
+<td>开关状态</td>
+<td>开关</td>
+</tr>
+<tr>
+<td><code>ImageSource</code></td>
+<td><code>string?</code></td>
+<td>覆盖图片来源（<code>null</code> → 显示 fallbackText）</td>
+<td>图片</td>
+</tr>
+<tr>
+<td><code>ProgressValue</code></td>
+<td><code>double?</code></td>
+<td>覆盖进度</td>
+<td>进度条</td>
+</tr>
+<tr>
+<td><code>IsEnabled</code></td>
+<td><code>bool?</code></td>
+<td>禁用/启用</td>
+<td>交互元素</td>
+</tr>
+<tr>
+<td><code>IsVisible</code></td>
+<td><code>bool?</code></td>
+<td>显示/隐藏</td>
+<td>全部</td>
+</tr>
+<tr>
+<td><code>IsIndeterminate</code></td>
+<td><code>bool?</code></td>
+<td>不确定态</td>
+<td>进度条</td>
+</tr>
+<tr>
+<td><code>MenuItems</code></td>
+<td><code>IReadOnlyList&lt;ComponentMenuItem&gt;?</code></td>
+<td>动态菜单项</td>
+<td>下拉菜单</td>
+</tr>
+</tbody>
+</table>
+<p>只包含需要变化元素的精简快照即可——未提及的元素保持声明值。</p>
+<h3 id="g-06-h13">6.3 快照是完整快照，不是增量补丁</h3>
+<div class="code-wrap"><pre><code class="language-csharp">public sealed record ComponentStateSnapshot
+{
+    public long Revision { get; init; }
+    public IReadOnlyDictionary&lt;string, ComponentElementState&gt; Elements { get; init; }
+    public static ComponentStateSnapshot Empty { get; }   // 只读单例
+}
+</code></pre></div>
+<ul>
+<li>未出现在 <code>Elements</code> 中的元素、以及 <code>ComponentElementState</code> 中为 <code>null</code> 的字段，
+  <strong>都会回到组件定义的默认值</strong></li>
+<li>插件发布快照后<strong>不应再修改其字典</strong>；宿主会在跨线程应用前复制内容</li>
+<li><code>Revision</code> 必须<strong>严格递增</strong>；相等或更旧的快照会被忽略（基类 <code>SetState</code> 自动分配）</li>
+<li><code>ComponentStateSnapshot.Empty</code> 是只读单例，要发状态就 <code>new</code> 一个</li>
+</ul>
+<h3 id="g-06-h14">6.4 返回值</h3>
+<div class="code-wrap"><pre><code class="language-csharp">ComponentActionResult.Completed(&quot;已打开。&quot;)   // 成功，可带提示
+ComponentActionResult.Failed(&quot;原因&quot;)          // 失败，宿主以 ToolTip 展示
+</code></pre></div>
+<h3 id="g-06-h15">6.5 线程安全</h3>
+<ul>
+<li>快照是<strong>不可变 record</strong>，可在任意线程调用 <code>SetState</code> 发布（基类内部处理释放检查与修订号）</li>
+<li>状态事件可以从后台线程发出，宿主会切换到 UI 线程</li>
+<li>释放后 <code>SetState</code> 会<strong>静默忽略</strong>，不会误发状态</li>
+<li>动作和释放代码会在<strong>后台线程</strong>运行，不应直接访问 Avalonia 控件</li>
+</ul>
+<p>照抄 <code>BuiltInMemoryUsageComponent</code> 的 Timer 轮询模式，
+或 <code>BuiltInWorldLaunchComponent</code> 的 <code>Task.Run</code> 模式即可。</p>
+<hr />
+<h2 id="g-06-h16">7. 图片元素</h2>
+<p><code>ImageElementDefinition</code> 使用字符串来源保持公共契约与 Avalonia 解耦。</p>
+<p>宿主接受：</p>
+<ul>
+<li>本地<strong>绝对路径</strong></li>
+<li>绝对 <strong>HTTPS</strong> 地址</li>
+<li>小型 <code>data:image/png;base64,...</code> 内嵌 PNG</li>
+</ul>
+<p>限制与行为：</p>
+<ul>
+<li>单张图片最大 <strong>8 MiB</strong>；远程结果使用有界缓存</li>
+<li><code>SourceRect</code> 是 <code>[0,1]</code> 归一化图片坐标（适合不知道源像素尺寸的素材）</li>
+<li><code>SourcePixelRect</code> 使用从图片左上角开始的<strong>整数像素</strong>坐标（适合 Minecraft 皮肤图集等固定布局）</li>
+<li><strong>二者不能同时设置</strong>；像素裁剪要求非负起点和正宽高</li>
+<li>图片解码后，超出实际尺寸的部分会被钳制到有效像素范围</li>
+<li><code>Pixelated</code> 适合像素素材</li>
+<li><code>FallbackText</code> 在来源为空或加载失败时提供可访问的占位内容</li>
+<li><code>IsSkinHead</code> 只显示皮肤图集的头部区域（左上角 1/8）</li>
+</ul>
+<div class="code-wrap"><pre><code class="language-csharp">builder.AddImage(
+    &quot;player-face&quot;,
+    new ComponentRect(0.08, 0.08, 0.84, 0.84),
+    sourcePixelRect: new ComponentPixelRect(8, 8, 8, 8),
+    fallbackText: &quot;?&quot;,
+    cornerRadius: 11,
+    pixelated: true);
+
+var state = new ComponentElementState
+{
+    ImageSource = &quot;https://textures.example.invalid/player-skin.png&quot;,
+    Text = &quot;P&quot;
+};
+</code></pre></div>
+<p>运行时 <code>ImageSource</code> 会覆盖定义来源；设为 <code>null</code> 时恢复定义值，
+空字符串则显示占位内容。</p>
+<p>图片加载异步执行，较新的完整状态快照会取消旧请求；视图离开视觉树时会取消本地等待
+并释放原生位图，重新挂载时即使 revision 未变化也会从保留快照恢复。
+失败不会阻塞组件动作或工作区布局。</p>
+<blockquote>
+<p>插件应只引用自己有权使用的资源，并为网络图片准备占位内容。</p>
+</blockquote>
+<hr />
+<h2 id="g-06-h17">8. 下拉菜单元素</h2>
+<p><code>DropdownElementDefinition.PinnedItems</code> 定义始终位于菜单顶部的固定命令；
+运行时通过对应元素状态的 <code>MenuItems</code> 追加动态项目。</p>
+<p>每个菜单项都可以携带参数，宿主会把它们原样放入
+<code>ComponentActionInvocation.Arguments</code>：</p>
+<div class="code-wrap"><pre><code class="language-csharp">builder
+    .AddAction(&quot;add-account&quot;)
+    .AddAction(&quot;select-account&quot;)
+    .AddDropdown(
+        &quot;account-menu&quot;,
+        new ComponentRect(0.84, 0.2, 0.12, 0.6),
+        pinnedItems:
+        [
+            new ComponentMenuItem
+            {
+                Id = &quot;add&quot;,
+                Text = &quot;添加账号&quot;,
+                ActionId = &quot;add-account&quot;,
+                SeparatorAfter = true
+            }
+        ]);
+
+var state = new ComponentElementState
+{
+    MenuItems =
+    [
+        new ComponentMenuItem
+        {
+            Id = &quot;account-0&quot;,
+            Text = &quot;Player_01&quot;,
+            SecondaryText = &quot;离线登录&quot;,
+            IconSource = @&quot;C:\plugin-data\account.png&quot;,
+            ActionId = &quot;select-account&quot;,
+            Arguments = new Dictionary&lt;string, string&gt;
+            {
+                [&quot;accountKey&quot;] = &quot;offline:Player_01&quot;
+            },
+            IsSelected = true
+        }
+    ]
+};
+</code></pre></div>
+<h3 id="g-06-h18"><code>ComponentMenuItem</code></h3>
+<table>
+<thead>
+<tr>
+<th>成员</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Id</code> / <code>Text</code></td>
+<td>必填</td>
+</tr>
+<tr>
+<td><code>SecondaryText</code></td>
+<td>副标题</td>
+</tr>
+<tr>
+<td><code>Glyph</code></td>
+<td>图标字符</td>
+</tr>
+<tr>
+<td><code>IconSource</code></td>
+<td>可选本地绝对路径或 HTTPS 图片；加载失败时回退到 <code>Glyph</code></td>
+</tr>
+<tr>
+<td><code>IsSkinHead</code></td>
+<td><code>IconSource</code> 是皮肤图集时只取头部区域</td>
+</tr>
+<tr>
+<td><code>ActionId</code></td>
+<td>必填，必须引用已声明的动作</td>
+</tr>
+<tr>
+<td><code>Arguments</code></td>
+<td>原样传入动作调用</td>
+</tr>
+<tr>
+<td><code>IsEnabled</code> / <code>IsSelected</code> / <code>SeparatorAfter</code></td>
+<td>显示控制</td>
+</tr>
+</tbody>
+</table>
+<p>规则：</p>
+<ul>
+<li>菜单按完整图片比例缩放，当前选中项会在图标上叠加勾选标记</li>
+<li>固定项和运行时项<strong>各自最多 128 个</strong></li>
+<li>定义中的未知动作会被校验器拒绝</li>
+<li>运行时的非法、重复或引用未知动作的菜单项会被宿主<strong>忽略</strong></li>
+<li><code>MenuItems</code> 与其他状态字段一样属于完整快照，<strong>未提供时只显示固定项</strong></li>
+</ul>
+<hr />
+<h2 id="g-06-h19">9. 注册</h2>
+<h3 id="g-06-h20">9.1 插件组件（推荐）</h3>
+<p>在插件初始化入口把 provider 注册到一个稳定功能区：</p>
+<div class="code-wrap"><pre><code class="language-csharp">window.FeatureAreas.RegisterPolygonComponents(
+    &quot;example-download-area&quot;,     // areaId
+    &quot;下载扩展&quot;,                   // title
+    &quot;第三方多边形组件&quot;,           // subtitle
+    &quot;⬡&quot;,                          // glyph
+    new DownloadComponentProvider());
+</code></pre></div>
+<p>行为：</p>
+<ul>
+<li><code>areaId</code> <strong>已存在</strong> → 保留该功能区的标题、图标与旧组件，把 provider 的组件<strong>追加</strong>到全局组件目录</li>
+<li><code>areaId</code> <strong>不存在</strong> → 使用传入的元数据创建新功能区</li>
+<li>已有个性化配置的 <code>ActionIds</code> 不会被强制改写，因此新组件会先出现在组件库，
+  用户可以把它拖到任意功能区</li>
+</ul>
+<h3 id="g-06-h21">9.2 内置组件</h3>
+<p>在 <code>NyaLauncher.Avalonia/Framework/BuiltInFeatureAreaProvider.cs</code> 中按功能域挂载：</p>
+<div class="code-wrap"><pre><code class="language-csharp">PolygonComponents =
+[
+    BuiltInMemoryUsageComponent.Create()
+];
+</code></pre></div>
+<p>也可以把 <code>provider.GetPolygonComponents()</code> 赋给
+<code>FeatureAreaDefinition.PolygonComponents</code>，再通过普通的 <code>FeatureAreas.Register(...)</code> 注册。</p>
+<hr />
+<h2 id="g-06-h22">10. 实例生命周期</h2>
+<ul>
+<li><code>IPolygonComponentFactory.Create</code> 接收包含组件 ID 与功能区 ID 的 <code>ComponentInstanceContext</code></li>
+<li><strong>组件库和拖动预览只展示定义，不创建可交互实例</strong>；工作区中的可交互组件才使用 factory 创建实例</li>
+<li>插件应把每次创建视为<strong>独立生命周期</strong>，不要在不同功能区位置之间共享可变 UI 状态</li>
+<li>宿主在组件进入可视树时订阅 <code>StateChanged</code>，离开时取消订阅</li>
+<li>缩放或布局重建只会替换视图，<strong>不会中断该摆放位置正在执行的动作</strong></li>
+<li>组件移除、跨区移动或工作区释放实例时，宿主会取消传给动作的令牌并调用 <code>DisposeAsync</code></li>
+<li>宿主会等待已接受的动作退出后再释放实例</li>
+<li><strong>主窗口关闭时会先给异步清理最多 5 秒的收尾时间</strong>，再允许应用退出；
+  失控的第三方实现不能永久阻止启动器关闭</li>
+</ul>
+<p>插件必须在 <code>DisposeAsync</code> 里停止计时器、网络请求和其他自有资源，
+并尽快遵守传入的 <code>CancellationToken</code>。</p>
+<hr />
+<h2 id="g-06-h23">11. 校验规则</h2>
+<p>定义在进入渲染前会经过 <code>PolygonComponentValidator.ValidateAndSnapshot</code>，违反即抛异常：</p>
+<ul>
+<li>元素尺寸 <strong>16~8192 px</strong>；字号 <strong>1~512</strong>；元素数 <strong>≤ 256</strong>；动作数 <strong>≤ 128</strong></li>
+<li><strong>按钮文字不能为空</strong></li>
+<li>动作 ID 不得重复；元素引用的动作必须已声明</li>
+<li><code>UseSurfaceAction</code> 引用的动作必须存在</li>
+<li>拖拽把手必须在 <code>0~1</code> 范围内</li>
+<li>所有 <code>ComponentRect</code> 值 <code>0~1</code>（超出即抛）</li>
+<li>形状顶点数 3–64，不支持孔洞 / 自相交 / 相邻重复点 / 近零面积</li>
+</ul>
+<p>需要一次展示全部问题时，可直接检查 <code>Validate()</code> 返回的
+<code>ComponentValidationResult.Errors</code>：</p>
+<div class="code-wrap"><pre><code class="language-csharp">var result = PolygonComponentValidator.Validate(definition);
+foreach (var error in result.Errors)
+    Console.WriteLine($&quot;{error.Code} @ {error.Path}: {error.Message}&quot;);
+</code></pre></div>
+<blockquote>
+<p>自动化检查应断言稳定的 <code>Code</code> 和 <code>Path</code>，<strong>不要依赖翻译后的 <code>Message</code></strong>。</p>
+</blockquote>
+<hr />
+<h2 id="g-06-h24">12. 完整示例：六边形下载组件</h2>
+<div class="code-wrap"><pre><code class="language-csharp">public sealed class DownloadComponentProvider : IPolygonComponentProvider
+{
+    public IReadOnlyList&lt;PolygonComponentRegistration&gt; GetPolygonComponents()
+    {
+        var definition = new PolygonComponentBuilder(
+                &quot;example.download/status&quot;, &quot;下载状态&quot;)
+            .WithDescription(&quot;显示当前任务进度&quot;)
+            .WithGlyph(&quot;↓&quot;)
+            .WithSize(320, 180)
+            .WithShape(PolygonShapeDefinition.RegularPolygon(6))
+            .WithDragHandle(new ComponentRect(0.43, 0.04, 0.14, 0.12))
+            .AddAction(&quot;toggle&quot;)
+            .AddText(&quot;title&quot;, new ComponentRect(0.20, 0.20, 0.60, 0.16),
+                &quot;资源下载&quot;, ComponentTextRole.Title, 16)
+            .AddProgress(&quot;progress&quot;, new ComponentRect(0.20, 0.43, 0.60, 0.20), &quot;下载进度&quot;)
+            .AddButton(&quot;toggle-button&quot;, new ComponentRect(0.35, 0.70, 0.30, 0.16),
+                &quot;暂停&quot;, &quot;toggle&quot;, isPrimary: true)
+            .Build();
+
+        return
+        [
+            new PolygonComponentRegistration
+            {
+                Definition = definition,
+                Factory = new DelegatePolygonComponentFactory(_ =&gt; new DownloadComponentInstance())
+            }
+        ];
+    }
+}
+
+public sealed class DownloadComponentInstance : PolygonComponentInstanceBase
+{
+    private double _progress;
+    private bool _paused;
+
+    public DownloadComponentInstance()
+    {
+        SetState(BuildSnapshot());
+    }
+
+    public override ValueTask&lt;ComponentActionResult&gt; InvokeAsync(
+        ComponentActionInvocation invocation, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!string.Equals(invocation.ActionId, &quot;toggle&quot;, StringComparison.OrdinalIgnoreCase))
+            return ValueTask.FromResult(ComponentActionResult.Failed(&quot;未知动作。&quot;));
+
+        _paused = !_paused;
+        SetState(BuildSnapshot());
+        return ValueTask.FromResult(
+            ComponentActionResult.Completed(_paused ? &quot;已暂停&quot; : &quot;已继续&quot;));
+    }
+
+    public void ReportProgress(double value)
+    {
+        if (!double.IsFinite(value)) return;
+        _progress = Math.Clamp(value, 0, 100);
+        SetState(BuildSnapshot());
+    }
+
+    private ComponentStateSnapshot BuildSnapshot() =&gt; new()
+    {
+        Elements = new Dictionary&lt;string, ComponentElementState&gt;(StringComparer.OrdinalIgnoreCase)
+        {
+            [&quot;progress&quot;] = new ComponentElementState
+            {
+                Text = _paused ? &quot;已暂停&quot; : &quot;下载进度&quot;,
+                ProgressValue = _progress
+            },
+            [&quot;toggle-button&quot;] = new ComponentElementState
+            {
+                Text = _paused ? &quot;继续&quot; : &quot;暂停&quot;,
+                IsEnabled = true
+            }
+        }
+    };
+}
+</code></pre></div>
+<hr />
+<h2 id="g-06-h25">13. 实战样例索引</h2>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>学到的模式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BuiltInWorldLaunchComponent</code></td>
+<td>外部数据扫描 + 图片运行时覆盖 + 按钮禁用态 + 订阅外部事件刷新</td>
+</tr>
+<tr>
+<td><code>BuiltInMemoryUsageComponent</code></td>
+<td>Timer 轮询 + 进度条/多文本状态发布 + 自动/手动配置取值</td>
+</tr>
+<tr>
+<td><code>BuiltInPersonalizationComponent</code></td>
+<td><code>UseSurfaceAction</code> 整卡可点 + 图标按钮</td>
+</tr>
+<tr>
+<td><code>BuiltInMusicPlayerComponent</code></td>
+<td>复杂状态机 + 下拉/滑块/切换综合运用</td>
+</tr>
+<tr>
+<td><code>BuiltInGameLaunchComponent</code></td>
+<td>后台任务 + 重入保护 + 状态文本反馈</td>
+</tr>
+<tr>
+<td><code>BuiltInAccountSelectorComponent</code></td>
+<td>动态下拉菜单 + 参数化动作</td>
+</tr>
+<tr>
+<td><code>BuiltInGameInstanceSelectorComponent</code></td>
+<td>共享状态 + 跨页面同步持久化</td>
+</tr>
+<tr>
+<td><code>BuiltInSkinCapeComponent</code></td>
+<td>两层图片裁剪 + 按账号类型生成不同菜单</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="g-06-h26">14. 常见坑</h2>
+<ol>
+<li><strong>动作没 <code>AddAction</code> 声明</strong> → 元素点击静默无效（宿主查不到动作直接返回）。</li>
+<li><strong>忘记 <code>allowReentry</code></strong> → 流式动作连点第二次没反应（默认防重入是特性不是 Bug）。</li>
+<li><strong>快照 Revision 不递增</strong> → 宿主可能忽略同版本快照（用基类 <code>SetState</code> 可避免）。</li>
+<li><strong><code>ComponentStateSnapshot.Empty</code> 是单例</strong> → 只读；要发状态就 <code>new</code> 一个。</li>
+<li><strong>把拖拽把手盖在按钮上</strong> → 长按拖动与点击手势打架。</li>
+<li><strong>硬编码颜色</strong> → 深浅模式切换后组件与宿主脱节，务必走 <code>PolygonComponentTheme</code> 的 <code>Variant</code>。</li>
+<li><strong><code>DisposeAsync</code> 里没退订外部事件</strong> → 实例池会复用实例，泄漏会跨页面存续。</li>
+<li><strong>在不同功能区位置共享可变状态</strong> → 每次 <code>Create</code> 都是独立生命周期，不要共享。</li>
+<li><strong>改了组件 ID</strong> → 用户的个性化布局引用失效。ID 必须保持稳定。</li>
+<li><strong>在动作里直接访问 Avalonia 控件</strong> → 动作在后台线程运行，会崩。</li>
+</ol></article>
+      <aside class="doc-toc"><div class="toc-inner"><p class="toc-title">本页目录</p><ul class="toc-list"><li><a href="#g-06-h1">1. 核心概念</a></li><li class="toc-sub"><a href="#g-06-h2">1.1 契约工程</a></li><li><a href="#g-06-h3">2. 归一化坐标系</a></li><li><a href="#g-06-h4">3. 最小可用组件</a></li><li><a href="#g-06-h5">4. Builder API 速查</a></li><li class="toc-sub"><a href="#g-06-h6">4.1 元信息</a></li><li class="toc-sub"><a href="#g-06-h7">4.2 动作</a></li><li class="toc-sub"><a href="#g-06-h8">4.3 元素</a></li><li><a href="#g-06-h9">5. 形状与几何</a></li><li><a href="#g-06-h10">6. 实例与状态</a></li><li class="toc-sub"><a href="#g-06-h11">6.1 推荐做法：继承基类</a></li><li class="toc-sub"><a href="#g-06-h12">6.2 状态覆盖语义</a></li><li class="toc-sub"><a href="#g-06-h13">6.3 快照是完整快照，不是增量补丁</a></li><li class="toc-sub"><a href="#g-06-h14">6.4 返回值</a></li><li class="toc-sub"><a href="#g-06-h15">6.5 线程安全</a></li><li><a href="#g-06-h16">7. 图片元素</a></li><li><a href="#g-06-h17">8. 下拉菜单元素</a></li><li class="toc-sub"><a href="#g-06-h18">ComponentMenuItem</a></li><li><a href="#g-06-h19">9. 注册</a></li><li class="toc-sub"><a href="#g-06-h20">9.1 插件组件（推荐）</a></li><li class="toc-sub"><a href="#g-06-h21">9.2 内置组件</a></li><li><a href="#g-06-h22">10. 实例生命周期</a></li><li><a href="#g-06-h23">11. 校验规则</a></li><li><a href="#g-06-h24">12. 完整示例：六边形下载组件</a></li><li><a href="#g-06-h25">13. 实战样例索引</a></li><li><a href="#g-06-h26">14. 常见坑</a></li></ul></div></aside>
+    </div>
+    <nav class="page-nav" aria-label="章节翻页"><a class="page-nav__link page-nav__prev" href="05-plugin-development.html"><span class="page-nav__dir">← 上一章</span><span class="page-nav__title">🧩 插件与功能区</span></a><a class="page-nav__link page-nav__next" href="07-notifications.html"><span class="page-nav__dir">下一章 →</span><span class="page-nav__title">🔔 通知框架</span></a></nav>
+    <footer class="doc-foot">
+      <a class="tonal-btn" href="../index.html">← 返回首页</a>
+      <p>文档由 <code>NyaLauncher/Guides</code> 生成 · 采用 Material Design 3 样式 · Licensed under Apache 2.0</p>
+    </footer>
+  </main>
+</div>
+<div class="scrim" id="scrim"></div>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var rail = document.getElementById('rail');
+  var scrim = document.getElementById('scrim');
+  var hamburger = document.getElementById('hamburger');
+
+  // 主题切换
+  var tgl = document.getElementById('themeToggle');
+  var saved = null;
+  try { saved = localStorage.getItem('nya-docs-theme'); } catch(e){}
+  if (saved === 'light') { root.setAttribute('data-theme','light'); tgl.checked = true; }
+  tgl.addEventListener('change', function(){
+    if (tgl.checked) { root.setAttribute('data-theme','light'); }
+    else { root.setAttribute('data-theme','dark'); }
+    try { localStorage.setItem('nya-docs-theme', tgl.checked ? 'light' : 'dark'); } catch(e){}
+  });
+
+  // 移动端抽屉
+  function closeDrawer(){ rail.classList.remove('open'); scrim.classList.remove('show'); }
+  hamburger.addEventListener('click', function(){
+    rail.classList.toggle('open'); scrim.classList.toggle('show');
+  });
+  scrim.addEventListener('click', closeDrawer);
+
+  // 移动端：点导航后收起抽屉（多页架构下导航是普通链接跳转）
+  document.querySelectorAll('.nav-item').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (window.innerWidth <= 880) closeDrawer();
+    });
+  });
+
+  // 本页目录：高亮当前标题
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc-list a'));
+  var LINE = 132;                       // sticky 顶栏 64px + 判断余量
+  function absTop(el){ return el.getBoundingClientRect().top + window.pageYOffset; }
+  var ticking = false;
+  function updateToc(){
+    ticking = false;
+    if (!tocLinks.length) return;
+    var best = tocLinks[0];
+    for (var i = 0; i < tocLinks.length; i++){
+      var t = document.getElementById(tocLinks[i].getAttribute('href').slice(1));
+      if (t && absTop(t) <= window.pageYOffset + LINE) best = tocLinks[i];
+    }
+    for (var j = 0; j < tocLinks.length; j++){
+      tocLinks[j].classList.toggle('active', tocLinks[j] === best);
+    }
+  }
+  function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(updateToc); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  updateToc();
+
+  // URL hash 定位
+  if (location.hash) {
+    var t = document.getElementById(location.hash.slice(1));
+    if (t) setTimeout(function(){ t.scrollIntoView(); }, 60);
+  }
+
+  // 代码块复制按钮
+  function copyText(text, btn){
+    var done = function(){
+      btn.classList.add('copied');
+      btn.textContent = '已复制 ✓';
+      setTimeout(function(){
+        btn.classList.remove('copied');
+        btn.textContent = '复制';
+      }, 1600);
+    };
+    var fallback = function(){
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else { fallback(); }
+  }
+  document.querySelectorAll('.md-content .code-wrap').forEach(function(wrap){
+    var btn = document.createElement('button');
+    btn.className = 'code-copy';
+    btn.type = 'button';
+    btn.textContent = '复制';
+    btn.setAttribute('aria-label', '复制代码');
+    btn.addEventListener('click', function(){
+      var code = wrap.querySelector('code') || wrap;
+      copyText(code.textContent, btn);
+    });
+    wrap.appendChild(btn);
+  });
+})();
+</script>
+</body>
+</html>

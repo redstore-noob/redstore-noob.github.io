@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>动画系统 · NyaLauncher 文档中心</title>
+<meta name="description" content="NyaLauncher 开发者文档中心 · 动画系统：架构、主题、布局、动画、插件、多边形组件与通知框架。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  /* ===== Material 3 暗色令牌（默认）· 与首页 styles.css 主色保持一致 ===== */
+  --md-sys-color-primary:#AEC6FF;
+  --md-sys-color-on-primary:#0A2F66;
+  --md-sys-color-primary-container:#284785;
+  --md-sys-color-on-primary-container:#DCE6FF;
+  --md-sys-color-secondary:#C2C8DA;
+  --md-sys-color-on-secondary:#2B3042;
+  --md-sys-color-secondary-container:#424759;
+  --md-sys-color-on-secondary-container:#E1E2F4;
+  --md-sys-color-tertiary:#9CE7FF;
+  --md-sys-color-tertiary-container:#004E63;
+  --md-sys-color-surface:#0E131C;
+  --md-sys-color-on-surface:#E4EAF6;
+  --md-sys-color-surface-variant:#424759;
+  --md-sys-color-on-surface-variant:#C2C8D6;
+  --md-sys-color-surface-container:#1A2030;
+  --md-sys-color-surface-container-high:#232A3B;
+  --md-sys-color-surface-container-highest:#2E3650;
+  --md-sys-color-surface-dim:#0E131C;
+  --md-sys-color-outline:#8A92A6;
+  --md-sys-color-outline-variant:#3D4459;
+  --md-sys-color-background:#0E131C;
+  --md-sys-color-on-background:#E4EAF6;
+  --md-sys-color-error:#FFB4AB;
+  --md-sys-color-on-error:#690005;
+  --md-sys-color-error-container:#93000A;
+  --md-sys-color-on-error-container:#FFDAD6;
+  --md-sys-color-scrim:rgba(0,0,0,.55);
+  --md-sys-color-code-bg:#0A0E15;
+  --md-sys-color-code-text:#DCE6FF;
+  --md-sys-elevation-1:0 1px 2px rgba(0,0,0,.30),0 1px 3px 1px rgba(0,0,0,.15);
+  --md-sys-elevation-2:0 1px 2px rgba(0,0,0,.30),0 2px 6px 2px rgba(0,0,0,.15);
+  --md-sys-elevation-3:0 4px 8px 3px rgba(0,0,0,.30),0 1px 3px rgba(0,0,0,.15);
+  --md-sys-radius-small:8px;
+  --md-sys-radius-medium:12px;
+  --md-sys-radius-large:16px;
+  --md-sys-radius-xlarge:28px;
+}
+[data-theme="light"]{
+  --md-sys-color-primary:#3B63C4;
+  --md-sys-color-on-primary:#FFFFFF;
+  --md-sys-color-primary-container:#DCE6FF;
+  --md-sys-color-on-primary-container:#0A2F66;
+  --md-sys-color-secondary:#5A6076;
+  --md-sys-color-on-secondary:#FFFFFF;
+  --md-sys-color-secondary-container:#E1E2F4;
+  --md-sys-color-on-secondary-container:#171C2B;
+  --md-sys-color-tertiary:#00658A;
+  --md-sys-color-tertiary-container:#C7EFFF;
+  --md-sys-color-surface:#F8FAFF;
+  --md-sys-color-on-surface:#1A2030;
+  --md-sys-color-surface-variant:#E0E2EC;
+  --md-sys-color-on-surface-variant:#444A5A;
+  --md-sys-color-surface-container:#ECEEF6;
+  --md-sys-color-surface-container-high:#E6E8F2;
+  --md-sys-color-surface-container-highest:#E0E2EC;
+  --md-sys-color-surface-dim:#F8FAFF;
+  --md-sys-color-outline:#747A8C;
+  --md-sys-color-outline-variant:#C4C6D0;
+  --md-sys-color-background:#F8FAFF;
+  --md-sys-color-on-background:#1A2030;
+  --md-sys-color-error:#BA1A1A;
+  --md-sys-color-on-error:#FFFFFF;
+  --md-sys-color-error-container:#FFDAD6;
+  --md-sys-color-on-error-container:#410002;
+  --md-sys-color-scrim:rgba(0,0,0,.32);
+  --md-sys-color-code-bg:#0E131C;
+  --md-sys-color-code-text:#DCE6FF;
+  --md-sys-elevation-1:0 1px 2px rgba(0,0,0,.12),0 1px 3px 1px rgba(0,0,0,.08);
+  --md-sys-elevation-2:0 1px 2px rgba(0,0,0,.12),0 2px 6px 2px rgba(0,0,0,.10);
+  --md-sys-elevation-3:0 4px 8px 3px rgba(0,0,0,.12),0 1px 3px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--md-sys-color-background);color:var(--md-sys-color-on-surface);
+  font-family:"Roboto","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--md-sys-color-primary);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ===== 顶栏 (Material top app bar) ===== */
+.app-bar{
+  position:sticky;top:0;z-index:50;height:64px;
+  display:flex;align-items:center;gap:12px;padding:0 16px;
+  background:var(--md-sys-color-surface-container);
+  color:var(--md-sys-color-on-surface);
+  box-shadow:var(--md-sys-elevation-2);
+  border-bottom:1px solid var(--md-sys-color-outline-variant);
+}
+.app-bar__brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;letter-spacing:.2px;}
+.app-bar__brand .cat{font-size:1.4rem;}
+.app-bar__brand .grad{color:var(--md-sys-color-primary);}
+.app-bar__spacer{flex:1;}
+.icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;
+  background:transparent;color:var(--md-sys-color-on-surface);font-size:1.25rem;
+  transition:background .2s;
+}
+.icon-btn:hover{background:var(--md-sys-color-surface-container-high);}
+.filled-btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;
+  border:none;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem;
+  background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);
+  box-shadow:var(--md-sys-elevation-1);transition:box-shadow .2s,filter .2s;
+}
+.filled-btn:hover{box-shadow:var(--md-sys-elevation-2);filter:brightness(1.05);}
+.tonal-btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;
+  border:none;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem;
+  background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);
+  transition:filter .2s;
+}
+.tonal-btn:hover{filter:brightness(1.05);}
+
+/* ===== 主题开关 (Material switch) ===== */
+.theme-switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.theme-switch input{position:absolute;opacity:0;width:0;height:0;}
+.switch-track{
+  position:relative;width:52px;height:32px;border-radius:999px;
+  background:var(--md-sys-color-surface-variant);
+  border:2px solid var(--md-sys-color-outline);transition:.25s;
+}
+.switch-thumb{
+  position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+  background:var(--md-sys-color-outline);transition:.25s;
+}
+.theme-switch input:checked + .switch-track{background:var(--md-sys-color-primary);border-color:var(--md-sys-color-primary);}
+.theme-switch input:checked + .switch-track .switch-thumb{left:25px;background:var(--md-sys-color-on-primary);}
+
+/* ===== 布局 ===== */
+.layout{display:flex;align-items:flex-start;min-height:calc(100vh - 64px);}
+
+/* 左侧永久导航栏 (Material navigation rail / drawer) */
+.rail{
+  position:sticky;top:64px;align-self:flex-start;
+  width:260px;flex-shrink:0;height:calc(100vh - 64px);
+  overflow-y:auto;padding:16px 12px;
+  background:var(--md-sys-color-surface-container);
+  border-right:1px solid var(--md-sys-color-outline-variant);
+}
+.rail__head{
+  font-size:.72rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--md-sys-color-on-surface-variant);padding:8px 12px 12px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:14px;width:100%;
+  padding:12px 14px;margin-bottom:4px;border:none;cursor:pointer;
+  background:transparent;color:var(--md-sys-color-on-surface);
+  border-radius:var(--md-sys-radius-large);font-size:.95rem;font-weight:500;
+  text-align:left;text-decoration:none;transition:background .18s,color .18s;
+}
+.nav-item .nav-ico{font-size:1.25rem;line-height:1;width:24px;text-align:center;}
+.nav-item:hover{background:var(--md-sys-color-surface-container-high);text-decoration:none;}
+.nav-item.active{
+  background:var(--md-sys-color-secondary-container);
+  color:var(--md-sys-color-on-secondary-container);font-weight:700;
+}
+
+/* 主内容 */
+.main{flex:1;min-width:0;padding:28px clamp(16px,4vw,40px) 64px;}
+.doc-section{scroll-margin-top:88px;margin-bottom:8px;}
+/* 锚点跳转避开 sticky 顶栏，标题留更多余量 */
+.md-content h1,.md-content h2,.md-content h3,.md-content h4{scroll-margin-top:104px;}
+.doc-grid{display:grid;grid-template-columns:minmax(0,1fr) 232px;gap:40px;align-items:start;}
+
+/* 文档卡片 (Material large card) */
+.doc-card{
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  border-radius:var(--md-sys-radius-xlarge);
+  padding:clamp(20px,3vw,40px);
+  box-shadow:var(--md-sys-elevation-1);
+}
+
+/* ===== Markdown 内容排版 ===== */
+.md-content > :first-child{margin-top:0;}
+.md-content h1{
+  font-size:clamp(1.7rem,4vw,2.3rem);font-weight:700;line-height:1.2;
+  margin:0 0 8px;color:var(--md-sys-color-on-surface);letter-spacing:.3px;
+}
+.md-content h2{
+  font-size:1.4rem;font-weight:700;margin:36px 0 14px;
+  padding-bottom:10px;color:var(--md-sys-color-on-surface);
+  border-bottom:2px solid var(--md-sys-color-primary-container);
+}
+.md-content h3{
+  font-size:1.12rem;font-weight:600;margin:26px 0 10px;
+  color:var(--md-sys-color-primary);
+}
+.md-content h4{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--md-sys-color-on-surface);}
+.md-content p{margin:12px 0;color:var(--md-sys-color-on-surface);}
+.md-content ul,.md-content ol{margin:12px 0;padding-left:24px;}
+.md-content li{margin:6px 0;}
+.md-content hr{border:0;border-top:1px solid var(--md-sys-color-outline-variant);margin:28px 0;}
+
+/* 行内代码 */
+.md-content code{
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.86em;background:var(--md-sys-color-surface-variant);
+  color:var(--md-sys-color-primary);border-radius:6px;padding:2px 6px;
+}
+/* 代码块 + 复制按钮 */
+.md-content .code-wrap{position:relative;margin:16px 0;}
+.md-content pre{
+  background:var(--md-sys-color-code-bg);color:var(--md-sys-color-code-text);
+  border-radius:var(--md-sys-radius-medium);padding:16px 18px;
+  overflow-x:auto;margin:0;font-size:.84rem;line-height:1.6;
+  border:1px solid var(--md-sys-color-outline-variant);
+}
+.code-copy{
+  position:absolute;top:8px;right:8px;height:28px;padding:0 12px;
+  display:inline-flex;align-items:center;
+  border:1px solid var(--md-sys-color-outline-variant);border-radius:8px;cursor:pointer;
+  background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);
+  font-family:inherit;font-size:.72rem;font-weight:600;letter-spacing:.3px;
+  opacity:0;transition:opacity .18s,background .18s;
+}
+.md-content .code-wrap:hover .code-copy{opacity:1;}
+.code-copy:focus-visible{opacity:1;}
+.code-copy:hover{background:var(--md-sys-color-surface-container-highest);}
+.code-copy.copied{
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);opacity:1;
+}
+.md-content pre code{
+  background:transparent;color:inherit;padding:0;border-radius:0;font-size:inherit;
+}
+.md-content blockquote{
+  margin:16px 0;padding:14px 18px;
+  background:var(--md-sys-color-primary-container);
+  color:var(--md-sys-color-on-primary-container);
+  border-left:5px solid var(--md-sys-color-primary);
+  border-radius:0 var(--md-sys-radius-medium) var(--md-sys-radius-medium) 0;
+}
+.md-content blockquote p{color:inherit;margin:6px 0;}
+.md-content blockquote code{background:rgba(0,0,0,.18);color:var(--md-sys-color-on-primary-container);}
+
+/* 表格 (Material data table) */
+.md-content .table-wrap{overflow-x:auto;margin:18px 0;border-radius:var(--md-sys-radius-medium);border:1px solid var(--md-sys-color-outline-variant);}
+.md-content table{border-collapse:collapse;width:100%;font-size:.9rem;}
+.md-content thead{background:var(--md-sys-color-surface-variant);}
+.md-content th{
+  text-align:left;font-weight:600;color:var(--md-sys-color-on-surface-variant);
+  padding:12px 16px;border-bottom:1px solid var(--md-sys-color-outline-variant);white-space:nowrap;
+}
+.md-content td{padding:11px 16px;border-bottom:1px solid var(--md-sys-color-outline-variant);color:var(--md-sys-color-on-surface);vertical-align:top;}
+.md-content tbody tr{transition:background .15s;}
+.md-content tbody tr:hover{background:var(--md-sys-color-surface-container-high);}
+.md-content tbody tr:last-child td{border-bottom:none;}
+
+/* ===== 本页目录 (table of contents) ===== */
+.doc-toc{position:sticky;top:88px;align-self:start;font-size:.85rem;}
+.toc-inner{
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  border-radius:var(--md-sys-radius-large);padding:16px 14px;
+}
+.toc-title{margin:0 0 10px;font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--md-sys-color-on-surface-variant);}
+.toc-list{list-style:none;margin:0;padding:0;}
+.toc-list li{margin:2px 0;}
+.toc-list a{display:block;padding:6px 10px;border-radius:8px;color:var(--md-sys-color-on-surface-variant);transition:background .15s,color .15s;}
+.toc-list a:hover{background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);text-decoration:none;}
+.toc-sub a{padding-left:22px;font-size:.82rem;}
+.toc-list a.active{
+  background:var(--md-sys-color-secondary-container);
+  color:var(--md-sys-color-on-secondary-container);font-weight:600;
+}
+
+/* ===== 章节翻页（上一章 / 下一章） ===== */
+.page-nav{display:flex;gap:16px;margin-top:24px;}
+.page-nav__link{
+  flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:4px;
+  padding:16px 20px;border-radius:var(--md-sys-radius-large);
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  box-shadow:var(--md-sys-elevation-1);text-decoration:none;
+  transition:box-shadow .2s,background .2s,transform .2s;
+}
+.page-nav__link:hover{
+  box-shadow:var(--md-sys-elevation-2);
+  background:var(--md-sys-color-surface-container-high);
+  transform:translateY(-2px);text-decoration:none;
+}
+.page-nav__next{text-align:right;align-items:flex-end;}
+.page-nav__dir{font-size:.72rem;letter-spacing:.5px;color:var(--md-sys-color-on-surface-variant);}
+.page-nav__title{font-size:.95rem;font-weight:600;color:var(--md-sys-color-primary);word-break:break-word;}
+.page-nav__spacer{flex:1 1 0;}
+
+/* ===== 页脚 ===== */
+.doc-foot{
+  margin-top:32px;padding-top:28px;border-top:1px solid var(--md-sys-color-outline-variant);
+  display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  color:var(--md-sys-color-on-surface-variant);font-size:.85rem;
+}
+
+/* ===== 抽屉遮罩 (移动端) ===== */
+.scrim{position:fixed;inset:0;background:var(--md-sys-color-scrim);z-index:45;opacity:0;visibility:hidden;transition:.25s;}
+
+/* ===== 响应式 ===== */
+@media (max-width:1180px){
+  .doc-grid{grid-template-columns:minmax(0,1fr);}
+  .doc-toc{display:none;}
+}
+@media (max-width:620px){
+  .page-nav{flex-direction:column;}
+  .page-nav__next{text-align:left;align-items:flex-start;}
+}
+@media (max-width:880px){
+  .rail{
+    position:fixed;top:64px;left:0;z-index:46;height:calc(100vh - 64px);
+    transform:translateX(-100%);transition:transform .28s cubic-bezier(.22,1,.36,1);
+    box-shadow:var(--md-sys-elevation-3);
+  }
+  .rail.open{transform:translateX(0);}
+  .scrim.show{opacity:1;visibility:visible;}
+  .app-bar__brand .label-long{display:none;}
+}
+</style>
+</head>
+<body>
+<header class="app-bar">
+  <button class="icon-btn" id="hamburger" aria-label="打开导航">☰</button>
+  <a class="app-bar__brand" href="../index.html">
+    <span class="cat">🐱</span>
+    <span><span class="label-long">Nya</span><span class="grad">Launcher</span> <span class="label-long">· 文档中心</span></span>
+  </a>
+  <span class="app-bar__spacer"></span>
+  <label class="theme-switch" title="切换明暗主题">
+    <span aria-hidden="true">🌙</span>
+    <input type="checkbox" id="themeToggle" />
+    <span class="switch-track"><span class="switch-thumb"></span></span>
+    <span aria-hidden="true">☀️</span>
+  </label>
+  <a class="filled-btn" href="../index.html">← 返回首页</a>
+</header>
+
+<div class="layout">
+  <nav class="rail" id="rail" aria-label="文档导航">
+    <div class="rail__head">文档地图</div>
+    <a class="nav-item" href="index.html"><span class="nav-ico" aria-hidden="true">🏠</span><span class="nav-label">概览</span></a>
+<a class="nav-item" href="01-architecture.html"><span class="nav-ico" aria-hidden="true">🧭</span><span class="nav-label">架构总览</span></a>
+<a class="nav-item" href="02-theming.html"><span class="nav-ico" aria-hidden="true">🎨</span><span class="nav-label">主题开发</span></a>
+<a class="nav-item" href="03-layout-and-spacing.html"><span class="nav-ico" aria-hidden="true">📐</span><span class="nav-label">布局与间距</span></a>
+<a class="nav-item active" href="04-animations.html" aria-current="page"><span class="nav-ico" aria-hidden="true">✨</span><span class="nav-label">动画系统</span></a>
+<a class="nav-item" href="05-plugin-development.html"><span class="nav-ico" aria-hidden="true">🧩</span><span class="nav-label">插件与功能区</span></a>
+<a class="nav-item" href="06-polygon-components.html"><span class="nav-ico" aria-hidden="true">🔷</span><span class="nav-label">多边形组件</span></a>
+<a class="nav-item" href="07-notifications.html"><span class="nav-ico" aria-hidden="true">🔔</span><span class="nav-label">通知框架</span></a>
+  </nav>
+  <main class="main">
+    <div class="doc-grid">
+      <article class="doc-card md-content"><h1>04 · 动画系统指南</h1>
+<blockquote>
+<p>本文档描述 NyaLauncher 的动效体系：<strong>声明式 class 触发</strong>、<strong>编程式 helper</strong>、
+以及<strong>编写新动画时必须遵守的模块化约定</strong>。</p>
+</blockquote>
+<hr />
+<h2 id="g-04-h1">1. 核心原则</h2>
+<h3 id="g-04-h2">1.1 动画模块化（硬性规则）</h3>
+<p>所有动画实现——附加属性、行为、helper、计时器——<strong>必须</strong>写在
+<code>NyaLauncher.Avalonia.Animations/Helpers/</code> 下。</p>
+<p>主工程（<code>NyaLauncher.Avalonia</code>）的页面与控件 <code>.cs</code> 里<strong>禁止</strong>直接写动画循环或
+<code>RenderTransform</code> 逻辑。消费动画只有三条合法路径：</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>用法</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全局 Style 绑定附加属性</td>
+<td><code>App.axaml</code> 里给控件类型挂上</td>
+<td>全局统一行为（如所有 Button 的回弹）</td>
+</tr>
+<tr>
+<td>给元素加 <code>nya-*</code> class</td>
+<td>XAML 里 <code>Classes="nya-lift"</code></td>
+<td>单个元素的声明式动效</td>
+</tr>
+<tr>
+<td>调用静态 helper</td>
+<td><code>await AnimationHelper.SlideFadeInAsync(page)</code></td>
+<td>代码控制时机的转场</td>
+</tr>
+</tbody>
+</table>
+<p>这条规则让动效可以被统一关停、统一调参，也避免动画逻辑散落在几十个页面里。</p>
+<h3 id="g-04-h3">1.2 统一开关 <code>AnimationGate</code></h3>
+<div class="code-wrap"><pre><code class="language-csharp">AnimationGate.Enabled   // 全局动画总开关
+</code></pre></div>
+<ul>
+<li>由 <code>ThemeSettings.LoadAnimationsEnabled()</code> 在 <code>MainWindow</code> 构造函数里赋值</li>
+<li>用户可在设置页主题卡片中修改（持久化到 <code>config.json</code> 的 <code>animationsEnabled</code>）</li>
+<li><strong>所有 helper 内部都会先检查它</strong>，关闭时直接跳过动画、不改变视觉终态</li>
+</ul>
+<p>所以你写新动画时，第一件事也应该是 <code>if (!AnimationGate.Enabled) return;</code>。</p>
+<p>另有两项独立的视觉开关，同样在启动时应用：</p>
+<table>
+<thead>
+<tr>
+<th>开关</th>
+<th>配置项</th>
+<th>默认</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AmbientGradient.AmbientGradientEnabled</code></td>
+<td><code>ambientGradient</code>（彩虹背景）</td>
+<td>开</td>
+</tr>
+<tr>
+<td><code>SparkleTrail.SparkleTrailEnabled</code></td>
+<td><code>sparkleTrail</code>（星尘特效）</td>
+<td>开</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-04-h4">1.3 基于 Transitions，而非逐帧循环</h3>
+<p>所有动效基于 Avalonia 的 <code>Transitions</code>（渲染线程驱动），<strong>不要</strong>用 UI 线程
+<code>for</code> 循环逐帧改属性。时长与缓动统一取自 <code>MaterialMotion</code>（Material Design 3 令牌）：</p>
+<table>
+<thead>
+<tr>
+<th>令牌</th>
+<th>值</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MaterialMotion.MediumTransitionMs</code></td>
+<td>300</td>
+<td>常规过渡</td>
+</tr>
+<tr>
+<td><code>MaterialMotion.LargeTransitionMs</code></td>
+<td>400</td>
+<td>大面积 / 窗口级过渡</td>
+</tr>
+<tr>
+<td><code>MaterialMotion.FadeEndFraction</code></td>
+<td>0.4</td>
+<td>入场：不透明度在前 40% 完成</td>
+</tr>
+<tr>
+<td><code>MaterialMotion.FadeEndFractionExit</code></td>
+<td>0.3</td>
+<td>出场：不透明度在前 30% 消失</td>
+</tr>
+<tr>
+<td><code>LinearEasing</code></td>
+<td>—</td>
+<td>透明度用匀速</td>
+</tr>
+<tr>
+<td><code>EmphasizedEasing</code></td>
+<td>—</td>
+<td>通用强调曲线</td>
+</tr>
+<tr>
+<td><code>EmphasizedDecelerateEasing</code></td>
+<td>—</td>
+<td>入场（先快后慢）</td>
+</tr>
+<tr>
+<td><code>EmphasizedAccelerateEasing</code></td>
+<td>—</td>
+<td>出场（先慢后快）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="g-04-h5">2. 声明式动效：<code>nya-*</code> class 速查</h2>
+<p>在 <code>App.axaml</code> 中已为每个 class 配好 Style，XAML 里加 <code>Classes</code> 即可生效：</p>
+<div class="code-wrap"><pre><code class="language-xml">&lt;Border Classes=&quot;card nya-lift&quot;&gt;
+&lt;TextBlock Classes=&quot;nya-marquee&quot; Text=&quot;...&quot; /&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>适用的控件</th>
+<th>附加属性</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nya-lift</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>TransitionEffects.HoverLift</code></td>
+<td>卡片悬浮抬升</td>
+</tr>
+<tr>
+<td><code>nya-fade</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>TransitionEffects.FadeInOnLoad</code></td>
+<td>加载时淡入</td>
+</tr>
+<tr>
+<td><code>nya-spin</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>TransitionEffects.Spin</code></td>
+<td>持续旋转</td>
+</tr>
+<tr>
+<td><code>nya-pulse</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>TransitionEffects.Pulse</code></td>
+<td>脉冲缩放</td>
+</tr>
+<tr>
+<td><code>nya-marquee</code></td>
+<td><code>TextBlock</code></td>
+<td><code>TransitionEffects.Marquee</code></td>
+<td>文字跑马灯（自动 <code>ClipToBounds</code>）</td>
+</tr>
+<tr>
+<td><code>nya-ripple</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>Ripple.Enabled</code></td>
+<td>点击水波纹</td>
+</tr>
+<tr>
+<td><code>nya-shimmer</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>Shimmer.Enabled</code></td>
+<td>斜向掠光带循环扫过</td>
+</tr>
+<tr>
+<td><code>nya-ambient</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>AmbientGradient.Enabled</code></td>
+<td>底层渐变缓慢旋转（氛围背景）</td>
+</tr>
+<tr>
+<td><code>nya-sparkles</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>SparkleTrail.Enabled</code></td>
+<td>指针划过飘小星星</td>
+</tr>
+<tr>
+<td><code>nya-stagger</code></td>
+<td><code>ItemsControl</code></td>
+<td><code>Stagger.Enabled</code></td>
+<td>列表项依次错峰滑入</td>
+</tr>
+<tr>
+<td><code>nya-flip</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>Flip.Enabled</code></td>
+<td>hover 绕竖轴翻转（最后一个子元素为背面）</td>
+</tr>
+<tr>
+<td><code>nya-magnetic</code></td>
+<td>任意 <code>Control</code></td>
+<td><code>Magnetic.Enabled</code></td>
+<td>朝鼠标吸附微移，离开回弹</td>
+</tr>
+<tr>
+<td><code>nya-typewriter</code></td>
+<td><code>TextBlock</code></td>
+<td><code>Typewriter.Enabled</code></td>
+<td>挂载后逐字打出</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-04-h6">2.1 全局自动挂载（无需加 class）</h3>
+<p><code>App.axaml</code> 已经为这些控件类型全局启用，任何位置创建的实例都会自动生效：</p>
+<table>
+<thead>
+<tr>
+<th>选择器</th>
+<th>附加属性</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Button</code></td>
+<td><code>GlobalAnimation.Enable</code></td>
+<td>hover 微放大 + 点击弹性回弹</td>
+</tr>
+<tr>
+<td><code>ToggleButton</code></td>
+<td><code>GlobalAnimation.Enable</code></td>
+<td>hover 微放大（<strong>不挂点击回弹</strong>，见下方说明）</td>
+</tr>
+<tr>
+<td><code>ComboBox</code></td>
+<td><code>GlobalAnimation.Enable</code></td>
+<td>下拉弹出动画</td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td><code>Ripple.Enabled</code></td>
+<td>点击水波纹（ScrollBar / Popup 内部按钮自动跳过）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>为什么 <code>ToggleButton</code> 不挂点击回弹？按下缩小会让命中区域变小，快速点击时
+抬起事件可能落在控件外，导致开关状态偶发不切换；而且 Material 自带 ripple 反馈。
+<code>ToggleButton</code> 是 <code>Button</code> 的子类，<code>CheckBox</code> / <code>RadioButton</code> 也走这条分支。</p>
+</blockquote>
+<h3 id="g-04-h7">2.2 可调参数</h3>
+<p>需要微调时直接在 XAML 上设附加属性：</p>
+<div class="code-wrap"><pre><code class="language-xml">&lt;!-- 转慢一点的旋转 --&gt;
+&lt;Border Classes=&quot;nya-spin&quot; helpers:TransitionEffects.SpinDurationMs=&quot;3000&quot; /&gt;
+
+&lt;!-- 脉冲幅度更大 --&gt;
+&lt;Border Classes=&quot;nya-pulse&quot; helpers:TransitionEffects.PulseScale=&quot;1.08&quot;
+        helpers:TransitionEffects.PulseDurationMs=&quot;900&quot; /&gt;
+
+&lt;!-- 跑马灯速度 --&gt;
+&lt;TextBlock Classes=&quot;nya-marquee&quot; helpers:TransitionEffects.MarqueeSpeed=&quot;60&quot; /&gt;
+
+&lt;!-- 磁性吸附强度 --&gt;
+&lt;Button Classes=&quot;nya-magnetic&quot; helpers:Magnetic.MaxOffset=&quot;12&quot; helpers:Magnetic.Strength=&quot;0.35&quot; /&gt;
+
+&lt;!-- 掠光强度与周期 --&gt;
+&lt;Border Classes=&quot;nya-shimmer&quot; helpers:Shimmer.DurationMs=&quot;2200&quot; helpers:Shimmer.Intensity=&quot;0.5&quot; /&gt;
+
+&lt;!-- 背景渐变周期 --&gt;
+&lt;Grid Classes=&quot;nya-ambient&quot; helpers:AmbientGradient.DurationMs=&quot;12000&quot; /&gt;
+
+&lt;!-- 打字机逐字间隔 --&gt;
+&lt;TextBlock Classes=&quot;nya-typewriter&quot; helpers:Typewriter.DelayMs=&quot;45&quot; /&gt;
+
+&lt;!-- 列表级联间隔 --&gt;
+&lt;ItemsControl Classes=&quot;nya-stagger&quot; helpers:Stagger.DelayMs=&quot;60&quot; /&gt;
+
+&lt;!-- 翻转：手动控制正反面 --&gt;
+&lt;Border Classes=&quot;nya-flip&quot; helpers:Flip.IsBack=&quot;True&quot; helpers:Flip.DurationMs=&quot;600&quot; /&gt;
+</code></pre></div>
+<p>需要 <code>helpers</code> 命名空间：</p>
+<div class="code-wrap"><pre><code class="language-xml">xmlns:helpers=&quot;using:NyaLauncher.Avalonia.Animations.Helpers&quot;
+</code></pre></div>
+<hr />
+<h2 id="g-04-h8">3. 编程式动效：Helper API</h2>
+<h3 id="g-04-h9">3.1 <code>AnimationHelper</code> —— 通用动效</h3>
+<div class="code-wrap"><pre><code class="language-csharp">using NyaLauncher.Avalonia.Animations.Helpers;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BounceAsync(Control, double scaleUp = 1.12, int durationMs = 350)</code></td>
+<td>Q 弹回弹（放大 → 回缩 → 归位）</td>
+</tr>
+<tr>
+<td><code>PressAsync(Control, int durationMs = 120)</code></td>
+<td>按下收缩到 0.92</td>
+</tr>
+<tr>
+<td><code>ReleaseAsync(Control, int durationMs = 300)</code></td>
+<td>释放回弹（0.92 → 1.05 → 1.0）</td>
+</tr>
+<tr>
+<td><code>HoverInAsync(Control, int durationMs = 200, double hoverScale = 1.05)</code></td>
+<td>悬浮放大</td>
+</tr>
+<tr>
+<td><code>HoverOutAsync(Control, int durationMs = 200)</code></td>
+<td>悬浮还原</td>
+</tr>
+<tr>
+<td><code>FadeInAsync(Visual, int durationMs = 300)</code></td>
+<td>纯淡入</td>
+</tr>
+<tr>
+<td><code>SlideFadeInAsync(Visual, int durationMs = 300, double slideOffset = 24)</code></td>
+<td>页面入场：淡入 + 自下方上浮</td>
+</tr>
+<tr>
+<td><code>SlideFadeOutAsync(Visual, int durationMs = 180, double slideOffset = 16)</code></td>
+<td>页面退场：淡出 + 下沉</td>
+</tr>
+<tr>
+<td><code>StaggerInAsync(IEnumerable&lt;Control&gt;, int perItemDelayMs = 45, int durationMs = 300, double slideOffset = 18)</code></td>
+<td>列表错峰入场</td>
+</tr>
+</tbody>
+</table>
+<div class="code-wrap"><pre><code class="language-csharp">// 页面切换：先淡出旧的，再淡入新的
+await AnimationHelper.SlideFadeOutAsync(oldPage);
+await AnimationHelper.SlideFadeInAsync(newPage);
+</code></pre></div>
+<blockquote>
+<p><strong><code>SlideFadeOutAsync</code> 结束后会保留 <code>Opacity = 0</code> 与下沉位移</strong>，
+由下一次入场或调用方复位。缓存页面复用前必须恢复 <code>Opacity = 1</code>。</p>
+</blockquote>
+<h3 id="g-04-h10">3.2 <code>BounceBehavior</code> —— 手动挂载交互反馈</h3>
+<p>全局 Style 已经覆盖大部分场景，代码动态创建的控件可手动挂：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AttachBounce(Button)</code></td>
+<td>hover 放大 + 按下回缩 + 点击 Q 弹（全套）</td>
+</tr>
+<tr>
+<td><code>AttachHoverScale(Control, double hoverScale = 1.05)</code></td>
+<td>仅 hover 放大</td>
+</tr>
+<tr>
+<td><code>AttachClickBounce(Control)</code></td>
+<td>仅按下/释放回弹</td>
+</tr>
+<tr>
+<td><code>AttachDropDownAnimation(ComboBox)</code></td>
+<td>下拉面板展开动画</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-04-h11">3.3 <code>WindowEffects</code> —— 窗口级动效</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Enter(Window window, int durationMs = LargeTransitionMs)</code></td>
+<td>窗口入场「飞出来」</td>
+</tr>
+<tr>
+<td><code>Exit(Window window, Action? onCompleted = null)</code></td>
+<td>窗口退场「飞走」，播完回调</td>
+</tr>
+<tr>
+<td><code>Minimize(Window window, Action? onCompleted = null)</code></td>
+<td>最小化动效</td>
+</tr>
+<tr>
+<td><code>Maximize(Window window)</code></td>
+<td>最大化动效</td>
+</tr>
+<tr>
+<td><code>Restore(Window window, bool fromMinimized = false)</code></td>
+<td>还原动效</td>
+</tr>
+</tbody>
+</table>
+<p>关闭窗口的正确姿势是<strong>先播退场，播完再真正关闭</strong>：</p>
+<div class="code-wrap"><pre><code class="language-csharp">WindowEffects.Exit(this, onCompleted: () =&gt; base.OnClosing(e));
+</code></pre></div>
+<h3 id="g-04-h12">3.4 <code>OverlayEffects</code> —— 遮罩层</h3>
+<table>
+<thead>
+<tr>
+<th>成员</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>附加属性 <code>PopIn</code></td>
+<td>XAML 里设 <code>True</code> 即可让遮罩内容弹入</td>
+</tr>
+<tr>
+<td><code>PopOut(Control host, Action? onCompleted = null)</code></td>
+<td>弹出层退场，播完回调</td>
+</tr>
+</tbody>
+</table>
+<div class="code-wrap"><pre><code class="language-xml">&lt;Border helpers:OverlayEffects.PopIn=&quot;True&quot;&gt; ... &lt;/Border&gt;
+</code></pre></div>
+<h3 id="g-04-h13">3.5 其他编程式入口</h3>
+<table>
+<thead>
+<tr>
+<th>类型 / 方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SwapTransition.SwapVertical(newControl, oldControl, int durationMs = 280)</code></td>
+<td>两个控件纵向交换的转场</td>
+</tr>
+<tr>
+<td><code>Stagger.Play(ItemsControl host)</code></td>
+<td>立即重播一次列表级联入场</td>
+</tr>
+<tr>
+<td><code>Shake.Trigger(Control control, int intensity = 7)</code></td>
+<td>抖动（适合表示输入错误）</td>
+</tr>
+<tr>
+<td><code>AmbientGradient.Enable(Control host)</code></td>
+<td>代码启用背景渐变</td>
+</tr>
+<tr>
+<td><code>AmbientGradient.RefreshGlobal()</code> / <code>RecreateAll()</code></td>
+<td>开关变化后刷新 / 重建所有渐变</td>
+</tr>
+<tr>
+<td><code>SparkleTrail.Enable(Control host)</code> / <code>SparkleTrail.RefreshGlobal()</code></td>
+<td>同上，星尘特效</td>
+</tr>
+<tr>
+<td><code>RippleBehavior.AttachRipple(Control control, Canvas layer)</code></td>
+<td>把水波纹画到指定图层</td>
+</tr>
+<tr>
+<td><code>RippleBehavior.GlobalRippleLayer</code></td>
+<td>全局水波纹图层</td>
+</tr>
+<tr>
+<td><code>RingProgressControl</code></td>
+<td>环形进度控件，属性 <code>Value</code> / <code>Thickness</code> / <code>TrackBrush</code> / <code>ProgressBrush</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="g-04-h14">4. 编写新动画的规范</h2>
+<p>要在 <code>Animations/Helpers/</code> 下新增一种动效时，按这个套路来：</p>
+<h3 id="g-04-h15">4.1 文件与命名</h3>
+<ul>
+<li>文件放 <code>NyaLauncher.Avalonia.Animations/Helpers/</code> 下，一个效果一个文件</li>
+<li>对外暴露 <strong>附加属性</strong>（供 XAML 声明式使用）或 <strong>静态异步方法</strong>（供代码调用）</li>
+<li>若同时需要两者，附加属性负责"挂载监听"，helper 方法负责"播一次"</li>
+</ul>
+<h3 id="g-04-h16">4.2 必须检查总开关</h3>
+<div class="code-wrap"><pre><code class="language-csharp">public static async Task MyEffectAsync(Control target)
+{
+    if (!AnimationGate.Enabled) return;      // ← 第一道门
+    // ...
+}
+</code></pre></div>
+<h3 id="g-04-h17">4.3 用 Transitions，不要逐帧循环</h3>
+<div class="code-wrap"><pre><code class="language-csharp">// ✅ 正确
+target.Transitions = new Transitions
+{
+    new DoubleTransition { Property = Visual.OpacityProperty,
+                           Duration = TimeSpan.FromMilliseconds(300),
+                           Easing = MaterialMotion.LinearEasing }
+};
+target.Opacity = 1;
+await Task.Delay(300);
+target.Transitions = null;
+
+// ❌ 错误：UI 线程逐帧循环
+for (int i = 0; i &lt;= 30; i++) { target.Opacity = i / 30.0; await Task.Delay(10); }
+</code></pre></div>
+<h3 id="g-04-h18">4.4 处理快速连续触发（代数计数器）</h3>
+<p>用户疯狂划过或连点时，旧动画的收尾清理会打断新动画。
+<code>AnimationHelper</code> 用代数计数器解决：每次启动新一轮动画领取一个递增代号，
+清理前先确认自己仍是最新一代。</p>
+<div class="code-wrap"><pre><code class="language-csharp">var generation = NextGeneration(control);   // ConditionalWeakTable&lt;Control, Box&gt;
+// ... 播放动画 ...
+await Task.Delay(durationMs);
+if (IsStale(control, generation)) return;   // 已被更新的动画接管，不清理
+control.Transitions = null;
+</code></pre></div>
+<p>新动画请沿用同样的模式（这两个私有 helper 在 <code>AnimationHelper</code> 内，可按需提取复用）。</p>
+<h3 id="g-04-h19">4.5 需要初始状态先渲染一帧</h3>
+<p>设置"初始隐藏/位移"后直接改终值，Avalonia 可能合并成一次渲染而不播动画。
+中间插一次低优先级布局：</p>
+<div class="code-wrap"><pre><code class="language-csharp">await Dispatcher.UIThread.InvokeAsync(() =&gt; { }, DispatcherPriority.Background);
+</code></pre></div>
+<p><code>AnimationHelper.FlushAsync()</code> 就是这个作用。</p>
+<h3 id="g-04-h20">4.6 在 <code>App.axaml</code> 注册 class</h3>
+<p>新增的声明式动效要在 <code>App.axaml</code> 里加一条 Style，才能用 <code>nya-*</code> class 触发：</p>
+<div class="code-wrap"><pre><code class="language-xml">&lt;Style Selector=&quot;Control.nya-myeffect&quot;&gt;
+  &lt;Setter Property=&quot;(helpers:MyEffect.Enabled)&quot; Value=&quot;True&quot; /&gt;
+&lt;/Style&gt;
+</code></pre></div>
+<p>同时记得在 <a href="#g-04-h5">本文档第 2 节的 class 表</a> 里补一行。</p>
+<hr />
+<h2 id="g-04-h21">5. 与主题的配合</h2>
+<ul>
+<li>主题切换时，<code>ThemeManager.ThemeChanged</code> 会触发 <code>MainWindow</code> 重挂载根元素（先淡出、再重挂载、再淡入）</li>
+<li>需要重建的视觉效果（背景渐变、星尘）要在热重载回调里显式刷新：</li>
+</ul>
+<div class="code-wrap"><pre><code class="language-csharp">ThemeManager.ThemeChanged += () =&gt;
+{
+    AmbientGradient.RecreateAll();
+    _ = ThemeManager.RemountRootAsync(this);
+};
+</code></pre></div>
+<ul>
+<li>动画颜色不要硬编码，用 <code>{DynamicResource XxxBrush}</code>，主题热重载才能实时跟随</li>
+</ul>
+<hr />
+<h2 id="g-04-h22">6. 常见坑</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>动画设置后直接跳变，没有过渡</td>
+<td>初始状态没渲染一帧就被覆盖</td>
+<td>用 <code>FlushAsync()</code> 插一次低优先级布局</td>
+</tr>
+<tr>
+<td>快速连点后控件卡在放大状态</td>
+<td>旧动画收尾时清掉了新动画的 Transitions</td>
+<td>用代数计数器，过期的一代不做清理</td>
+</tr>
+<tr>
+<td>关闭动画开关后控件停在半透明</td>
+<td>helper 里没检查 <code>AnimationGate</code> 就把 <code>Opacity</code> 改了</td>
+<td>总开关关闭时<strong>直接 return，不改任何属性</strong></td>
+</tr>
+<tr>
+<td>页面复用后一片空白</td>
+<td><code>SlideFadeOutAsync</code> 保留了 <code>Opacity = 0</code></td>
+<td>复用前手动恢复 <code>Opacity = 1</code></td>
+</tr>
+<tr>
+<td><code>ToggleButton</code> 偶发点不动</td>
+<td>挂了点击回弹导致抬起事件落在控件外</td>
+<td>开关类控件只挂 hover，不挂回弹</td>
+</tr>
+<tr>
+<td>切换主题后自定义动画颜色不跟随</td>
+<td>硬编码了颜色</td>
+<td>改用 <code>DynamicResource</code> 引用主题画刷</td>
+</tr>
+</tbody>
+</table></article>
+      <aside class="doc-toc"><div class="toc-inner"><p class="toc-title">本页目录</p><ul class="toc-list"><li><a href="#g-04-h1">1. 核心原则</a></li><li class="toc-sub"><a href="#g-04-h2">1.1 动画模块化（硬性规则）</a></li><li class="toc-sub"><a href="#g-04-h3">1.2 统一开关 AnimationGate</a></li><li class="toc-sub"><a href="#g-04-h4">1.3 基于 Transitions，而非逐帧循环</a></li><li><a href="#g-04-h5">2. 声明式动效：nya-* class 速查</a></li><li class="toc-sub"><a href="#g-04-h6">2.1 全局自动挂载（无需加 class）</a></li><li class="toc-sub"><a href="#g-04-h7">2.2 可调参数</a></li><li><a href="#g-04-h8">3. 编程式动效：Helper API</a></li><li class="toc-sub"><a href="#g-04-h9">3.1 AnimationHelper —— 通用动效</a></li><li class="toc-sub"><a href="#g-04-h10">3.2 BounceBehavior —— 手动挂载交互反馈</a></li><li class="toc-sub"><a href="#g-04-h11">3.3 WindowEffects —— 窗口级动效</a></li><li class="toc-sub"><a href="#g-04-h12">3.4 OverlayEffects —— 遮罩层</a></li><li class="toc-sub"><a href="#g-04-h13">3.5 其他编程式入口</a></li><li><a href="#g-04-h14">4. 编写新动画的规范</a></li><li class="toc-sub"><a href="#g-04-h15">4.1 文件与命名</a></li><li class="toc-sub"><a href="#g-04-h16">4.2 必须检查总开关</a></li><li class="toc-sub"><a href="#g-04-h17">4.3 用 Transitions，不要逐帧循环</a></li><li class="toc-sub"><a href="#g-04-h18">4.4 处理快速连续触发（代数计数器）</a></li><li class="toc-sub"><a href="#g-04-h19">4.5 需要初始状态先渲染一帧</a></li><li class="toc-sub"><a href="#g-04-h20">4.6 在 App.axaml 注册 class</a></li><li><a href="#g-04-h21">5. 与主题的配合</a></li><li><a href="#g-04-h22">6. 常见坑</a></li></ul></div></aside>
+    </div>
+    <nav class="page-nav" aria-label="章节翻页"><a class="page-nav__link page-nav__prev" href="03-layout-and-spacing.html"><span class="page-nav__dir">← 上一章</span><span class="page-nav__title">📐 布局与间距</span></a><a class="page-nav__link page-nav__next" href="05-plugin-development.html"><span class="page-nav__dir">下一章 →</span><span class="page-nav__title">🧩 插件与功能区</span></a></nav>
+    <footer class="doc-foot">
+      <a class="tonal-btn" href="../index.html">← 返回首页</a>
+      <p>文档由 <code>NyaLauncher/Guides</code> 生成 · 采用 Material Design 3 样式 · Licensed under Apache 2.0</p>
+    </footer>
+  </main>
+</div>
+<div class="scrim" id="scrim"></div>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var rail = document.getElementById('rail');
+  var scrim = document.getElementById('scrim');
+  var hamburger = document.getElementById('hamburger');
+
+  // 主题切换
+  var tgl = document.getElementById('themeToggle');
+  var saved = null;
+  try { saved = localStorage.getItem('nya-docs-theme'); } catch(e){}
+  if (saved === 'light') { root.setAttribute('data-theme','light'); tgl.checked = true; }
+  tgl.addEventListener('change', function(){
+    if (tgl.checked) { root.setAttribute('data-theme','light'); }
+    else { root.setAttribute('data-theme','dark'); }
+    try { localStorage.setItem('nya-docs-theme', tgl.checked ? 'light' : 'dark'); } catch(e){}
+  });
+
+  // 移动端抽屉
+  function closeDrawer(){ rail.classList.remove('open'); scrim.classList.remove('show'); }
+  hamburger.addEventListener('click', function(){
+    rail.classList.toggle('open'); scrim.classList.toggle('show');
+  });
+  scrim.addEventListener('click', closeDrawer);
+
+  // 移动端：点导航后收起抽屉（多页架构下导航是普通链接跳转）
+  document.querySelectorAll('.nav-item').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (window.innerWidth <= 880) closeDrawer();
+    });
+  });
+
+  // 本页目录：高亮当前标题
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc-list a'));
+  var LINE = 132;                       // sticky 顶栏 64px + 判断余量
+  function absTop(el){ return el.getBoundingClientRect().top + window.pageYOffset; }
+  var ticking = false;
+  function updateToc(){
+    ticking = false;
+    if (!tocLinks.length) return;
+    var best = tocLinks[0];
+    for (var i = 0; i < tocLinks.length; i++){
+      var t = document.getElementById(tocLinks[i].getAttribute('href').slice(1));
+      if (t && absTop(t) <= window.pageYOffset + LINE) best = tocLinks[i];
+    }
+    for (var j = 0; j < tocLinks.length; j++){
+      tocLinks[j].classList.toggle('active', tocLinks[j] === best);
+    }
+  }
+  function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(updateToc); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  updateToc();
+
+  // URL hash 定位
+  if (location.hash) {
+    var t = document.getElementById(location.hash.slice(1));
+    if (t) setTimeout(function(){ t.scrollIntoView(); }, 60);
+  }
+
+  // 代码块复制按钮
+  function copyText(text, btn){
+    var done = function(){
+      btn.classList.add('copied');
+      btn.textContent = '已复制 ✓';
+      setTimeout(function(){
+        btn.classList.remove('copied');
+        btn.textContent = '复制';
+      }, 1600);
+    };
+    var fallback = function(){
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else { fallback(); }
+  }
+  document.querySelectorAll('.md-content .code-wrap').forEach(function(wrap){
+    var btn = document.createElement('button');
+    btn.className = 'code-copy';
+    btn.type = 'button';
+    btn.textContent = '复制';
+    btn.setAttribute('aria-label', '复制代码');
+    btn.addEventListener('click', function(){
+      var code = wrap.querySelector('code') || wrap;
+      copyText(code.textContent, btn);
+    });
+    wrap.appendChild(btn);
+  });
+})();
+</script>
+</body>
+</html>
