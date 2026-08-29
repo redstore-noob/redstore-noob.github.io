@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NyaLauncher · 看板娘 Nya 的设定档案</title>
+<meta name="description" content="NyaLauncher 官方看板娘 Nya 的人物设定、立绘画廊与性格档案。" />
+<link rel="icon" type="image/png" href="images/nya-icon.png" />
+<meta name="theme-color" content="#0e120d" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  /* ===== Material 3 暗色令牌 · Nya 绿（与首页 styles.css 保持一致） ===== */
+  --md-sys-color-primary:#B8E36B;
+  --md-sys-color-on-primary:#1F3300;
+  --md-sys-color-primary-container:#3E5513;
+  --md-sys-color-on-primary-container:#D9F5A8;
+  --md-sys-color-secondary:#C6CDB6;
+  --md-sys-color-on-secondary:#2F331F;
+  --md-sys-color-secondary-container:#454B33;
+  --md-sys-color-on-secondary-container:#E2E5CE;
+  --md-sys-color-tertiary:#9CE7FF;
+  --md-sys-color-tertiary-container:#004E63;
+  --md-sys-color-on-tertiary-container:#C7EFFF;
+  --md-sys-color-surface:#0E120D;
+  --md-sys-color-on-surface:#E6ECDF;
+  --md-sys-color-surface-variant:#2E3423;
+  --md-sys-color-on-surface-variant:#C3CABB;
+  --md-sys-color-surface-container:#1A2013;
+  --md-sys-color-surface-container-high:#23291A;
+  --md-sys-color-surface-container-highest:#2E3423;
+  --md-sys-color-outline:#8B9484;
+  --md-sys-color-outline-variant:#3D4433;
+  --md-sys-color-background:#0E120D;
+  --md-sys-color-on-background:#E6ECDF;
+  --md-sys-elevation-1:0 1px 2px rgba(0,0,0,.30),0 1px 3px 1px rgba(0,0,0,.15);
+  --md-sys-elevation-2:0 1px 2px rgba(0,0,0,.30),0 2px 6px 2px rgba(0,0,0,.15);
+  --md-sys-elevation-3:0 4px 8px 3px rgba(0,0,0,.30),0 1px 3px rgba(0,0,0,.15);
+  --md-sys-radius-medium:12px;
+  --md-sys-radius-large:16px;
+  --md-sys-radius-xlarge:28px;
+  --nya-purple:rgba(168,85,247,.85);
+}
+[data-theme="light"]{
+  --md-sys-color-primary:#4C6A10;
+  --md-sys-color-on-primary:#FFFFFF;
+  --md-sys-color-primary-container:#D9F5A8;
+  --md-sys-color-on-primary-container:#1F3300;
+  --md-sys-color-secondary:#545D3F;
+  --md-sys-color-on-secondary:#FFFFFF;
+  --md-sys-color-secondary-container:#E2E5CE;
+  --md-sys-color-on-secondary-container:#171C2B;
+  --md-sys-color-tertiary:#00658A;
+  --md-sys-color-tertiary-container:#C7EFFF;
+  --md-sys-color-on-tertiary-container:#001F2A;
+  --md-sys-color-surface:#F9FAEF;
+  --md-sys-color-on-surface:#1A2013;
+  --md-sys-color-surface-variant:#E0E4D2;
+  --md-sys-color-on-surface-variant:#454B33;
+  --md-sys-color-surface-container:#EDEFE2;
+  --md-sys-color-surface-container-high:#E7EADC;
+  --md-sys-color-surface-container-highest:#E0E4D2;
+  --md-sys-color-outline:#767F63;
+  --md-sys-color-outline-variant:#C5C9B5;
+  --md-sys-color-background:#F9FAEF;
+  --md-sys-color-on-background:#1A2013;
+  --md-sys-elevation-1:0 1px 2px rgba(0,0,0,.12),0 1px 3px 1px rgba(0,0,0,.08);
+  --md-sys-elevation-2:0 1px 2px rgba(0,0,0,.12),0 2px 6px 2px rgba(0,0,0,.10);
+  --md-sys-elevation-3:0 4px 8px 3px rgba(0,0,0,.12),0 1px 3px rgba(0,0,0,.10);
+  --nya-purple:rgba(122,44,199,.75);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--md-sys-color-background);color:var(--md-sys-color-on-surface);
+  font-family:"Roboto","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--md-sys-color-primary);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;}
+
+/* ===== 顶栏（与 docs 同款 Material top app bar） ===== */
+.app-bar{
+  position:sticky;top:0;z-index:50;height:64px;
+  display:flex;align-items:center;gap:12px;padding:0 16px;
+  background:var(--md-sys-color-surface-container);
+  color:var(--md-sys-color-on-surface);
+  box-shadow:var(--md-sys-elevation-2);
+  border-bottom:1px solid var(--md-sys-color-outline-variant);
+}
+.app-bar::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:linear-gradient(90deg,var(--md-sys-color-primary),var(--md-sys-color-tertiary),var(--nya-purple),var(--md-sys-color-primary));
+  background-size:200% 100%;animation:gradFlow 8s ease-in-out infinite;opacity:.55;pointer-events:none;
+}
+.app-bar__brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;letter-spacing:.2px;color:var(--md-sys-color-on-surface);}
+.app-bar__brand:hover{text-decoration:none;}
+.app-bar__logo{width:32px;height:32px;border-radius:50%;border:2px solid var(--md-sys-color-primary);box-shadow:0 0 10px rgba(184,227,107,.35);}
+.app-bar__brand .grad{color:var(--md-sys-color-primary);}
+.app-bar__spacer{flex:1;}
+.icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border:none;border-radius:999px;cursor:pointer;
+  background:transparent;color:var(--md-sys-color-on-surface);font-size:1.25rem;
+  transition:background .2s;
+}
+.icon-btn:hover{background:var(--md-sys-color-surface-container-high);}
+.filled-btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;
+  border:none;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem;
+  background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);
+  box-shadow:var(--md-sys-elevation-1);transition:box-shadow .2s,filter .2s;
+}
+.filled-btn:hover{box-shadow:var(--md-sys-elevation-2);filter:brightness(1.06);text-decoration:none;}
+/* 主题开关（与 docs 同款） */
+.theme-switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.theme-switch input{display:none;}
+.switch-track{width:44px;height:24px;border-radius:999px;background:var(--md-sys-color-surface-container-highest);position:relative;transition:background .2s;}
+.switch-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--md-sys-color-primary);transition:transform .25s cubic-bezier(.2,0,0,1);}
+.theme-switch input:checked + .switch-track{background:var(--md-sys-color-primary-container);}
+.theme-switch input:checked + .switch-track .switch-thumb{transform:translateX(20px);}
+
+/* ===== 布局 ===== */
+.page{max-width:980px;margin:0 auto;padding:32px 20px 64px;}
+.doc-card{
+  background:var(--md-sys-color-surface-container);
+  border:1px solid var(--md-sys-color-outline-variant);
+  border-radius:var(--md-sys-radius-large);
+  box-shadow:var(--md-sys-elevation-1);
+  padding:28px 30px;margin-bottom:28px;
+}
+
+/* ===== 看板娘 Hero ===== */
+.nya-hero{display:flex;gap:32px;align-items:center;flex-wrap:wrap;}
+.nya-hero__avatar{
+  width:180px;height:180px;border-radius:50%;flex:0 0 auto;
+  border:4px solid var(--md-sys-color-primary);
+  box-shadow:0 0 36px rgba(184,227,107,.35),0 8px 24px rgba(0,0,0,.45);
+  animation:avatarFloat 4.5s ease-in-out infinite;
+}
+@keyframes avatarFloat{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-10px) rotate(2deg);}}
+.nya-hero__body{flex:1;min-width:260px;}
+.nya-hero__badge{
+  display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;
+  padding:5px 14px;border-radius:999px;font-size:.8rem;letter-spacing:.5px;
+  background:var(--md-sys-color-surface-container-high);
+  border:1px solid var(--md-sys-color-outline-variant);color:var(--md-sys-color-on-surface-variant);
+}
+.nya-hero__badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--md-sys-color-primary);box-shadow:0 0 8px var(--md-sys-color-primary);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.nya-hero__name{font-size:2.6rem;font-weight:700;line-height:1.15;margin:0 0 6px;}
+.nya-hero__name .grad{
+  background:linear-gradient(100deg,var(--md-sys-color-primary),var(--md-sys-color-tertiary),var(--md-sys-color-primary));
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:gradFlow 6s ease-in-out infinite;
+}
+@keyframes gradFlow{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+.nya-hero__quote{color:var(--md-sys-color-on-surface-variant);font-style:italic;margin:0 0 14px;}
+.nya-hero__quote b{color:var(--md-sys-color-primary);font-style:normal;}
+.nya-hero__tags{display:flex;flex-wrap:wrap;gap:8px;}
+.nya-tag{
+  display:inline-flex;align-items:center;height:30px;padding:0 14px;border-radius:999px;
+  font-size:.8rem;background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);
+}
+
+/* ===== 设定表格（与 docs 表格同款） ===== */
+.doc-card h2{font-size:1.35rem;margin:0 0 16px;display:flex;align-items:center;gap:10px;}
+.doc-card h2 .kicker{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--md-sys-color-tertiary);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;}
+table{width:100%;border-collapse:collapse;font-size:.92rem;}
+th,td{padding:10px 14px;border-bottom:1px solid var(--md-sys-color-outline-variant);text-align:left;vertical-align:top;}
+th{color:var(--md-sys-color-primary);font-weight:600;white-space:nowrap;background:var(--md-sys-color-surface-container-high);}
+tbody tr{transition:background .2s;}
+tbody tr:hover{background:var(--md-sys-color-surface-container-high);}
+tbody tr:last-child td{border-bottom:none;}
+td .mono{color:var(--md-sys-color-tertiary);font-size:.85rem;}
+blockquote{
+  margin:16px 0;padding:14px 18px;border-left:4px solid var(--md-sys-color-primary);
+  background:var(--md-sys-color-surface-container-high);border-radius:0 var(--md-sys-radius-medium) var(--md-sys-radius-medium) 0;
+  color:var(--md-sys-color-on-surface-variant);
+}
+blockquote p{margin:0;}
+
+/* ===== 画廊 ===== */
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.gallery__item{
+  position:relative;overflow:hidden;cursor:zoom-in;
+  border-radius:var(--md-sys-radius-large);
+  background:var(--md-sys-color-surface-container-high);
+  border:1px solid var(--md-sys-color-outline-variant);
+  box-shadow:var(--md-sys-elevation-1);
+  transition:transform .3s cubic-bezier(.2,0,0,1),box-shadow .3s;
+}
+.gallery__item:hover{transform:translateY(-5px);box-shadow:var(--md-sys-elevation-3),0 0 28px rgba(184,227,107,.12);}
+.gallery__item img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;transition:transform .5s cubic-bezier(.2,0,0,1);}
+.gallery__item:hover img{transform:scale(1.05);}
+.gallery__cap{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 14px;background:linear-gradient(180deg,transparent,rgba(10,13,8,.88));color:#fff;}
+[data-theme="light"] .gallery__cap{background:linear-gradient(180deg,transparent,rgba(20,24,14,.72));}
+.gallery__cap h3{margin:0;font-size:1rem;}
+.gallery__cap p{margin:2px 0 0;font-size:.8rem;opacity:.85;}
+
+/* ===== 灯箱 ===== */
+.lightbox{
+  position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+  background:rgba(5,7,4,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;cursor:zoom-out;padding:32px;
+}
+.lightbox.show{opacity:1;visibility:visible;}
+.lightbox img{max-width:min(92vw,860px);max-height:86vh;border-radius:var(--md-sys-radius-large);border:2px solid var(--md-sys-color-primary);box-shadow:0 0 48px rgba(184,227,107,.25),0 24px 64px rgba(0,0,0,.6);transform:scale(.94);transition:transform .3s cubic-bezier(.2,0,0,1);}
+.lightbox.show img{transform:scale(1);}
+.lightbox__hint{position:absolute;bottom:20px;left:0;right:0;text-align:center;color:rgba(255,255,255,.7);font-size:.85rem;letter-spacing:.5px;}
+
+/* ===== 页脚 ===== */
+.doc-foot{text-align:center;color:var(--md-sys-color-on-surface-variant);font-size:.85rem;padding:20px 0 8px;}
+.doc-foot .heart{color:var(--md-sys-color-tertiary);}
+.doc-foot .cat{color:var(--md-sys-color-primary);}
+
+@media (max-width:640px){
+  .nya-hero{justify-content:center;text-align:center;}
+  .nya-hero__tags{justify-content:center;}
+  .nya-hero__name{font-size:2rem;}
+  .nya-hero__avatar{width:140px;height:140px;}
+  .app-bar .label-long{display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;}
+}
+</style>
+</head>
+<body>
+<header class="app-bar">
+  <a class="app-bar__brand" href="../index.html">
+    <img class="app-bar__logo" src="images/nya-icon.png" alt="NyaLauncher 图标" />
+    <span><span class="label-long">Nya</span><span class="grad">Launcher</span> <span class="label-long">· 看板娘档案</span></span>
+  </a>
+  <span class="app-bar__spacer"></span>
+  <label class="theme-switch" title="切换明暗主题">
+    <span aria-hidden="true">🌙</span>
+    <input type="checkbox" id="themeToggle" />
+    <span class="switch-track"><span class="switch-thumb"></span></span>
+    <span aria-hidden="true">☀️</span>
+  </label>
+  <a class="filled-btn" href="index.html">← 返回首页</a>
+</header>
+
+<main class="page">
+
+  <!-- ===== Hero ===== -->
+  <section class="doc-card">
+    <div class="nya-hero">
+      <img class="nya-hero__avatar" src="images/nya-icon.png" alt="Nya 的头像" />
+      <div class="nya-hero__body">
+        <span class="nya-hero__badge">OFFICIAL MASCOT · 官方看板娘</span>
+        <h1 class="nya-hero__name">Nya <span class="grad">にゃ</span></h1>
+        <p class="nya-hero__quote">「游戏要怎么启动，<b>应该由你说了算</b>——当然，也由我说了算喵！」</p>
+        <div class="nya-hero__tags">
+          <span class="nya-tag">🐱 猫娘 · 数字生命体</span>
+          <span class="nya-tag">🎮 深夜游戏部</span>
+          <span class="nya-tag">🧩 插件管理担当</span>
+          <span class="nya-tag">💚 绿色应援色</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 基本设定 ===== -->
+  <section class="doc-card">
+    <h2><span class="kicker">// profile</span>基本档案</h2>
+    <table>
+      <thead>
+        <tr><th>项目</th><th>设定</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>姓名</td><td><b>Nya</b>（ニャ）· 取自 NyaLauncher 的「Nya」，也是她的口头禅</td></tr>
+        <tr><td>种族</td><td>方块世界的猫娘 · <span class="mono">Catgirl.exe</span>，由苦力怕的绿色与猫的能量凝聚而成的数字生命体</td></tr>
+        <tr><td>生日</td><td><span class="mono">v0.1.0beta</span> 发布日 —— 项目诞生那天，她第一次睁开眼睛喵</td></tr>
+        <tr><td>外貌</td><td>棕色短发挑染苦力怕绿、蓝宝石色瞳孔、绿色连帽卫衣、苦力怕发卡、下坠式猫耳</td></tr>
+        <tr><td>性格</td><td>元气满满的电竞少女，好奇心旺盛；偶尔盯着屏幕发呆——那是插件在后台编译</td></tr>
+        <tr><td>喜欢</td><td>RGB 灯效、深夜联机、整理 mod 文件夹、摸鱼时被挠下巴</td></tr>
+        <tr><td>讨厌</td><td>遥测数据、弹窗广告、强制更新，以及「launcher 不开源」这句话</td></tr>
+        <tr><td>特长</td><td>AI 辅助诊断启动失败、推荐最优 JVM 参数；心情好时还会帮你整理快捷键</td></tr>
+        <tr><td>必杀技</td><td><span class="mono">Nya! Impact</span> —— 一记猫拳拍碎报错弹窗（回收站会疼的）</td></tr>
+      </tbody>
+    </table>
+    <blockquote>
+      <p>💡 <b>设计理念：</b>她的绿来自苦力怕与 NyaLauncher 的品牌色，蓝眼睛象征 <span class="mono">Avalonia UI</span> 的清爽界面，
+      卫衣上的拉绳是一根 USB-C 数据线——毕竟她住在你的启动器里喵。</p>
+    </blockquote>
+  </section>
+
+  <!-- ===== 立绘画廊 ===== -->
+  <section class="doc-card">
+    <h2><span class="kicker">// gallery</span>立绘画廊 <span style="font-weight:400;font-size:.8rem;color:var(--md-sys-color-on-surface-variant);">（点击查看大图）</span></h2>
+    <div class="gallery">
+      <figure class="gallery__item" data-full="Nya/nya-original.png">
+        <img src="Nya/nya-original.png" alt="Nya 原始立绘" loading="lazy" />
+        <figcaption class="gallery__cap">
+          <h3>🎨 原始立绘</h3>
+          <p>Nya 的标志性造型 · 绿色卫衣与苦力怕发卡</p>
+        </figcaption>
+      </figure>
+      <figure class="gallery__item" data-full="Nya/nya-profile.png">
+        <img src="Nya/nya-profile.png" alt="Nya 设定图" loading="lazy" />
+        <figcaption class="gallery__cap">
+          <h3>📐 设定图</h3>
+          <p>服饰细节与配色规范 · 三视图参考资料</p>
+        </figcaption>
+      </figure>
+      <figure class="gallery__item" data-full="Nya/nya-stream.png">
+        <img src="Nya/nya-stream.png" alt="Nya 意识流图" loading="lazy" />
+        <figcaption class="gallery__cap">
+          <h3>💭 意识流</h3>
+          <p>偶尔的发呆时间 · 插件正在后台编译喵…</p>
+        </figcaption>
+      </figure>
+      <figure class="gallery__item" data-full="Nya/nya-cyber.png">
+        <img src="Nya/nya-cyber.png" alt="Nya 赛博风" loading="lazy" />
+        <figcaption class="gallery__cap">
+          <h3>🌃 赛博之夜</h3>
+          <p>深夜电竞房 · RGB 灯光与城市霓虹中的 Nya</p>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== 声音设定 ===== -->
+  <section class="doc-card">
+    <h2><span class="kicker">// voice</span>口头禅语录</h2>
+    <table>
+      <thead><tr><th>场景</th><th>台词</th></tr></thead>
+      <tbody>
+        <tr><td>启动成功</td><td>「启动完成喵！祝你好运～ (*ฅ́˘ฅ̀*)」</td></tr>
+        <tr><td>启动失败</td><td>「呜…报错了喵，不过没关系，让窝来诊断一下！」</td></tr>
+        <tr><td>插件加载</td><td>「新插件装好了喵，要看看它能玩出什么花样吗？」</td></tr>
+        <tr><td>空闲发呆</td><td>「zzZ…喵？！窝没睡着，窝在省电模式喵！」</td></tr>
+        <tr><td>更新提醒</td><td>「有新版本啦！这次窝也在开发名单里喵，快来看看～」</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer class="doc-foot">
+    <p>NyaLauncher · 看板娘 Nya 的官方档案 · 用 <span class="heart">❤️</span> 与 <span class="cat">🐱</span> 构建</p>
+    <p class="mono" style="font-size:.78rem;opacity:.7;">Licensed under Apache 2.0</p>
+  </footer>
+</main>
+
+<!-- ===== 灯箱 ===== -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="图片预览">
+  <img id="lightboxImg" src="" alt="预览大图" />
+  <span class="lightbox__hint">点击任意位置或按 ESC 关闭</span>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---- 主题切换（记忆到 localStorage，与 docs 行为一致） ---- */
+  var toggle = document.getElementById("themeToggle");
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem("nya-page-theme"); } catch (e) {}
+  if (saved) root.setAttribute("data-theme", saved);
+  toggle.checked = root.getAttribute("data-theme") === "light";
+  toggle.addEventListener("change", function () {
+    var theme = toggle.checked ? "light" : "dark";
+    root.setAttribute("data-theme", theme);
+    try { localStorage.setItem("nya-page-theme", theme); } catch (e) {}
+  });
+
+  /* ---- 灯箱 ---- */
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightboxImg");
+  document.querySelectorAll(".gallery__item").forEach(function (item) {
+    item.addEventListener("click", function () {
+      lightboxImg.src = item.getAttribute("data-full");
+      lightbox.classList.add("show");
+      document.body.style.overflow = "hidden";
+    });
+  });
+  function closeLightbox() {
+    lightbox.classList.remove("show");
+    document.body.style.overflow = "";
+  }
+  lightbox.addEventListener("click", closeLightbox);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeLightbox();
+  });
+})();
+</script>
+</body>
+</html>

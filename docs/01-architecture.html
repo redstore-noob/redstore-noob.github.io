@@ -661,7 +661,7 @@ a:hover{text-decoration:underline;}
 <div class="code-wrap"><pre><code>1. InitializeComponent()
 2. LauncherConfig.SetStorageDirectory(...)      ← 配置目录归位（config.json 与 workspace.json 同目录）
 3. DownloadSettings.ApplySavedSettings()        ← 恢复下载设置
-4. AnimationGate.Enabled    = ThemeSettings.LoadAnimationsEnabled()    ← 动画总开关
+4. AnimationGate.Enabled 默认 true，动画永远开启（设置页动画开关已移除）
    AmbientGradient.Enabled  = ThemeSettings.LoadAmbientGradient()      ← 彩虹背景
    SparkleTrail.Enabled     = ThemeSettings.LoadSparkleTrail()         ← 星尘特效
 5. 创建 GameLaunchService / GameDownloadService 并订阅 Changed
@@ -672,7 +672,7 @@ a:hover{text-decoration:underline;}
 10. ThemeManager.ThemeChanged += OnThemeHotReload               ← 订阅主题热重载
 11. WindowEffects.Enter(...) 播放入场动效
 </code></pre></div>
-<p><strong>关键顺序</strong>：动画开关必须先于任何动画挂载生效；主题订阅必须在界面构建完成后建立。
+<p><strong>关键顺序</strong>：视觉开关（彩虹背景 / 星尘）必须先于任何动画挂载生效；主题订阅必须在界面构建完成后建立。
 插件如果要在运行时注册功能区，参考 <a href="05-plugin-development.html">插件与功能区开发</a>。</p>
 <hr />
 <h2 id="g-01-h9">5. 配置与数据目录</h2>
@@ -693,7 +693,7 @@ a:hover{text-decoration:underline;}
 <tr>
 <td><code>config.json</code></td>
 <td>配置目录</td>
-<td>账户与启动配置、主题家族与模式、动画开关</td>
+<td>账户与启动配置、主题家族与模式</td>
 </tr>
 <tr>
 <td><code>workspace-location.txt</code></td>
@@ -733,16 +733,6 @@ a:hover{text-decoration:underline;}
 <td>读取时自动迁移并拆分</td>
 </tr>
 <tr>
-<td><code>animationsEnabled</code></td>
-<td><code>true</code> / <code>false</code></td>
-<td>动画总开关，默认开</td>
-</tr>
-<tr>
-<td><code>closeAnimations</code>（旧）</td>
-<td><code>true</code> / <code>false</code></td>
-<td>旧「关闭动画」键，仅用于迁移</td>
-</tr>
-<tr>
 <td><code>ambientGradient</code></td>
 <td><code>true</code> / <code>false</code></td>
 <td>彩虹背景，默认开</td>
@@ -754,6 +744,10 @@ a:hover{text-decoration:underline;}
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>旧键 <code>animationsEnabled</code> / <code>closeAnimations</code>（动画总开关）已无人读取——
+设置页动画开关已移除，动画永远开启。</p>
+</blockquote>
 <p>读取入口统一在 <code>NyaLauncher.Avalonia/Pages/ThemeSettings.cs</code>。</p>
 <hr />
 <h2 id="g-01-h11">6. 构建与发布</h2>
@@ -797,7 +791,7 @@ dotnet build -c Release
 </tr>
 <tr>
 <td>加一套配色</td>
-<td>新增 <code>{Family}_Resources.axaml</code></td>
+<td>新增 <code>{Family}_Accents.axaml</code></td>
 <td><a href="02-theming.html">02</a></td>
 </tr>
 <tr>

@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NyaLauncher · 跨平台 Minecraft 启动器</title>
   <meta name="description" content="NyaLauncher —— 基于 .NET 10 与 Avalonia UI 构建的现代、轻量、跨平台 Minecraft 启动器。隐私优先，插件生态，AI 辅助。" />
+  <link rel="icon" type="image/png" href="images/nya-icon.png" />
+  <link rel="apple-touch-icon" href="images/nya-icon.png" />
+  <meta name="theme-color" content="#0e120d" />
+  <meta property="og:title" content="NyaLauncher · 跨平台 Minecraft 启动器" />
+  <meta property="og:description" content="现代 · 轻量 · 跨平台 · 高度自定义 · 为自由而生" />
+  <meta property="og:image" content="images/nya-icon.png" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -20,19 +27,24 @@
     <div class="md-bg__spotlight"></div>
   </div>
 
+  <!-- ===== 顶部滚动进度条 ===== -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
   <!-- ===== 顶部导航 ===== -->
   <header class="nav" id="nav">
     <a class="nav__brand" href="#home">
-      <span class="nav__logo">🐱</span>
+      <img class="nav__logo" src="images/nya-icon.png" alt="NyaLauncher 图标" width="36" height="36" />
       <span class="nav__name">Nya<span class="grad-text">Launcher</span></span>
     </a>
     <nav class="nav__links">
+      <a href="#download">下载</a>
       <a href="#about">关于</a>
       <a href="#features">特性</a>
       <a href="#tech">技术栈</a>
       <a href="#structure">结构</a>
       <a href="#updates">进度</a>
       <a href="#community">社区</a>
+      <a href="nya.html">看板娘</a>
       <a href="docs/index.html">文档</a>
       <a class="nav__cta md-btn md-btn--filled" href="https://github.com/redstore-noob/NyaLauncher" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -46,7 +58,7 @@
     <div class="hero__inner">
       <span class="hero__badge reveal">v0.1.0-preview · 为自由而生</span>
       <h1 class="hero__title reveal" data-parallax="0.15">
-        <span class="hero__cat">🐱</span> Nya<span class="grad-text">Launcher</span>
+        <img class="hero__cat" src="images/nya-icon.png" alt="" width="72" height="72" /> Nya<span class="grad-text">Launcher</span>
       </h1>
       <p class="hero__subtitle reveal" data-parallax="0.08">
         现代 · 轻量 · 跨平台 · 高度自定义 · <span class="neon-cyan">为自由而生</span>
@@ -73,6 +85,28 @@
       </div>
     </div>
     <div class="hero__scroll" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- ===== 下载 ===== -->
+  <section class="section" id="download">
+    <div class="section__head reveal">
+      <span class="section__kicker mono">// download</span>
+      <h2 class="section__title">获取 <span class="grad-text">NyaLauncher</span></h2>
+      <p class="section__lead">当前版本 <span class="mono dl__version" id="dlVersion">v0.1.0-preview</span> · 永久免费 · Apache 2.0 开源</p>
+    </div>
+
+    <div class="dl reveal">
+      <a class="dl__main md-btn md-btn--filled" href="https://github.com/redstore-noob/NyaLauncher/releases/latest" target="_blank" rel="noopener">
+        <span class="dl__os-ico" id="dlOsIco" aria-hidden="true">🪟</span>
+        <span id="dlOsText">为 Windows 下载</span>
+      </a>
+      <div class="dl__alt">
+        <a class="dl__chip" href="https://github.com/redstore-noob/NyaLauncher/releases/latest" target="_blank" rel="noopener" data-os="windows"><span aria-hidden="true">🪟</span> Windows</a>
+        <a class="dl__chip" href="https://github.com/redstore-noob/NyaLauncher/releases/latest" target="_blank" rel="noopener" data-os="macos"><span aria-hidden="true">🍎</span> macOS</a>
+        <a class="dl__chip" href="https://github.com/redstore-noob/NyaLauncher/releases/latest" target="_blank" rel="noopener" data-os="linux"><span aria-hidden="true">🐧</span> Linux</a>
+      </div>
+      <p class="dl__note mono">所有版本 · SHA-256 校验 · 历史存档 → GitHub Releases</p>
+    </div>
   </section>
 
   <!-- ===== 关于项目 ===== -->
@@ -330,6 +364,42 @@
     </div>
   </section>
 
+  <!-- ===== 常见问题 ===== -->
+  <section class="section" id="faq">
+    <div class="section__head reveal">
+      <span class="section__kicker mono">// faq</span>
+      <h2 class="section__title">常见<span class="grad-text">问题</span></h2>
+      <p class="section__lead">在提 Issue 之前，先看看这里有没有答案喵。</p>
+    </div>
+
+    <div class="faq">
+      <details class="faq__item reveal" style="--delay:0ms">
+        <summary>NyaLauncher 和 PCL2、HMCL 有什么区别？</summary>
+        <p>NyaLauncher 基于 <span class="mono">.NET 10 + Avalonia</span> 从零构建，主打「高度自定义 + 隐私优先」：无遥测、无广告、无账号墙，插件契约完全开放。PCL2 仅限 Windows 且闭源，HMCL 基于 Java；NyaLauncher 追求原生跨平台与更现代的 UI 体验。</p>
+      </details>
+      <details class="faq__item reveal" style="--delay:60ms">
+        <summary>支持哪些操作系统？</summary>
+        <p>Windows、macOS、Linux 三大桌面平台原生支持，一套代码处处运行，未来还将支持原生 AOT 编译进一步减小体积、加快启动。</p>
+      </details>
+      <details class="faq__item reveal" style="--delay:120ms">
+        <summary>离线状态下可以使用吗？</summary>
+        <p>可以。离线账户与离线启动是一等公民；正版登录令牌也在本地加密存储（<span class="mono">NyaLauncher.MinecraftTokenCrypto</span>），不联网也能玩单人与已缓存的整合包。</p>
+      </details>
+      <details class="faq__item reveal" style="--delay:180ms">
+        <summary>真的没有任何数据收集吗？</summary>
+        <p>真的。零遥测、零埋点、零追踪——这是写进项目信条的底线。你可以审计全部源码，网络请求只在下载资源与正版验证时发生。</p>
+      </details>
+      <details class="faq__item reveal" style="--delay:240ms">
+        <summary>插件用什么语言开发？</summary>
+        <p>插件基于 <span class="mono">NyaLauncher.Plugin.Abstractions</span> 契约接口开发，不绑定 Avalonia；只要能编译为 .NET 程序集的语言（C#、F#、VB 等）都可以。</p>
+      </details>
+      <details class="faq__item reveal" style="--delay:300ms">
+        <summary>什么时候正式发布？</summary>
+        <p>计划 2026 年 9 月 30 日发布 v0.1.0 正式版。当前可以下载 v0.1.0-preview 体验，开发进度可在上方「进度」区块实时查看。</p>
+      </details>
+    </div>
+  </section>
+
   <!-- ===== 社区与链接 ===== -->
   <section class="section" id="community">
     <div class="section__head reveal">
@@ -368,13 +438,19 @@
   <footer class="footer">
     <div class="footer__inner reveal">
       <div class="footer__brand">
-        <span class="footer__logo">🐱</span>
+        <img class="footer__logo" src="images/nya-icon.png" alt="" width="40" height="40" />
         <span class="footer__name">Nya<span class="grad-text">Launcher</span></span>
       </div>
       <p class="footer__license mono">Licensed under Apache 2.0</p>
       <p class="footer__built">用 <span class="heart">❤️</span> 与 <span class="cat">🐱</span> 构建</p>
     </div>
   </footer>
+
+  <!-- ===== 看板娘桌宠 ===== -->
+  <div class="pet" id="nyaPet" role="button" tabindex="0" aria-label="看板娘 Nya，点我试试喵">
+    <img class="pet__img" src="images/nya-icon.png" alt="" width="64" height="64" />
+    <div class="pet__bubble" id="petBubble" role="status">喵？</div>
+  </div>
 
   <button class="to-top" id="toTop" type="button" aria-label="回到顶部">
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>

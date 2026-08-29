@@ -190,7 +190,7 @@ if (particleCanvas && !prefersReduced) {
   function makeParticles() {
     const area = window.innerWidth * window.innerHeight;
     const count = Math.min(Math.max(Math.floor(area / 8200), 38), 95);
-    const colors = ["rgba(174,198,255,.55)", "rgba(156,231,255,.45)", "rgba(174,198,255,.35)"];
+    const colors = ["rgba(184,227,107,.55)", "rgba(156,231,255,.45)", "rgba(184,227,107,.35)"];
     particles = [];
     for (let i = 0; i < count; i++) {
       particles.push({
@@ -215,13 +215,19 @@ if (particleCanvas && !prefersReduced) {
       p.pulse += .035;
       ctx.globalAlpha = Math.max(.2, Math.min(.65, .42 + Math.sin(p.pulse) * .22));
       ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
+      // 每 4 个粒子中混入 1 个 Minecraft 像素方块，其余保持圆点
+      if (i % 4 === 0) {
+        const s = p.size * 2.4;
+        ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
+      } else {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     ctx.globalAlpha = 1;
-    const lineColor = "rgba(174,198,255,";
+    const lineColor = "rgba(184,227,107,";
     for (let i = 0; i < particles.length; i++) {
       const a = particles[i];
       for (let j = i + 1; j < particles.length; j++) {
@@ -260,6 +266,24 @@ if (particleCanvas && !prefersReduced) {
   resizeCanvas(); makeParticles(); draw();
 }
 
+/* ---------- 10. 顶部滚动进度条 ---------- */
+const scrollBar = document.getElementById("scrollProgress");
+if (scrollBar) {
+  let barTicking = false;
+  function updateBar() {
+    barTicking = false;
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - window.innerHeight;
+    scrollBar.style.transform = "scaleX(" + (max > 0 ? window.pageYOffset / max : 0) + ")";
+  }
+  function onBarScroll() {
+    if (!barTicking) { barTicking = true; requestAnimationFrame(updateBar); }
+  }
+  window.addEventListener("scroll", onBarScroll, { passive: true });
+  window.addEventListener("resize", onBarScroll);
+  updateBar();
+}
+
 /* ---------- 9. 滚动自适应遮罩：首屏背景图最清晰，往下滚逐渐压暗 ---------- */
 const bgScrim = document.querySelector(".md-bg__scrim");
 if (bgScrim) {
@@ -277,5 +301,156 @@ if (bgScrim) {
   window.addEventListener("scroll", onScrimScroll, { passive: true });
   window.addEventListener("resize", onScrimScroll);
   updateScrim();
+}
+
+/* ---------- 11. 全局点击涟漪：任意位置点击泛起霓虹波纹 ---------- */
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.addEventListener("click", function (e) {
+    const size = 96;
+    const r = document.createElement("span");
+    r.className = "click-ripple";
+    r.style.width = r.style.height = size + "px";
+    r.style.left = (e.clientX - size / 2) + "px";
+    r.style.top = (e.clientY - size / 2) + "px";
+    document.body.appendChild(r);
+    r.addEventListener("animationend", function () { r.remove(); });
+  });
+}
+
+/* ---------- 12. 智能下载：平台检测 + GitHub 最新版本号 ---------- */
+(function () {
+  const ua = navigator.userAgent;
+  let os = { key: "windows", ico: "🪟", label: "Windows" };
+  if (/Mac|iPhone|iPad/i.test(ua)) os = { key: "macos", ico: "🍎", label: "macOS" };
+  else if (/Linux|X11/i.test(ua) && !/Android/i.test(ua)) os = { key: "linux", ico: "🐧", label: "Linux" };
+
+  const ico = document.getElementById("dlOsIco");
+  const text = document.getElementById("dlOsText");
+  if (ico) ico.textContent = os.ico;
+  if (text) text.textContent = "为 " + os.label + " 下载";
+  document.querySelectorAll(".dl__chip").forEach(function (chip) {
+    if (chip.getAttribute("data-os") === os.key) chip.classList.add("is-current");
+  });
+
+  const verEl = document.getElementById("dlVersion");
+  if (verEl) {
+    fetch("https://api.github.com/repos/redstore-noob/NyaLauncher/releases/latest")
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        if (data && data.tag_name) verEl.textContent = data.tag_name;
+      })
+      .catch(function () { /* 网络失败时保留 HTML 里的默认版本号 */ });
+  }
+})();
+
+/* ---------- 13. 看板娘桌宠：点击台词 + 偶尔自言自语 ---------- */
+(function () {
+  const pet = document.getElementById("nyaPet");
+  const bubble = document.getElementById("petBubble");
+  if (!pet || !bubble) return;
+
+  const lines = [
+    "喵？找窝有事吗喵～",
+    "启动失败不可怕，让窝来诊断喵！",
+    "今天也想来一局深夜联机喵…",
+    "插件市场马上就好，再等等窝喵！",
+    "无遥测、无广告，窝最讨厌偷窥猫了喵！",
+    "JVM 参数调好了喵，快去试试吧～",
+    "zzZ…喵？！窝没睡着，窝在省电模式喵！",
+    "你知道吗？卫衣的拉绳是根 USB-C 喵。",
+    "苦力怕发卡可爱吗？喵嘿嘿～",
+    "给窝一颗绿宝石，窝就帮你启动喵！"
+  ];
+  let bubbleTimer = null;
+  function say(text) {
+    bubble.textContent = text;
+    bubble.classList.add("show");
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(function () { bubble.classList.remove("show"); }, 3200);
+  }
+  function randomLine() { return lines[Math.floor(Math.random() * lines.length)]; }
+
+  pet.addEventListener("click", function () { say(randomLine()); });
+  pet.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); say(randomLine()); }
+  });
+  // 每 40 秒偶尔自言自语（仅页面可见时）
+  setInterval(function () {
+    if (document.visibilityState === "visible" && Math.random() < .5) say(randomLine());
+  }, 40000);
+})();
+
+/* ---------- 14. nya 键盘彩蛋：绿闪 + 苦力怕雨 ---------- */
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const secret = "nya";
+  let buffer = "";
+  let cooling = false;
+
+  function creeperRain() {
+    // 绿闪
+    let flash = document.getElementById("nyaFlash");
+    if (!flash) {
+      flash = document.createElement("div");
+      flash.className = "nya-flash";
+      flash.id = "nyaFlash";
+      document.body.appendChild(flash);
+    }
+    flash.classList.remove("go");
+    void flash.offsetWidth; // 重置动画
+    flash.classList.add("go");
+
+    // 苦力怕像素方块雨
+    const greens = ["#5ABA3C", "#7ED957", "#3E8914", "#B8E36B", "#4E9A2E"];
+    for (let i = 0; i < 28; i++) {
+      const s = document.createElement("span");
+      const size = 8 + Math.floor(Math.random() * 18);
+      s.className = "creeper-drop";
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.width = size + "px";
+      s.style.height = size + "px";
+      s.style.background = greens[i % greens.length];
+      s.style.setProperty("--spin", (Math.random() > .5 ? "" : "-") + (360 + Math.random() * 360) + "deg");
+      s.style.animationDuration = (1.4 + Math.random() * 1.6) + "s";
+      s.style.animationDelay = (Math.random() * .5) + "s";
+      document.body.appendChild(s);
+      s.addEventListener("animationend", function () { s.remove(); });
+    }
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key.length !== 1) return;
+    buffer = (buffer + e.key.toLowerCase()).slice(-secret.length);
+    if (buffer === secret && !cooling) {
+      cooling = true;
+      creeperRain();
+      const bubble = document.getElementById("petBubble");
+      if (bubble) { bubble.textContent = "NYA!! 被你发现啦喵～ 🟩"; bubble.classList.add("show"); setTimeout(function () { bubble.classList.remove("show"); }, 3200); }
+      setTimeout(function () { cooling = false; }, 4000);
+    }
+  });
+})();
+
+/* ---------- 15. 点击方块爆裂：涟漪之外再炸出像素碎片 ---------- */
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const shardColors = ["#5ABA3C", "#7ED957", "#3E8914", "#B8E36B"];
+  document.addEventListener("click", function (e) {
+    for (let i = 0; i < 8; i++) {
+      const shard = document.createElement("span");
+      const size = 4 + Math.floor(Math.random() * 6);
+      shard.className = "creeper-shard";
+      shard.style.width = shard.style.height = size + "px";
+      shard.style.left = e.clientX + "px";
+      shard.style.top = e.clientY + "px";
+      shard.style.background = shardColors[i % shardColors.length];
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 36 + Math.random() * 54;
+      shard.style.setProperty("--dx", Math.cos(angle) * dist + "px");
+      shard.style.setProperty("--dy", Math.sin(angle) * dist + "px");
+      shard.style.setProperty("--spin", (Math.random() * 360) + "deg");
+      document.body.appendChild(shard);
+      shard.addEventListener("animationend", function () { shard.remove(); });
+    }
+  });
 }
 })();

@@ -370,7 +370,7 @@ a:hover{text-decoration:underline;}
 </blockquote>
 <hr />
 <h2 id="g-02-h1">1. 系统总览</h2>
-<p>主题系统由 5 个部分组成：</p>
+<p>主题系统由 6 个部分组成：</p>
 <table>
 <thead>
 <tr>
@@ -381,24 +381,29 @@ a:hover{text-decoration:underline;}
 </thead>
 <tbody>
 <tr>
-<td>家族资源文件</td>
-<td><code>Themes/{Family}_Resources.axaml</code></td>
-<td>定义该家族的全部 Color + Brush，含 Dark / Light 两个变体</td>
+<td><code>BasePalette.axaml</code></td>
+<td><code>Themes/BasePalette.axaml</code></td>
+<td><strong>中性兜底基底</strong>：深 / 浅两套基础颜色（背景 / 边框 / 文字 / 遮罩 / 工作区），家族缺键时回落到这里</td>
+</tr>
+<tr>
+<td>家族强调色文件</td>
+<td><code>Themes/{Family}_Accents.axaml</code></td>
+<td>强调色阶梯 + Material 次色 + 语义色（不分深浅），以及家族专属的深浅背景搭配</td>
 </tr>
 <tr>
 <td><code>StyleAlter</code></td>
 <td><code>Themes/StyleAlter.cs</code></td>
-<td>加载家族资源 → 复制到 <code>Application.Resources</code> → 同步 Material 强调色</td>
+<td>加载基底与家族文件 → 按明暗模式叠加 → 派生强调消费键 → 同步 Material 强调色</td>
 </tr>
 <tr>
 <td><code>ThemeManager</code></td>
 <td><code>Themes/ThemeManager.cs</code></td>
-<td>热应用主题：设置明暗 + 调 <code>StyleAlter</code> + 广播 <code>ThemeChanged</code></td>
+<td>热应用主题：设置明暗 + 调 <code>StyleAlter</code> + 广播 <code>ThemeChanged</code>；家族与模式都没变时跳过；「跟随系统」时对 <code>ColorValuesChanged</code> 做 300ms 防抖</td>
 </tr>
 <tr>
 <td><code>ThemeSettings</code></td>
 <td><code>Pages/ThemeSettings.cs</code></td>
-<td>读写 <code>config.json</code> 里的主题家族、模式与各项开关</td>
+<td>读写 <code>config.json</code> 里的主题家族与模式</td>
 </tr>
 <tr>
 <td>画刷辅助类</td>
@@ -407,36 +412,148 @@ a:hover{text-decoration:underline;}
 </tr>
 </tbody>
 </table>
-<h3 id="g-02-h2">主题文件结构</h3>
+<h3 id="g-02-h2">1.1 主题文件结构</h3>
 <div class="code-wrap"><pre><code>NyaLauncher.Avalonia/Themes/
-  HatsuneMiku_Resources.axaml      初音未来（青绿 / 粉红）
-  DeepSeekPurple_Resources.axaml   DeepSeek 紫
-  ZhiShuBlue_Resources.axaml       植树蓝
-  MojangRed_Resources.axaml        Mojang 红
+  BasePalette.axaml                中性兜底基底（深 / 浅两套）
+  HatsuneMiku_Accents.axaml        初音未来（粉色系）
+  DeepSeekPurple_Accents.axaml     DeepSeek 紫
+  ZhiShuBlue_Accents.axaml         植树蓝
+  MojangRed_Accents.axaml          Mojang 红
 </code></pre></div>
-<p>每个家族文件是<strong>一个</strong> <code>ResourceDictionary</code>，内部用 <code>ThemeDictionaries</code> 承载明暗两个变体：</p>
+<p>家族文件由两部分组成：</p>
+<ol>
+<li><strong>直接键</strong>（模式无关）：强调色阶梯、<code>SecondaryAccentColor</code>（Material 次色）、语义色</li>
+<li><strong><code>ThemeDictionaries</code></strong>（模式相关）：家族专属的暗色 / 浅色背景搭配（背景 / 边框 / 文字 /
+   遮罩 / 工作区 + 对应 Brush），<strong>Dark 与 Light 必须成对写出</strong></li>
+</ol>
 <div class="code-wrap"><pre><code class="language-xml">&lt;ResourceDictionary xmlns=&quot;https://github.com/avaloniaui&quot;
                     xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;&gt;
+    &lt;!-- 直接键：强调色阶梯 / 次色 / 语义色 --&gt;
+    &lt;Color x:Key=&quot;AccentColor&quot;&gt;#E94196&lt;/Color&gt;
+    &lt;!-- ... --&gt;
+    &lt;SolidColorBrush x:Key=&quot;AccentBrush&quot; Color=&quot;{StaticResource AccentColor}&quot;/&gt;
+    &lt;!-- ... --&gt;
+
     &lt;ResourceDictionary.ThemeDictionaries&gt;
         &lt;ResourceDictionary x:Key=&quot;Dark&quot;&gt;
-            &lt;!-- 全部 Color + Brush --&gt;
+            &lt;!-- 家族专属暗色背景搭配 --&gt;
         &lt;/ResourceDictionary&gt;
         &lt;ResourceDictionary x:Key=&quot;Light&quot;&gt;
-            &lt;!-- 同样的键，另一套值 --&gt;
+            &lt;!-- 家族专属浅色背景搭配，键必须与 Dark 完全一致 --&gt;
         &lt;/ResourceDictionary&gt;
     &lt;/ResourceDictionary.ThemeDictionaries&gt;
 &lt;/ResourceDictionary&gt;
 </code></pre></div>
 <blockquote>
-<p>变体字典的 <code>x:Key</code> 必须是 <code>Dark</code> / <code>Light</code>，对应 Avalonia 的 <code>ThemeVariant</code>。
-加载时 <code>StyleAlter</code> 会按当前模式挑一个变体，把它的条目<strong>复制</strong>进
-<code>Application.Current.Resources</code>，因此界面上用 <code>{DynamicResource XxxBrush}</code> 就能实时跟随。</p>
+<p>加载时 <code>StyleAlter</code> 会先把 <code>BasePalette</code> 当前模式的变体复制进 <code>Application.Resources</code>，
+再用家族文件覆盖：直接键 + 当前模式的变体字典逐条写入。因此界面上
+<code>{DynamicResource XxxBrush}</code> 能实时跟随，家族没写的键回落到中性基底。</p>
 </blockquote>
 <hr />
 <h2 id="g-02-h3">2. 资源键全集</h2>
 <p>以下每个 Color 键都有对应的 Brush 键（<code>&lt;Name&gt;Color</code> → <code>&lt;Name&gt;Brush</code>），
 Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticResource XxxColor}"/&gt;</code>。</p>
-<h3 id="g-02-h4">2.1 背景色（Background）</h3>
+<h3 id="g-02-h4">2.1 强调色阶梯（家族文件直接键，模式无关）</h3>
+<p>主题的核心品牌色，从深到亮排列。</p>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccentDeepDarkColor</code></td>
+<td><strong>最深强调</strong></td>
+<td>深色按钮 hover 底色、任务进度条底色；亮色模式派生文字色的取值端</td>
+</tr>
+<tr>
+<td><code>AccentDeepColor</code></td>
+<td><strong>深强调</strong></td>
+<td>设置页装饰条（下载设置）、任务指示器底色</td>
+</tr>
+<tr>
+<td><code>AccentDarkColor</code></td>
+<td><strong>暗强调</strong></td>
+<td>按钮 pressed 态、窗口图标底色</td>
+</tr>
+<tr>
+<td><code>AccentDarkerColor</code></td>
+<td><strong>较暗强调</strong></td>
+<td>暗色模式主按钮底色（派生）</td>
+</tr>
+<tr>
+<td><code>AccentColor</code></td>
+<td><strong>主题主色</strong></td>
+<td>主按钮、焦点边框、滑块、进度条、Material 主色</td>
+</tr>
+<tr>
+<td><code>AccentLightColor</code></td>
+<td><strong>亮强调</strong></td>
+<td>按钮 hover 态、Material 次色的备选</td>
+</tr>
+<tr>
+<td><code>AccentBrightColor</code></td>
+<td><strong>最亮强调</strong></td>
+<td>任务指示器边框、高亮闪烁；暗色模式派生文字色的取值端</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h5">2.2 Material 次色（家族文件直接键）</h3>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SecondaryAccentColor</code></td>
+<td>Material 控件的次强调色（如初音粉）。缺失时退回 <code>AccentLightColor</code> → 主色</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h6">2.3 语义色（家族文件直接键，不分深浅）</h3>
+<table>
+<thead>
+<tr>
+<th>Color Key</th>
+<th>语义</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SuccessColor</code></td>
+<td><strong>成功/在线</strong></td>
+<td>连接状态指示灯、下载完成</td>
+</tr>
+<tr>
+<td><code>ErrorColor</code></td>
+<td><strong>错误/危险</strong></td>
+<td>错误提示、删除确认按钮</td>
+</tr>
+<tr>
+<td><code>ErrorDarkColor</code></td>
+<td><strong>深色错误</strong></td>
+<td>错误背景</td>
+</tr>
+<tr>
+<td><code>WarningColor</code></td>
+<td><strong>警告</strong></td>
+<td>警告提示</td>
+</tr>
+<tr>
+<td><code>InfoColor</code></td>
+<td><strong>信息</strong></td>
+<td>信息提示、<code>NyaAlert</code> 信息滑条</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-02-h7">2.4 背景色（ThemeDictionaries，家族专属）</h3>
 <p>从最深到最浅，构成界面的纵深层次。</p>
 <table>
 <thead>
@@ -504,7 +621,7 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 <blockquote>
 <p><strong>亮色主题是反过来的</strong>：<code>WindowBg</code> 最浅，<code>HighlightBg</code> 较深。</p>
 </blockquote>
-<h3 id="g-02-h5">2.2 边框色（Border）</h3>
+<h3 id="g-02-h8">2.5 边框色（ThemeDictionaries，家族专属）</h3>
 <p>从最弱到最强，控制边框的可见程度。</p>
 <table>
 <thead>
@@ -549,7 +666,7 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 <li>输入控件聚焦态 → 用 <code>AccentBrush</code> 替代</li>
 <li>次要按钮 → <code>EmphasizedBorderBrush</code> + <code>ButtonBgBrush</code> 背景</li>
 </ul>
-<h3 id="g-02-h6">2.3 文字色（Text）</h3>
+<h3 id="g-02-h9">2.6 文字色（ThemeDictionaries，家族专属）</h3>
 <p>从最醒目到最弱，控制文字的信息层级。</p>
 <table>
 <thead>
@@ -576,19 +693,9 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 <td>辅助说明</td>
 </tr>
 <tr>
-<td><code>LinkTextColor</code></td>
-<td><strong>链接/可交互文字</strong></td>
-<td>超链接、可点击标签、"实例管理 ▸" 按钮</td>
-</tr>
-<tr>
 <td><code>BodyTextColor</code></td>
 <td><strong>正文文字</strong></td>
 <td>段落、描述、默认 TextBlock</td>
-</tr>
-<tr>
-<td><code>AccentTextColor</code></td>
-<td><strong>强调文字</strong></td>
-<td>数值高亮（如内存值）、状态提示</td>
 </tr>
 <tr>
 <td><code>MutedTextColor</code></td>
@@ -617,159 +724,10 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 </tr>
 </tbody>
 </table>
-<p>层级关系（暗色主题）：</p>
-<div class="code-wrap"><pre><code>PrimaryText ← 最亮最醒目
-  SecondaryText
-    TertiaryText
-      BodyText ← 默认正文
-        MutedText
-          SubtextText
-            HintText ← 最暗最弱
-              DisabledText
-                PlaceholderText ← 几乎看不见
-</code></pre></div>
 <blockquote>
-<p><strong>亮色主题是反过来的</strong>：<code>PrimaryText</code> 最深（接近黑色），<code>PlaceholderText</code> 最浅（接近灰色）。</p>
+<p><code>AccentText</code> / <code>LinkText</code> 不由家族文件定义，见 <a href="#g-02-h12">2.9 运行时派生键</a>。</p>
 </blockquote>
-<h3 id="g-02-h7">2.4 强调色（Accent）</h3>
-<p>主题的核心品牌色，从深到亮排列。</p>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>语义</th>
-<th>典型用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>AccentDeepDarkColor</code></td>
-<td><strong>最深强调</strong></td>
-<td>深色按钮 hover 底色、任务进度条底色</td>
-</tr>
-<tr>
-<td><code>AccentDeepColor</code></td>
-<td><strong>深强调</strong></td>
-<td>设置页装饰条（下载设置）、任务指示器底色</td>
-</tr>
-<tr>
-<td><code>AccentDarkColor</code></td>
-<td><strong>暗强调</strong></td>
-<td>按钮 pressed 态、窗口图标底色</td>
-</tr>
-<tr>
-<td><code>AccentDarkerColor</code></td>
-<td><strong>较暗强调</strong></td>
-<td>组件主色按钮</td>
-</tr>
-<tr>
-<td><code>AccentColor</code></td>
-<td><strong>主题主色</strong></td>
-<td>主按钮、焦点边框、滑块、进度条、设置页装饰条（游戏设置）</td>
-</tr>
-<tr>
-<td><code>AccentLightColor</code></td>
-<td><strong>亮强调</strong></td>
-<td>按钮 hover 态</td>
-</tr>
-<tr>
-<td><code>AccentBrightColor</code></td>
-<td><strong>最亮强调</strong></td>
-<td>任务指示器边框、高亮闪烁</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>主题家族</th>
-<th>Accent 色调</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HatsuneMiku Dark</td>
-<td>青绿 <code>#3EC9A0</code></td>
-</tr>
-<tr>
-<td>HatsuneMiku Light</td>
-<td>粉红 <code>#E94196</code></td>
-</tr>
-<tr>
-<td>DeepSeekPurple</td>
-<td>紫色 <code>#A78BFA</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="g-02-h8">2.5 语义色（Semantic）</h3>
-<p>不随主题色调变化的固定语义色。</p>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>语义</th>
-<th>典型用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SuccessColor</code></td>
-<td><strong>成功/在线</strong></td>
-<td>账户管理装饰条、连接状态指示灯、下载完成</td>
-</tr>
-<tr>
-<td><code>ErrorColor</code></td>
-<td><strong>错误/危险</strong></td>
-<td>错误提示、删除确认按钮</td>
-</tr>
-<tr>
-<td><code>ErrorDarkColor</code></td>
-<td><strong>深色错误</strong></td>
-<td>错误背景</td>
-</tr>
-<tr>
-<td><code>WarningColor</code></td>
-<td><strong>警告</strong></td>
-<td>警告提示</td>
-</tr>
-<tr>
-<td><code>InfoColor</code></td>
-<td><strong>信息</strong></td>
-<td>信息提示</td>
-</tr>
-</tbody>
-</table>
-<h3 id="g-02-h9">2.6 主题特色色</h3>
-<p>每个家族可定义独有的特色色（键名自取，Brush 同理）。</p>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>初音未来 Dark</th>
-<th>初音未来 Light</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>MikuTeal</code></td>
-<td><code>#30C0A0</code></td>
-<td><code>#39C5BB</code></td>
-<td>青绿</td>
-</tr>
-<tr>
-<td><code>MikuPink</code></td>
-<td><code>#E94196</code></td>
-<td><code>#E94196</code></td>
-<td>粉红</td>
-</tr>
-</tbody>
-</table>
-<p>其他家族用自己的命名（如 <code>MojangRed</code> / <code>ZhiShuBlue</code> 系列）。
-<strong>注意</strong>：<code>StyleAlter</code> 在同步 Material 时会优先取 <code>MikuPink</code> 作为次色，
-缺失时依次退回 <code>AccentLightColor</code> → 主色。想让 Material 控件有漂亮的次色，
-建议定义一个 <code>MikuPink</code> 之类的特色键。</p>
-<h3 id="g-02-h10">2.7 叠加层色（Overlay）</h3>
+<h3 id="g-02-h10">2.7 叠加层色（ThemeDictionaries，家族专属）</h3>
 <table>
 <thead>
 <tr>
@@ -778,6 +736,10 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>DockHintBgColor</code></td>
+<td>停靠提示背景</td>
+</tr>
 <tr>
 <td><code>OverlayBgColor</code></td>
 <td>全屏蒙层背景（半透明黑色）</td>
@@ -790,29 +752,9 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 <td><code>DialogAltBgColor</code></td>
 <td>对话框交替区域背景</td>
 </tr>
-<tr>
-<td><code>DropPreviewBgColor</code></td>
-<td>拖放预览背景（半透明强调色）</td>
-</tr>
-<tr>
-<td><code>DropPreviewBorderColor</code></td>
-<td>拖放预览边框</td>
-</tr>
-<tr>
-<td><code>DockHintBgColor</code></td>
-<td>停靠提示背景</td>
-</tr>
-<tr>
-<td><code>SidebarDropPreviewBgColor</code></td>
-<td>侧边栏拖放预览背景</td>
-</tr>
-<tr>
-<td><code>SidebarDropPreviewBorderColor</code></td>
-<td>侧边栏拖放预览边框</td>
-</tr>
 </tbody>
 </table>
-<h3 id="g-02-h11">2.8 工作区色（Workspace）</h3>
+<h3 id="g-02-h11">2.8 工作区色（ThemeDictionaries，家族专属）</h3>
 <p>用于组件工作区的拖拽、停靠、卡片等。</p>
 <table>
 <thead>
@@ -843,10 +785,6 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 <td>拖拽手柄背景</td>
 </tr>
 <tr>
-<td><code>DragHandleActiveColor</code></td>
-<td>拖拽手柄激活态</td>
-</tr>
-<tr>
 <td><code>DragHandleGlyphColor</code></td>
 <td>拖拽手柄图标色</td>
 </tr>
@@ -867,311 +805,62 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 <td>组件条目 hover 态</td>
 </tr>
 <tr>
-<td><code>ComponentPrimaryBgColor</code></td>
-<td>主要组件按钮背景</td>
-</tr>
-<tr>
-<td><code>ComponentPrimaryBorderColor</code></td>
-<td>主要组件按钮边框</td>
-</tr>
-<tr>
-<td><code>ComponentPrimaryHoverBgColor</code></td>
-<td>主要组件按钮 hover</td>
-</tr>
-<tr>
 <td><code>SidebarBorderColor</code></td>
 <td>侧边栏边框</td>
 </tr>
 </tbody>
 </table>
-<h3 id="g-02-h12">2.9 Polygon 组件色</h3>
-<p>主界面工作区中 Polygon 组件的专用颜色。<strong>必须定义</strong>，否则主界面组件会崩溃。</p>
-<h4>背景与表面</h4>
+<h3 id="g-02-h12">2.9 运行时派生键（StyleAlter 派生）</h3>
+<p>以下键<strong>不由家族文件声明</strong>，由 <code>StyleAlter.ApplyDerivedAccentKeys</code> 在应用主题时按
+「明暗模式 × 家族强调色」运行时派生（暗底取亮端保证可读，亮底取深端），并<strong>同时写入
+Color 与 Brush 两个键</strong>。主题作者无需定义，只需保证强调色阶梯完整。</p>
 <table>
 <thead>
 <tr>
-<th>Color Key</th>
-<th>Brush Key</th>
-<th>语义</th>
+<th>派生键</th>
+<th>取值规则（Dark / Light）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>PolygonSurfaceColor</code></td>
-<td><code>PolygonSurfaceBrush</code></td>
-<td>组件表面背景（对应 SurfaceBg）</td>
+<td><code>AccentTextColor</code>、<code>LinkTextColor</code></td>
+<td>暗底取 <code>AccentBright</code>；亮底取 <code>AccentDeepDark</code></td>
 </tr>
 <tr>
-<td><code>PolygonSurfaceHoverColor</code></td>
-<td>—</td>
-<td>组件表面 hover 态</td>
+<td><code>ComponentPrimaryBgColor</code></td>
+<td>暗底取 <code>AccentDarker</code>；亮底取 <code>Accent</code></td>
 </tr>
 <tr>
-<td><code>PolygonComponentCardBg</code></td>
-<td><code>PolygonComponentCardBgBrush</code></td>
-<td>组件卡片背景</td>
+<td><code>ComponentPrimaryBorderColor</code></td>
+<td>暗底取 <code>AccentDark</code>；亮底取 <code>AccentLight</code></td>
 </tr>
 <tr>
-<td><code>PolygonComponentCardBorder</code></td>
-<td><code>PolygonComponentCardBorderBrush</code></td>
-<td>组件卡片边框</td>
+<td><code>ComponentPrimaryHoverBgColor</code></td>
+<td>暗底取 <code>AccentDark</code>；亮底取 <code>AccentBright</code></td>
 </tr>
 <tr>
-<td><code>PolygonIconBoxBg</code></td>
-<td><code>PolygonIconBoxBgBrush</code></td>
-<td>图标盒子背景</td>
+<td><code>DragHandleActiveColor</code></td>
+<td>暗底取 <code>AccentDark</code>；亮底取 <code>Accent</code></td>
 </tr>
 <tr>
-<td><code>PolygonEditorSurface</code></td>
-<td><code>PolygonEditorSurfaceBrush</code></td>
-<td>编辑器表面背景</td>
+<td><code>DropPreviewBgColor</code> / <code>SidebarDropPreviewBgColor</code></td>
+<td>主色加固定透明度（<code>#38</code> / <code>#40</code>），深浅同值</td>
 </tr>
 <tr>
-<td><code>PolygonCardBg</code></td>
-<td><code>PolygonCardBgBrush</code></td>
-<td>多边形卡片背景</td>
+<td><code>DropPreviewBorderColor</code></td>
+<td>暗底取 <code>AccentBright</code>；亮底取 <code>Accent</code></td>
 </tr>
 <tr>
-<td><code>PolygonCardBorder</code></td>
-<td><code>PolygonCardBorderBrush</code></td>
-<td>多边形卡片边框</td>
+<td><code>SidebarDropPreviewBorderColor</code></td>
+<td>取 <code>AccentLight</code></td>
+</tr>
+<tr>
+<td><code>SystemAccentColor</code> + <code>Dark1</code> / <code>Dark2</code> / <code>Light1</code></td>
+<td>直接映射家族强调色阶梯</td>
 </tr>
 </tbody>
 </table>
-<h4>边框与交互</h4>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>Brush Key</th>
-<th>语义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>PolygonBorderColor</code></td>
-<td>—</td>
-<td>组件默认边框</td>
-</tr>
-<tr>
-<td><code>PolygonBorderHoverColor</code></td>
-<td>—</td>
-<td>组件 hover 边框（用主题强调色）</td>
-</tr>
-<tr>
-<td><code>PolygonEditorBorder</code></td>
-<td><code>PolygonEditorBorderBrush</code></td>
-<td>编辑器边框</td>
-</tr>
-<tr>
-<td><code>PolygonProgressTrackColor</code></td>
-<td>—</td>
-<td>进度条轨道</td>
-</tr>
-</tbody>
-</table>
-<h4>拖拽</h4>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>Brush Key</th>
-<th>语义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>PolygonDragGlyph</code></td>
-<td><code>PolygonDragGlyphBrush</code></td>
-<td>拖拽手柄图标色</td>
-</tr>
-<tr>
-<td><code>PolygonDragPreviewBg</code></td>
-<td><code>PolygonDragPreviewBgBrush</code></td>
-<td>拖拽预览背景（半透明强调色）</td>
-</tr>
-</tbody>
-</table>
-<h4>启动按钮</h4>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>语义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>PolygonLaunchSurface</code></td>
-<td>启动按钮背景</td>
-</tr>
-<tr>
-<td><code>PolygonLaunchSurfaceHover</code></td>
-<td>启动按钮 hover</td>
-</tr>
-<tr>
-<td><code>PolygonLaunchBorder</code></td>
-<td>启动按钮边框</td>
-</tr>
-<tr>
-<td><code>PolygonLaunchBorderHover</code></td>
-<td>启动按钮 hover 边框</td>
-</tr>
-<tr>
-<td><code>PolygonLaunchProgressTrack</code></td>
-<td>启动进度条轨道</td>
-</tr>
-<tr>
-<td><code>PolygonLaunchAccentFg</code></td>
-<td>启动按钮强调前景</td>
-</tr>
-</tbody>
-</table>
-<h4>删除操作</h4>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>Brush Key</th>
-<th>语义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>PolygonDeleteBg</code></td>
-<td><code>PolygonDeleteBgBrush</code></td>
-<td>删除按钮/区域背景</td>
-</tr>
-<tr>
-<td><code>PolygonDeleteBorder</code></td>
-<td><code>PolygonDeleteBorderBrush</code></td>
-<td>删除边框（Error 色）</td>
-</tr>
-<tr>
-<td><code>PolygonDeleteFg</code></td>
-<td><code>PolygonDeleteFgBrush</code></td>
-<td>删除前景文字</td>
-</tr>
-</tbody>
-</table>
-<h4>预设与皮肤</h4>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>Brush Key</th>
-<th>语义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>PolygonPresetBg</code></td>
-<td><code>PolygonPresetBgBrush</code></td>
-<td>预设按钮背景</td>
-</tr>
-<tr>
-<td><code>PolygonPresetBorder</code></td>
-<td><code>PolygonPresetBorderBrush</code></td>
-<td>预设按钮边框</td>
-</tr>
-<tr>
-<td><code>PolygonSkinButtonBg</code></td>
-<td><code>PolygonSkinButtonBgBrush</code></td>
-<td>皮肤按钮背景</td>
-</tr>
-<tr>
-<td><code>PolygonSkinButtonBgCurrent</code></td>
-<td><code>PolygonSkinButtonBgCurrentBrush</code></td>
-<td>当前皮肤按钮背景</td>
-</tr>
-<tr>
-<td><code>PolygonSkinButtonBorder</code></td>
-<td><code>PolygonSkinButtonBorderBrush</code></td>
-<td>皮肤按钮边框</td>
-</tr>
-<tr>
-<td><code>PolygonSkinButtonBorderCurrent</code></td>
-<td><code>PolygonSkinButtonBorderCurrentBrush</code></td>
-<td>当前皮肤按钮边框</td>
-</tr>
-<tr>
-<td><code>PolygonSkinAvatarBg</code></td>
-<td><code>PolygonSkinAvatarBgBrush</code></td>
-<td>头像背景</td>
-</tr>
-</tbody>
-</table>
-<h4>任务指示器</h4>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>Brush Key</th>
-<th>语义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>PolygonTaskActivityDownloadingBg</code></td>
-<td><code>PolygonTaskDownloadingBgBrush</code></td>
-<td>下载中指示器背景（绿色）</td>
-</tr>
-<tr>
-<td><code>PolygonTaskActivityDownloadingBorder</code></td>
-<td><code>PolygonTaskDownloadingBorderBrush</code></td>
-<td>下载中指示器边框</td>
-</tr>
-<tr>
-<td><code>PolygonTaskActivityLaunchingBg</code></td>
-<td><code>PolygonTaskLaunchingBgBrush</code></td>
-<td>启动中指示器背景（主题色）</td>
-</tr>
-<tr>
-<td><code>PolygonTaskActivityLaunchingBorder</code></td>
-<td><code>PolygonTaskLaunchingBorderBrush</code></td>
-<td>启动中指示器边框</td>
-</tr>
-<tr>
-<td><code>PolygonDisabledText</code></td>
-<td><code>PolygonDisabledTextBrush</code></td>
-<td>组件禁用文字色</td>
-</tr>
-</tbody>
-</table>
-<h3 id="g-02-h13">2.10 系统色覆盖</h3>
-<p>Avalonia 框架级的系统强调色，影响原生控件（进度条、选区高亮等）。</p>
-<table>
-<thead>
-<tr>
-<th>Color Key</th>
-<th>典型值（Dark）</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SystemAccentColor</code></td>
-<td>与主题 Accent 相同</td>
-<td>系统主强调色</td>
-</tr>
-<tr>
-<td><code>SystemAccentColorDark1</code></td>
-<td>Accent 稍暗</td>
-<td>变体</td>
-</tr>
-<tr>
-<td><code>SystemAccentColorDark2</code></td>
-<td>Accent 更暗</td>
-<td>变体</td>
-</tr>
-<tr>
-<td><code>SystemAccentColorLight1</code></td>
-<td>Accent 稍亮</td>
-<td>变体</td>
-</tr>
-</tbody>
-</table>
-<h3 id="g-02-h14">2.11 基础色</h3>
+<h3 id="g-02-h13">2.10 基础色（BasePalette 兜底）</h3>
 <table>
 <thead>
 <tr>
@@ -1193,76 +882,83 @@ Brush 一律写成 <code>&lt;SolidColorBrush x:Key="XxxBrush" Color="{StaticReso
 </tr>
 </tbody>
 </table>
-<h3 id="g-02-h15">2.12 汇总</h3>
-<p>一份完整的家族文件需要定义（每个变体）：</p>
+<h3 id="g-02-h14">2.11 汇总</h3>
 <table>
 <thead>
 <tr>
 <th>分组</th>
-<th>数量</th>
+<th>定义位置</th>
+<th>数量（每模式）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>基础色</td>
-<td>2</td>
+<td>强调色阶梯</td>
+<td>家族文件直接键</td>
+<td>7 Color + 7 Brush</td>
+</tr>
+<tr>
+<td>Material 次色</td>
+<td>家族文件直接键</td>
+<td>1 Color</td>
+</tr>
+<tr>
+<td>语义色</td>
+<td>家族文件直接键</td>
+<td>5 Color + 5 Brush</td>
 </tr>
 <tr>
 <td>背景色</td>
+<td>家族 ThemeDictionaries（Dark / Light 成对）</td>
 <td>9 Color + 9 Brush</td>
 </tr>
 <tr>
 <td>边框色</td>
+<td>同上</td>
 <td>5 Color + 5 Brush</td>
 </tr>
 <tr>
 <td>文字色</td>
-<td>11 Color + 11 Brush</td>
-</tr>
-<tr>
-<td>强调色</td>
-<td>7 Color + 7 Brush</td>
-</tr>
-<tr>
-<td>语义色</td>
-<td>5 Color + 5 Brush</td>
-</tr>
-<tr>
-<td>特色色</td>
-<td>≥2 Color + 2 Brush（可复用 Accent 色）</td>
+<td>同上</td>
+<td>9 Color + 9 Brush</td>
 </tr>
 <tr>
 <td>叠加层色</td>
-<td>8 Color + 8 Brush</td>
+<td>同上</td>
+<td>4 Color + 4 Brush</td>
 </tr>
 <tr>
 <td>工作区色</td>
-<td>15 Color + 15 Brush</td>
+<td>同上</td>
+<td>11 Color + 11 Brush</td>
 </tr>
 <tr>
-<td><strong>Polygon 组件色</strong></td>
-<td><strong>35 Color + 24 Brush</strong></td>
+<td>运行时派生键</td>
+<td><code>StyleAlter</code> 派生，<strong>无需定义</strong></td>
+<td>—</td>
 </tr>
 <tr>
-<td>系统色覆盖</td>
-<td>4</td>
+<td>基础色</td>
+<td><code>BasePalette.axaml</code> 兜底，<strong>无需定义</strong></td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p>总计 <strong>110+ 个 Color 与 Brush</strong>。最省事的做法是复制
-<code>HatsuneMiku_Resources.axaml</code> 再逐项改值——它是最完整的参考实现。</p>
+<p>家族文件缺任何一个 ThemeDictionaries 键时会回落到 <code>BasePalette.axaml</code> 的中性值，
+但<strong>风格会不统一</strong>—— Dark 与 Light 必须成对写出完整搭配。
+最省事的做法是复制 <code>HatsuneMiku_Accents.axaml</code> 再逐项改值。</p>
 </blockquote>
 <hr />
-<h2 id="g-02-h16">3. 颜色取值规则</h2>
-<h3 id="g-02-h17">3.1 层级规则</h3>
+<h2 id="g-02-h15">3. 颜色取值规则</h2>
+<h3 id="g-02-h16">3.1 层级规则</h3>
 <ul>
 <li><strong>暗色主题</strong>：<code>WindowBg</code> 最暗（约 5% 亮度），逐级递增至 <code>BadgeBg</code>（约 20% 亮度）</li>
 <li><strong>亮色主题</strong>：<code>WindowBg</code> 最亮（约 97% 亮度），逐级递减至 <code>BadgeBg</code>（约 85% 亮度）</li>
 <li><strong>边框色</strong>：暗色主题比对应背景亮 5–15%；亮色主题比对应背景暗 5–15%</li>
 <li><strong>文字色</strong>：暗色主题从白到灰递减；亮色主题从黑到灰递减</li>
 </ul>
-<h3 id="g-02-h18">3.2 强调色梯度</h3>
+<h3 id="g-02-h17">3.2 强调色梯度</h3>
 <p>从深到亮保持 7 级梯度：</p>
 <div class="code-wrap"><pre><code>AccentDeepDark  →  最深（约比主色暗 25%）
 AccentDeep      →  深（约比主色暗 15%）
@@ -1272,47 +968,42 @@ Accent          →  主色
 AccentLight     →  稍亮（hover 态）
 AccentBright    →  最亮
 </code></pre></div>
+<h3 id="g-02-h18">3.3 派生键的取值方向</h3>
+<p>强调色阶梯是<strong>模式无关</strong>的（同一个家族深浅模式共用一套强调色），但「强调色上的文字」
+「主按钮底色」等消费键要考虑底色明暗：</p>
+<ul>
+<li><strong>暗底</strong>：文字取阶梯<strong>亮端</strong>（<code>AccentBright</code>），按钮底色取<strong>深一档</strong>（更稳重）</li>
+<li><strong>亮底</strong>：文字取阶梯<strong>深端</strong>（<code>AccentDeepDark</code>），按钮底色直接用主色</li>
+</ul>
 <hr />
 <h2 id="g-02-h19">4. 创建新主题</h2>
-<h3 id="g-02-h20">步骤 1：新建资源文件</h3>
-<p>在 <code>NyaLauncher.Avalonia/Themes/</code> 下创建 <code>{Family}_Resources.axaml</code>。
-<strong>推荐做法</strong>：复制 <code>HatsuneMiku_Resources.axaml</code>，改文件名，再逐项替换颜色值。</p>
-<p>结构要求：</p>
-<div class="code-wrap"><pre><code class="language-xml">&lt;ResourceDictionary xmlns=&quot;https://github.com/avaloniaui&quot;
-                    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;&gt;
-    &lt;ResourceDictionary.ThemeDictionaries&gt;
-        &lt;ResourceDictionary x:Key=&quot;Dark&quot;&gt;
-            &lt;Color x:Key=&quot;TransparentColor&quot;&gt;#00000000&lt;/Color&gt;
-            &lt;Color x:Key=&quot;WhiteColor&quot;&gt;#FFFFFF&lt;/Color&gt;
-            &lt;!-- ... 全部 Color ... --&gt;
-
-            &lt;SolidColorBrush x:Key=&quot;WindowBgBrush&quot; Color=&quot;{StaticResource WindowBgColor}&quot;/&gt;
-            &lt;!-- ... 全部 Brush ... --&gt;
-
-            &lt;Color x:Key=&quot;SystemAccentColor&quot;&gt;#XXXXXX&lt;/Color&gt;
-            &lt;!-- ... 4 个系统色 ... --&gt;
-        &lt;/ResourceDictionary&gt;
-
-        &lt;ResourceDictionary x:Key=&quot;Light&quot;&gt;
-            &lt;!-- 同样的键，另一套值 --&gt;
-        &lt;/ResourceDictionary&gt;
-    &lt;/ResourceDictionary.ThemeDictionaries&gt;
-&lt;/ResourceDictionary&gt;
+<h3 id="g-02-h20">步骤 1：新建家族文件</h3>
+<p>在 <code>NyaLauncher.Avalonia/Themes/</code> 下创建 <code>{Family}_Accents.axaml</code>。
+<strong>推荐做法</strong>：复制 <code>HatsuneMiku_Accents.axaml</code>，改文件名，再逐项替换颜色值。</p>
+<p>必须完成两件事：</p>
+<ol>
+<li>写好直接键：强调色阶梯（7 档）+ <code>SecondaryAccentColor</code> + 语义色</li>
+<li><strong>ThemeDictionaries 成对写出</strong>家族专属的 Dark / Light 背景搭配
+   （背景 9 + 边框 5 + 文字 9 + 叠加层 4 + 工作区 11，Color 与 Brush 双键），
+   键名与初音文件完全一致</li>
+</ol>
+<h3 id="g-02-h21">步骤 2：在设置页注册主题卡片</h3>
+<p>在 <code>NyaLauncher.Avalonia/Pages/SettingsPage.axaml</code> 的「个性化」卡片里加一个 theme-card：</p>
+<div class="code-wrap"><pre><code class="language-xml">&lt;RadioButton x:Name=&quot;ThemeCardMyFamily&quot;
+             Classes=&quot;theme-card&quot;
+             GroupName=&quot;ThemeFamily&quot;
+             Tag=&quot;MyFamily&quot;
+             Margin=&quot;0,0,10,10&quot;
+             IsCheckedChanged=&quot;OnThemeFamilyChecked&quot;&gt;
+    &lt;!-- 卡片内容：主题预览色块与名称 --&gt;
+&lt;/RadioButton&gt;
 </code></pre></div>
-<h3 id="g-02-h21">步骤 2：注册家族名</h3>
-<p>在 <code>NyaLauncher.Avalonia/Pages/SettingsPage.axaml.cs</code> 的 <code>_themeFamilies</code> 字典里加一项：</p>
-<div class="code-wrap"><pre><code class="language-csharp">private readonly Dictionary&lt;string, string&gt; _themeFamilies = new()
-{
-    { &quot;HatsuneMiku&quot;, &quot;初音未来&quot; },
-    { &quot;DeepSeekPurple&quot;, &quot;DeepSeek紫&quot; },
-    { &quot;ZhiShuBlue&quot;, &quot;植树蓝&quot; },
-    { &quot;MojangRed&quot;, &quot;Mojang红&quot; },
-    { &quot;MyFamily&quot;, &quot;我的主题&quot; }      // ← 新增：键 = axaml 文件名前缀，值 = 显示名
-};
+<p>同时在 <code>SettingsPage.axaml.cs</code> 的勾选状态同步逻辑里加一行：</p>
+<div class="code-wrap"><pre><code class="language-csharp">ThemeCardMyFamily.IsChecked = currentFamily == &quot;MyFamily&quot;;
 </code></pre></div>
 <blockquote>
-<p>字典的<strong>键必须与文件名前缀完全一致</strong>（<code>MyFamily</code> ↔ <code>MyFamily_Resources.axaml</code>），
-因为 <code>StyleAlter</code> 是按 <code>avares://NyaLauncher.Avalonia/Themes/{Family}_Resources.axaml</code>
+<p><code>Tag</code> 就是家族名，<strong>必须与文件名前缀完全一致</strong>（<code>MyFamily</code> ↔ <code>MyFamily_Accents.axaml</code>），
+因为 <code>StyleAlter</code> 是按 <code>avares://NyaLauncher.Avalonia/Themes/{Family}_Accents.axaml</code>
 拼 URI 去加载的。</p>
 </blockquote>
 <h3 id="g-02-h22">步骤 3：确保资源文件参与编译</h3>
@@ -1321,7 +1012,8 @@ AccentBright    →  最亮
 <h3 id="g-02-h23">步骤 4：验证</h3>
 <ul>
 <li>明暗两个变体都要切一遍，逐页检查：设置页、下载页、版本管理、主界面组件、所有弹窗</li>
-<li>重点看：文字对比度、边框可见性、进度条/滑块轨道、组件 hover 与选中态</li>
+<li>重点看：文字对比度、边框可见性、进度条/滑块轨道、组件 hover 与选中态、
+  派生键（强调文字、主按钮、拖放预览）在深浅两种底色上的可读性</li>
 <li>家族文件缺失或加载失败时，<code>StyleAlter</code> 会<strong>自动降级到 HatsuneMiku</strong> 并在调试输出中记录原因</li>
 </ul>
 <hr />
@@ -1330,17 +1022,21 @@ AccentBright    →  最亮
 <div class="code-wrap"><pre><code>用户切换主题
    ↓
 ThemeManager.ApplyTheme(family, mode)
+   ├── 0. 家族与模式都没变 → 直接跳过（防重复刷屏）
    ├── 1. Application.RequestedThemeVariant = Dark / Light   （标准控件明暗）
    ├── 2. StyleAlter.ApplyTheme(family, mode)                （资源字典换血）
-   │        ├── 加载 Themes/{Family}_Resources.axaml
-   │        ├── 挑出当前变体字典，逐条复制到 Application.Resources
-   │        └── SyncMaterialTheme() 同步 Material 强调色
+   │        ├── 复制 BasePalette.axaml 当前模式的变体 → Application.Resources
+   │        ├── 家族 {Family}_Accents.axaml 直接键 + 当前模式变体覆盖基底
+   │        ├── ApplyDerivedAccentKeys() 按「明暗 × 强调色」派生消费键
+   │        └── SyncMaterialTheme() 同步 Material 主色 / 次色
    └── 3. ThemeChanged?.Invoke()                             （广播）
             ↓
        MainWindow.OnThemeHotReload
             ├── AmbientGradient.RecreateAll()     重建背景渐变
             └── ThemeManager.RemountRootAsync()   淡出 → 重挂载根元素 → 淡入
 </code></pre></div>
+<p>「跟随系统」模式下，<code>ThemeManager</code> 对系统的 <code>ColorValuesChanged</code> 事件做 <strong>300ms 防抖</strong>，
+避免系统切换明暗瞬间连续触发多次重挂载。</p>
 <h3 id="g-02-h26">5.2 为什么要重挂载根元素</h3>
 <p>资源复制进 <code>Application.Resources</code> 后，<code>DynamicResource</code> 引用会自动刷新，
 但已经解析过的 <code>StaticResource</code> 不会。因此宿主重挂载窗口根元素，
@@ -1360,14 +1056,15 @@ ThemeManager.ApplyTheme(family, mode)
 &lt;!-- 共 20+ 项，覆盖输入框、分隔线、Snackbar、DataGrid、验证错误等 --&gt;
 </code></pre></div>
 <p><strong>第二层</strong> —— <code>StyleAlter.SyncMaterialTheme()</code> 动态注入强调色：</p>
-<div class="code-wrap"><pre><code class="language-csharp">var primary   = ExtractColor(source, &quot;AccentColor&quot;) ?? Colors.Teal;
-var secondary = ExtractColor(source, &quot;MikuPink&quot;)
-             ?? ExtractColor(source, &quot;AccentLightColor&quot;)
+<div class="code-wrap"><pre><code class="language-csharp">var primary   = ExtractColor(family, &quot;AccentColor&quot;) ?? Colors.Teal;
+var secondary = ExtractColor(family, &quot;SecondaryAccentColor&quot;)
+             ?? ExtractColor(family, &quot;AccentLightColor&quot;)
              ?? primary;
 var theme = Theme.Create(baseTheme, primary, secondary);
 materialTheme.CurrentTheme = theme;
 </code></pre></div>
 <blockquote>
+<p>取色<strong>严格来自当前家族文件</strong>（而非 <code>Application.Resources</code>），防止跨家族残留串色。</p>
 <p>⚠️ <strong>绝对不要设置 <code>MaterialTheme.BaseTheme</code> 属性</strong>。
 该属性任何变化都会调度内部私有主题（XAML 里的 Teal/Pink 枚举占位）
 在 100ms 后回写 <code>CurrentTheme</code>，把注入的家族强调色覆盖掉。
@@ -1394,7 +1091,7 @@ materialTheme.CurrentTheme = theme;
 </tr>
 <tr>
 <td><code>ThemePolygonHelper</code>（<code>internal</code>）</td>
-<td>Polygon 组件专用：<code>EditorSurface</code>、<code>DeleteBg</code>、<code>SkinButton*</code> 等</td>
+<td>Polygon 组件画刷：统一绑定到<strong>标准主题键</strong>（<code>CardBgBrush</code>、<code>ComponentBgBrush</code>、<code>ErrorBrush</code> 等），新增主题无需为组件单独定义颜色</td>
 </tr>
 </tbody>
 </table>
@@ -1466,8 +1163,18 @@ myRing.ProgressBrush = ThemeBrushes.Accent;
 </tr>
 <tr>
 <td>新增家族后设置页选了没反应</td>
-<td><code>_themeFamilies</code> 字典键与文件名前缀不一致</td>
-<td>两者必须完全一致</td>
+<td>主题卡片 <code>Tag</code> 与文件名前缀不一致</td>
+<td>两者必须完全一致（见步骤 2）</td>
+</tr>
+<tr>
+<td>某个模式下界面颜色乱 / 仍是基底灰绿色</td>
+<td>家族文件只写了 Dark 或只写了 Light 变体</td>
+<td>ThemeDictionaries <strong>必须成对写出</strong>，键名与初音文件完全一致</td>
+</tr>
+<tr>
+<td>强调文字 / 主按钮 / 拖放预览颜色不对</td>
+<td>想在家族文件里手写派生键</td>
+<td>不要写——派生键由 <code>StyleAlter</code> 运行时生成，保证阶梯完整即可</td>
 </tr>
 <tr>
 <td>Material 控件显示成默认绿</td>
@@ -1476,8 +1183,8 @@ myRing.ProgressBrush = ThemeBrushes.Accent;
 </tr>
 <tr>
 <td>跨家族串色（保留了上个家族的颜色）</td>
-<td>资源是<strong>复制</strong>进 <code>Application.Resources</code> 的，未清理旧键</td>
-<td><code>StyleAlter</code> 取色严格认当前变体字典，别从 <code>Application.Resources</code> 反查</td>
+<td>从 <code>Application.Resources</code> 反查取色</td>
+<td><code>SyncMaterialTheme</code> 只认当前家族字典；自定义取色也应如此</td>
 </tr>
 <tr>
 <td>亮色主题下层次反了</td>
@@ -1489,14 +1196,9 @@ myRing.ProgressBrush = ThemeBrushes.Accent;
 <td>家族文件缺失或 XML 有误</td>
 <td>查看调试输出 <code>[StyleAlter] Failed to load theme family ...</code>；会自动降级到 HatsuneMiku</td>
 </tr>
-<tr>
-<td>组件卡片崩溃</td>
-<td>Polygon 组件色未定义全</td>
-<td>对照 <a href="#g-02-h12">2.9 节</a> 补全 35 Color + 24 Brush</td>
-</tr>
 </tbody>
 </table></article>
-      <aside class="doc-toc"><div class="toc-inner"><p class="toc-title">本页目录</p><ul class="toc-list"><li><a href="#g-02-h1">1. 系统总览</a></li><li class="toc-sub"><a href="#g-02-h2">主题文件结构</a></li><li><a href="#g-02-h3">2. 资源键全集</a></li><li class="toc-sub"><a href="#g-02-h4">2.1 背景色（Background）</a></li><li class="toc-sub"><a href="#g-02-h5">2.2 边框色（Border）</a></li><li class="toc-sub"><a href="#g-02-h6">2.3 文字色（Text）</a></li><li class="toc-sub"><a href="#g-02-h7">2.4 强调色（Accent）</a></li><li class="toc-sub"><a href="#g-02-h8">2.5 语义色（Semantic）</a></li><li class="toc-sub"><a href="#g-02-h9">2.6 主题特色色</a></li><li class="toc-sub"><a href="#g-02-h10">2.7 叠加层色（Overlay）</a></li><li class="toc-sub"><a href="#g-02-h11">2.8 工作区色（Workspace）</a></li><li class="toc-sub"><a href="#g-02-h12">2.9 Polygon 组件色</a></li><li class="toc-sub"><a href="#g-02-h13">2.10 系统色覆盖</a></li><li class="toc-sub"><a href="#g-02-h14">2.11 基础色</a></li><li class="toc-sub"><a href="#g-02-h15">2.12 汇总</a></li><li><a href="#g-02-h16">3. 颜色取值规则</a></li><li class="toc-sub"><a href="#g-02-h17">3.1 层级规则</a></li><li class="toc-sub"><a href="#g-02-h18">3.2 强调色梯度</a></li><li><a href="#g-02-h19">4. 创建新主题</a></li><li class="toc-sub"><a href="#g-02-h20">步骤 1：新建资源文件</a></li><li class="toc-sub"><a href="#g-02-h21">步骤 2：注册家族名</a></li><li class="toc-sub"><a href="#g-02-h22">步骤 3：确保资源文件参与编译</a></li><li class="toc-sub"><a href="#g-02-h23">步骤 4：验证</a></li><li><a href="#g-02-h24">5. 运行时机制</a></li><li class="toc-sub"><a href="#g-02-h25">5.1 热重载流程</a></li><li class="toc-sub"><a href="#g-02-h26">5.2 为什么要重挂载根元素</a></li><li class="toc-sub"><a href="#g-02-h27">5.3 Material 控件如何跟随</a></li><li><a href="#g-02-h28">6. 在 C# 代码里取色</a></li><li><a href="#g-02-h29">7. 页面内样式类</a></li><li><a href="#g-02-h30">8. 常见坑</a></li></ul></div></aside>
+      <aside class="doc-toc"><div class="toc-inner"><p class="toc-title">本页目录</p><ul class="toc-list"><li><a href="#g-02-h1">1. 系统总览</a></li><li class="toc-sub"><a href="#g-02-h2">1.1 主题文件结构</a></li><li><a href="#g-02-h3">2. 资源键全集</a></li><li class="toc-sub"><a href="#g-02-h4">2.1 强调色阶梯（家族文件直接键，模式无关）</a></li><li class="toc-sub"><a href="#g-02-h5">2.2 Material 次色（家族文件直接键）</a></li><li class="toc-sub"><a href="#g-02-h6">2.3 语义色（家族文件直接键，不分深浅）</a></li><li class="toc-sub"><a href="#g-02-h7">2.4 背景色（ThemeDictionaries，家族专属）</a></li><li class="toc-sub"><a href="#g-02-h8">2.5 边框色（ThemeDictionaries，家族专属）</a></li><li class="toc-sub"><a href="#g-02-h9">2.6 文字色（ThemeDictionaries，家族专属）</a></li><li class="toc-sub"><a href="#g-02-h10">2.7 叠加层色（ThemeDictionaries，家族专属）</a></li><li class="toc-sub"><a href="#g-02-h11">2.8 工作区色（ThemeDictionaries，家族专属）</a></li><li class="toc-sub"><a href="#g-02-h12">2.9 运行时派生键（StyleAlter 派生）</a></li><li class="toc-sub"><a href="#g-02-h13">2.10 基础色（BasePalette 兜底）</a></li><li class="toc-sub"><a href="#g-02-h14">2.11 汇总</a></li><li><a href="#g-02-h15">3. 颜色取值规则</a></li><li class="toc-sub"><a href="#g-02-h16">3.1 层级规则</a></li><li class="toc-sub"><a href="#g-02-h17">3.2 强调色梯度</a></li><li class="toc-sub"><a href="#g-02-h18">3.3 派生键的取值方向</a></li><li><a href="#g-02-h19">4. 创建新主题</a></li><li class="toc-sub"><a href="#g-02-h20">步骤 1：新建家族文件</a></li><li class="toc-sub"><a href="#g-02-h21">步骤 2：在设置页注册主题卡片</a></li><li class="toc-sub"><a href="#g-02-h22">步骤 3：确保资源文件参与编译</a></li><li class="toc-sub"><a href="#g-02-h23">步骤 4：验证</a></li><li><a href="#g-02-h24">5. 运行时机制</a></li><li class="toc-sub"><a href="#g-02-h25">5.1 热重载流程</a></li><li class="toc-sub"><a href="#g-02-h26">5.2 为什么要重挂载根元素</a></li><li class="toc-sub"><a href="#g-02-h27">5.3 Material 控件如何跟随</a></li><li><a href="#g-02-h28">6. 在 C# 代码里取色</a></li><li><a href="#g-02-h29">7. 页面内样式类</a></li><li><a href="#g-02-h30">8. 常见坑</a></li></ul></div></aside>
     </div>
     <nav class="page-nav" aria-label="章节翻页"><a class="page-nav__link page-nav__prev" href="01-architecture.html"><span class="page-nav__dir">← 上一章</span><span class="page-nav__title">🧭 架构总览</span></a><a class="page-nav__link page-nav__next" href="03-layout-and-spacing.html"><span class="page-nav__dir">下一章 →</span><span class="page-nav__title">📐 布局与间距</span></a></nav>
     <footer class="doc-foot">

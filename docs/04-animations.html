@@ -406,11 +406,13 @@ a:hover{text-decoration:underline;}
 <div class="code-wrap"><pre><code class="language-csharp">AnimationGate.Enabled   // 全局动画总开关
 </code></pre></div>
 <ul>
-<li>由 <code>ThemeSettings.LoadAnimationsEnabled()</code> 在 <code>MainWindow</code> 构造函数里赋值</li>
-<li>用户可在设置页主题卡片中修改（持久化到 <code>config.json</code> 的 <code>animationsEnabled</code>）</li>
-<li><strong>所有 helper 内部都会先检查它</strong>，关闭时直接跳过动画、不改变视觉终态</li>
+<li><strong>默认 <code>true</code>，动画永远开启</strong>：设置页的「动画效果」开关已移除，
+  <code>config.json</code> 里的旧键 <code>animationsEnabled</code> / <code>closeAnimations</code> 不再有人读取</li>
+<li>该开关保留为<strong>代码级闸门</strong>：所有 helper 内部仍会先检查它，
+  关闭时直接跳过动画、不改变视觉终态</li>
 </ul>
-<p>所以你写新动画时，第一件事也应该是 <code>if (!AnimationGate.Enabled) return;</code>。</p>
+<p>所以你写新动画时，第一件事也应该是 <code>if (!AnimationGate.Enabled) return;</code>
+——即使当前没有入口能关掉它，这也保证动效体系始终可以被统一关停。</p>
 <p>另有两项独立的视觉开关，同样在启动时应用：</p>
 <table>
 <thead>
@@ -668,19 +670,19 @@ a:hover{text-decoration:underline;}
 </thead>
 <tbody>
 <tr>
-<td><code>BounceAsync(Control, double scaleUp = 1.12, int durationMs = 350)</code></td>
+<td><code>BounceAsync(Control, double scaleUp = 1.06, int durationMs = 300)</code></td>
 <td>Q 弹回弹（放大 → 回缩 → 归位）</td>
 </tr>
 <tr>
 <td><code>PressAsync(Control, int durationMs = 120)</code></td>
-<td>按下收缩到 0.92</td>
+<td>按下轻压到 0.97</td>
 </tr>
 <tr>
-<td><code>ReleaseAsync(Control, int durationMs = 300)</code></td>
-<td>释放回弹（0.92 → 1.05 → 1.0）</td>
+<td><code>ReleaseAsync(Control, int durationMs = 240)</code></td>
+<td>释放回位（微过冲 1.01 → 1.0）</td>
 </tr>
 <tr>
-<td><code>HoverInAsync(Control, int durationMs = 200, double hoverScale = 1.05)</code></td>
+<td><code>HoverInAsync(Control, int durationMs = 200, double hoverScale = 1.02)</code></td>
 <td>悬浮放大</td>
 </tr>
 <tr>
@@ -710,6 +712,11 @@ await AnimationHelper.SlideFadeOutAsync(oldPage);
 await AnimationHelper.SlideFadeInAsync(newPage);
 </code></pre></div>
 <blockquote>
+<p><strong>微交互幅度约定</strong>：按压 <strong>0.97</strong>、松开微过冲 <strong>1.01</strong>、悬浮缩放 <strong>1.02</strong>、
+Bounce 默认 <strong>1.06</strong>、HoverLift <strong>-6px + 1.02</strong>——这是刻意收敛后的克制轻盈值，
+新代码请沿用同一量级，勿调回夸张幅度（0.92 / 1.05 / 1.12 / -10px 均已废弃）。
+列表错峰入场（<code>StaggerInAsync</code> 45ms/项）有总延迟封顶
+<code>MaterialMotion.MaxStaggerTotalDelayMs</code>（360ms），长列表会自动压缩逐项间隔。</p>
 <p><strong><code>SlideFadeOutAsync</code> 结束后会保留 <code>Opacity = 0</code> 与下沉位移</strong>，
 由下一次入场或调用方复位。缓存页面复用前必须恢复 <code>Opacity = 1</code>。</p>
 </blockquote>
@@ -728,7 +735,7 @@ await AnimationHelper.SlideFadeInAsync(newPage);
 <td>hover 放大 + 按下回缩 + 点击 Q 弹（全套）</td>
 </tr>
 <tr>
-<td><code>AttachHoverScale(Control, double hoverScale = 1.05)</code></td>
+<td><code>AttachHoverScale(Control, double hoverScale = 1.02)</code></td>
 <td>仅 hover 放大</td>
 </tr>
 <tr>
@@ -937,7 +944,7 @@ control.Transitions = null;
 <tr>
 <td>关闭动画开关后控件停在半透明</td>
 <td>helper 里没检查 <code>AnimationGate</code> 就把 <code>Opacity</code> 改了</td>
-<td>总开关关闭时<strong>直接 return，不改任何属性</strong></td>
+<td>闸门关闭时<strong>直接 return，不改任何属性</strong>（当前恒开，但检查逻辑必须保留）</td>
 </tr>
 <tr>
 <td>页面复用后一片空白</td>
