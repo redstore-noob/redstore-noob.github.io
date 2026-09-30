@@ -1,0 +1,9 @@
+# 构建产物源码与依赖
+web/node_modules/
+web/dist/
+.pnpm-store/
+.acl-recovery/
+
+# 系统文件
+.DS_Store
+Thumbs.db

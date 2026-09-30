@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@plugin "./hero.ts";
+@source "../node_modules/@heroui/theme/dist";
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== 全局背景：NekoLauncher 主视觉 + 暗色遮罩 ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: url("/images/background.png") center / cover no-repeat;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 9, 11, 0.55),
+    rgba(9, 9, 11, 0.78)
+  );
+}

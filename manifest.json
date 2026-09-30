@@ -1,12 +1,12 @@
 {
-  "name": "NyaLauncher · 跨平台 Minecraft 启动器",
-  "short_name": "NyaLauncher",
-  "description": "基于 .NET 10 与 Avalonia UI 构建的现代、轻量、跨平台 Minecraft 启动器。隐私优先，插件生态，AI 辅助。",
+  "name": "NekoLauncher",
+  "short_name": "NekoLauncher",
+  "description": "NekoLauncher —— 项目已由 NyaLauncher 迁移而来，全新网站施工中喵。",
   "lang": "zh-CN",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0E120D",
-  "theme_color": "#0E120D",
+  "background_color": "#111111",
+  "theme_color": "#111111",
   "icons": [
     {
       "src": "images/nya-icon.png",
