@@ -50,6 +50,18 @@ function SiteNavbar() {
             </Link>
           </NavbarItem>
         ))}
+        <NavbarItem className="hidden sm:flex">
+          <Button
+            as={Link}
+            href="https://afdian.com/a/redstore-noob"
+            target="_blank"
+            rel="noopener"
+            variant="flat"
+            color="danger"
+          >
+            ❤ 赞助
+          </Button>
+        </NavbarItem>
         <NavbarItem>
           <Button
             as={Link}
@@ -71,6 +83,18 @@ function SiteNavbar() {
             </Link>
           </NavbarMenuItem>
         ))}
+        <NavbarMenuItem>
+          <Link
+            href="https://afdian.com/a/redstore-noob"
+            target="_blank"
+            rel="noopener"
+            color="danger"
+            size="lg"
+            onPress={() => setMenuOpen(false)}
+          >
+            ❤ 赞助
+          </Link>
+        </NavbarMenuItem>
       </NavbarMenu>
     </Navbar>
   );

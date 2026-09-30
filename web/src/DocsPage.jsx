@@ -506,6 +506,18 @@ export default function DocsPage() {
           <NavbarItem>
             <Button
               as={Link}
+              href="https://afdian.com/a/redstore-noob"
+              target="_blank"
+              rel="noopener"
+              variant="flat"
+              color="danger"
+            >
+              ❤ 赞助
+            </Button>
+          </NavbarItem>
+          <NavbarItem>
+            <Button
+              as={Link}
               href={GITHUB_URL}
               target="_blank"
               rel="noopener"
