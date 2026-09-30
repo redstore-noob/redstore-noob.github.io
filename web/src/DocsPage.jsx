@@ -21,6 +21,7 @@ import {
 
 const GITHUB_URL = "https://github.com/redstore-noob/NekoLauncher";
 const GUIDE_URL = `${GITHUB_URL}/blob/main/docs/Extensions_Guide.md`;
+const CSS_TABLE_URL = `${GITHUB_URL}/blob/main/docs/CSS_STYLE_TABLE.md`;
 const EXAMPLE_URL = `${GITHUB_URL}/tree/main/examples/server-status`;
 
 /* ===== 左侧导航数据 ===== */
@@ -39,6 +40,10 @@ const NAV_SECTIONS = [
   { id: "launcher-config", label: "⚙️ 启动器设置" },
   { id: "lifecycle", label: "♻️ 生命周期" },
   { id: "ui", label: "🎨 UI 约定" },
+  { id: "styles", label: "🖌️ 自定义 CSS 样式" },
+  { id: "styles-vars", label: "　└ 第一档：CSS 变量" },
+  { id: "styles-classes", label: "　└ 第二档：nya-* 类" },
+  { id: "styles-debug", label: "　└ 调试与禁忌" },
   { id: "publish", label: "📤 打包发布" },
   { id: "cheatsheet", label: "📖 API 速查表" },
 ];
@@ -89,6 +94,7 @@ function QuickStart() {
 ├── plugin.yaml   ← 唯一声明文件
 ├── icon.png      ← 图标（固定名，可选，≤ 256KB）
 ├── index.js      ← 编译产物 = 默认入口
+├── theme.css     ← 清单 styles 声明的样式文件（可选，存盘即热生效）
 └── src/…         ← 源码（随包分发）`}</CodeBlock>
       <p>
         <strong>dev 模式零工具链</strong>：在 <Code>plugin.yaml</Code> 加{" "}
@@ -135,12 +141,19 @@ capabilities:               # 权限声明，见「权限系统」
   launch: true
 
 settings:                   # 默认设置：首次加载种入 api.config（仅空键写入）
-  dailyGoalHours: "2"`}</CodeBlock>
+  dailyGoalHours: "2"
+
+styles:                     # 样式文件（相对插件目录、限 .css）：加载时自动注入为全局 CSS
+  - theme.css               # 改动会被宿主监听，保存即热生效（约 3 秒内），无需重新加载`}</CodeBlock>
       <p>
         注意：<Code>entry</Code> / <Code>icon</Code> 字段<strong>不存在</strong>——入口固定{" "}
         <Code>index.js</Code>（dev 插件 <Code>index.jsx</Code>），图标固定 <Code>icon.png</Code>；
         也<strong>不存在改写启动命令行的通道</strong>，插件只能通过{" "}
         <Code>launchSelected</Code> / <Code>launchVersion</Code> 走与用户手点完全相同的启动正门。
+      </p>
+      <p>
+        <Code>styles</Code> 是新增的样式声明：列出的 <Code>.css</Code> 文件会被注入为全局 CSS，
+        可自定义任意控件（含宿主自身）的样式，详见「自定义 CSS 样式」。
       </p>
     </Section>
   );
@@ -158,6 +171,7 @@ function Permissions() {
     ["open-url", "openUrl"],
     ["open-path", "openPath（叠加“仅插件目录内”的宿主侧限制）"],
     ["server-status", "getServerStatus"],
+    ["styles", "styles.inject / styles.remove（全局 CSS 注入，可自定义任意控件样式）"],
   ];
   return (
     <Section id="permissions" title="🔐 权限系统（声明制，未声明 = 报错）">
@@ -412,6 +426,188 @@ function UiConventions() {
         静态资源用 <Code>new URL("./assets/x.png", import.meta.url)</Code> 引用，
         不要用相对路径 <Code>&lt;img src="./assets/x.png"&gt;</Code>。
       </p>
+      <p>
+        要改<strong>插件自己的 DOM 之外</strong>的样式（包括宿主自身的控件），
+        用清单 <Code>styles</Code> 字段或 <Code>api.styles.inject</Code>，见下一节。
+      </p>
+    </Section>
+  );
+}
+
+/* ===== 自定义样式（新增） ===== */
+
+const STYLE_VARS = [
+  ["--heroui-primary", "主题主色（500 档），影响全部强调色元素"],
+  ["--heroui-primary-50 … -900", "主色明暗阶梯（50/100/200/300/400/500/600/700/800/900）"],
+  ["--heroui-primary-foreground", "主色上的前程色（按钮文字），亮主色应给深色"],
+  ["--nya-surface-1", "一级表面色（侧边栏、面板底色）· 自动跟随明暗主题"],
+  ["--nya-surface-2", "二级表面色（更亮的浮层面板）· 自动跟随明暗主题"],
+  ["--nya-border-c", "通用描边色 · 自动跟随明暗主题"],
+  ["--nya-surface-1-light / -dark", "一级表面色的亮/暗值（想手动分别覆盖时用）"],
+  ["--nya-surface-2-light / -dark", "二级表面色的亮/暗值"],
+  ["--nya-border-light / -dark", "描边的亮/暗值"],
+  ["--nya-shell", "最外层底壳色（RGB 通道，如 3 7 18）· 自动跟随明暗主题"],
+  ["--nya-blur-scale", "毛玻璃模糊半径倍率（缺省 1，调小可降模糊省性能）"],
+  ["--nya-glass-alpha", "表面不透明度（缺省 0.8，配合 blur 做玻璃质感）"],
+];
+
+const STYLE_CLASSES = [
+  ["容器与面板", ".nya-panel / .nya-panel-strong / .nya-panel-inner", "通用面板容器（毛玻璃 + 描边）、强面板、面板内嵌次级内容块"],
+  ["容器与面板", ".nya-border", "通用描边（颜色取 --nya-border-c）"],
+  ["容器与面板", ".nya-neon-card", "主页小组件卡片壳（插件小组件也被自动装入此壳）"],
+  ["容器与面板", ".nya-bg-scrim", "背景图上的压暗遮罩"],
+  ["侧边栏", ".nya-sidebar / .nya-sidebar-item", "侧边栏本体 / 侧边栏按钮项（含进场动画）"],
+  ["侧边栏", ".nya-sidebar-item-active / .nya-sidebar-icon", "当前选中项 / 项内图标（悬停选中弹跳动画）"],
+  ["侧边栏", ".nya-sidebar-cursor", "选中项背后的滑动光标"],
+  ["弹窗与过渡", ".nya-modal-backdrop / .nya-modal-surface / .nya-modal-enter", "弹窗遮罩层 / 弹窗面板本体 / 弹窗进场动画"],
+  ["弹窗与过渡", ".nya-enter / .nya-stagger-1~3 / .nya-card-in / .nya-bg-fade", "通用进场动画与逐级延迟 / 卡片进场 / 背景图淡入"],
+  ["其它", ".nya-scroll", "自定义滚动条区域（可覆写 ::-webkit-scrollbar）"],
+  ["其它", ".nya-bar / .nya-hold-bar", "进度条 / 长按进度条"],
+  ["其它", ".nya-markdown", "Markdown 渲染容器（p / h1~h6 / code / pre / table 等子选择器）"],
+  ["其它", ".nya-eq-bar / .nya-vinyl / .nya-cover-glow", "音乐播放器均衡条 / 黑胶 / 封面光晕"],
+  ["其它", ".nya-instance-pill / .nya-instance-stagger", "实例列表胶囊项与逐级进场"],
+  ["其它", ".nya-drag-ghost / .nya-drop-line", "小组件拖动的幽灵条与落点指示线"],
+  ["其它", ".nya-mc-obfuscated", "MC 风格乱码字符效果"],
+];
+
+function StylesSection() {
+  return (
+    <Section id="styles" title="🖌️ 自定义 CSS 样式（新增）">
+      <p>
+        插件现在可以注入<strong>全局 CSS</strong>，自定义启动器任意控件的样式（含宿主自身）。
+        两种方式：<strong>静态文件</strong>（推荐，存盘即热生效）与{" "}
+        <strong>运行时注入</strong>（需 <Code>styles</Code> 权限）。
+      </p>
+      <CodeBlock>{`# plugin.yaml：静态样式（推荐，存盘即热生效，无需重新加载）
+styles:
+  - theme.css          # 相对插件目录、限 .css`}</CodeBlock>
+      <CodeBlock>{`// 运行时动态样式（capabilities 需声明 styles: true）
+api.styles.inject(":root { --nya-glass-alpha: 0.9 }", "glass");
+api.styles.remove("glass");
+
+// 同 key 重复注入 = 替换；不传 key 时缺省为 "inline"
+// 卸载 / 重载 / 停用时，宿主自动移除该插件的全部样式`}</CodeBlock>
+      <p>
+        <strong>兼容承诺</strong>：下面的「第一档 CSS 变量」与「第二档 <Code>nya-*</Code>{" "}
+        语义类」都是宿主公共接口——改名/删除/语义变更会在更新日志明确标注，新增只增不改。
+        除此之外的一切选择器（Tailwind 工具类、HeroUI 内部结构）都是实现细节，随时可能变化。
+      </p>
+    </Section>
+  );
+}
+
+function StylesVars() {
+  return (
+    <Section id="styles-vars" title="第一档：CSS 变量（最稳，换肤首选）">
+      <p>
+        宿主主题由这些变量驱动，覆盖它们即可整体换色，不受类名变动影响。
+        <strong>格式均为 HSL 通道值</strong>（如 <Code>212 100% 47%</Code>，不含{" "}
+        <Code>hsl()</Code> 包裹），使用时写作 <Code>hsl(var(--nya-surface-1) / 0.8)</Code>。
+      </p>
+      <Table aria-label="CSS 变量表" removeWrapper>
+        <TableHeader>
+          <TableColumn>变量</TableColumn>
+          <TableColumn>含义</TableColumn>
+        </TableHeader>
+        <TableBody>
+          {STYLE_VARS.map(([v, d]) => (
+            <TableRow key={v}>
+              <TableCell><Code className="text-xs whitespace-nowrap">{v}</Code></TableCell>
+              <TableCell className="text-xs">{d}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <p><strong>示例——全局换成绿色主题 + 更实的毛玻璃：</strong></p>
+      <CodeBlock>{`:root {
+  --heroui-primary: 142 71% 45%;
+  --heroui-primary-foreground: 0 0% 100%;
+  --nya-glass-alpha: 0.92;
+}`}</CodeBlock>
+      <p>
+        <strong>注意</strong>：只覆盖 <Code>--heroui-primary</Code> 时，500 档阶梯与表面色
+        不会自动跟随（它们由宿主按所选主题色计算写入）——想成套换色请把主色阶梯和{" "}
+        <Code>nya</Code> 表面变量一起覆盖，或直接改用设置页的预设主题色。
+      </p>
+    </Section>
+  );
+}
+
+function StylesClasses() {
+  return (
+    <Section id="styles-classes" title="第二档：nya-* 语义类">
+      <p>
+        宿主自己命名的语义类名，定义集中在{" "}
+        <Link
+          href={`${GITHUB_URL}/blob/main/frontend/src/styles/globals.css`}
+          target="_blank"
+          rel="noopener"
+          size="sm"
+          showAnchorIcon
+        >
+          frontend/src/styles/globals.css
+        </Link>
+        。
+      </p>
+      <Table aria-label="语义类表" removeWrapper>
+        <TableHeader>
+          <TableColumn>分组</TableColumn>
+          <TableColumn>类名</TableColumn>
+          <TableColumn>对应控件</TableColumn>
+        </TableHeader>
+        <TableBody>
+          {STYLE_CLASSES.map(([g, c, d], i) => (
+            <TableRow key={i}>
+              <TableCell className="text-xs whitespace-nowrap">{g}</TableCell>
+              <TableCell><Code className="text-xs">{c}</Code></TableCell>
+              <TableCell className="text-xs">{d}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <p>
+        <strong>第三档：HeroUI 组件（不构成契约，后果自负）</strong>——HeroUI 组件暴露{" "}
+        <Code>data-slot</Code> 属性，可以不依赖 Tailwind 类名地选中：
+      </p>
+      <CodeBlock>{`/* 例：所有按钮改方角 */
+[data-slot="button"] { border-radius: 6px; }`}</CodeBlock>
+      <p>
+        这些属性来自上游库、宿主不可控，组件内部结构（嵌套 slot、伪元素）没有稳定承诺。
+        适合个人微调，<strong>不要</strong>在发布给他人的插件里依赖第三档选择器。
+      </p>
+    </Section>
+  );
+}
+
+function StylesDebug() {
+  return (
+    <Section id="styles-debug" title="调试方法与明确不建议做的">
+      <p>
+        每条插件样式以{" "}
+        <Code>{`<style data-plugin-id="<插件id>" data-plugin-key="<key>">`}</Code>{" "}
+        挂在 <Code>document.head</Code> 末尾——DevTools 里按 <Code>data-plugin-id</Code>{" "}
+        过滤即可看到某个插件注入了什么；
+      </p>
+      <p>
+        · 清单 <Code>styles</Code> 文件的 key 是 <Code>file:&lt;路径&gt;</Code>，
+        运行时 API 缺省 key 是 <Code>inline</Code>；
+      </p>
+      <p>
+        · 改清单声明的 CSS 文件，存盘后约 <strong>3 秒内自动热生效</strong>
+        （宿主监听文件变化），无需手动「重新加载插件」。
+      </p>
+      <p><strong>明确不建议做的</strong>：</p>
+      <p>· 覆盖 <Code>body</Code> / <Code>#app</Code> 之外的全局 reset——会波及 Wails 的 WebView 容器行为；</p>
+      <p>· <Code>!important</Code> 满天飞——插件样式的 <Code>&lt;style&gt;</Code> 挂载顺序晚于宿主样式，
+        同特异性下本来就是插件赢，滥用只会让用户其它插件没法再改回；</p>
+      <p>· 依赖第三档选择器做主题分发——你的用户会在某次升级后回来找你。</p>
+      <p>
+        完整锚点清单见{" "}
+        <Link href={CSS_TABLE_URL} target="_blank" rel="noopener" size="sm" showAnchorIcon>
+          docs/CSS_STYLE_TABLE.md
+        </Link>
+        。
+      </p>
     </Section>
   );
 }
@@ -458,6 +654,7 @@ function CheatSheet() {
     ["启动", "launchSelected / launchVersion", "launch", "与手点同管线"],
     ["事件", "onLaunchPhaseChange / onInstancesChanged", "—", "返回取消订阅函数"],
     ["设置", "config.get / set / clear", "storage", "键前缀隔离；仅字符串"],
+    ["样式", "styles.inject(css, key?) / styles.remove(key)", "styles", "注入全局 CSS（可改任意控件）；同 key 重复注入为替换；卸载/重载/停用时宿主自动移除；静态文件用清单 styles 字段"],
   ];
   return (
     <Section id="cheatsheet" title="📖 运行时 API 速查表（v1 全表）">
@@ -561,7 +758,7 @@ export default function DocsPage() {
             <Link href={GUIDE_URL} target="_blank" rel="noopener" size="sm">
               Extensions_Guide.md
             </Link>{" "}
-            v1 API 整理，配齐各类 API 的使用示例喵。
+            v1 API 整理，配齐各类 API 的使用示例，并含新增的<span className="text-foreground">自定义 CSS 样式定制</span>指南喵。
           </p>
 
           <QuickStart />
@@ -578,6 +775,10 @@ export default function DocsPage() {
           <LauncherConfig />
           <Lifecycle />
           <UiConventions />
+          <StylesSection />
+          <StylesVars />
+          <StylesClasses />
+          <StylesDebug />
           <Publish />
           <CheatSheet />
 
