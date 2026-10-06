@@ -31,3 +31,109 @@ body::after {
     rgba(9, 9, 11, 0.78)
   );
 }
+
+::selection {
+  background: hsl(var(--heroui-primary) / 0.35);
+}
+
+/* 细滚动条，与暗色主题协调 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--heroui-primary) / 0.35) transparent;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-thumb {
+  background: hsl(var(--heroui-primary) / 0.35);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ===== 进场动画 ===== */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+.anim-delay-1 { animation-delay: 0.08s; }
+.anim-delay-2 { animation-delay: 0.16s; }
+.anim-delay-3 { animation-delay: 0.24s; }
+.anim-delay-4 { animation-delay: 0.32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .anim-fade-up { animation: none; }
+}
+
+/* ===== 特效 ===== */
+
+/* 英雄区标题的主色渐变文字 */
+.text-gradient-primary {
+  background: linear-gradient(
+    120deg,
+    hsl(var(--heroui-primary)),
+    hsl(var(--heroui-primary) / 0.55)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 特性卡 / 链接卡悬停：上浮 + 主色描边 */
+.card-lift {
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  border-color: hsl(var(--heroui-primary) / 0.45);
+  box-shadow: 0 12px 40px -16px hsl(var(--heroui-primary) / 0.35);
+}
+
+/* 特性卡图标底座 */
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.875rem;
+  font-size: 1.4rem;
+  background: hsl(var(--heroui-primary) / 0.14);
+  border: 1px solid hsl(var(--heroui-primary) / 0.25);
+}
+
+/* 分区标题上方的小引导标签 */
+.section-kicker {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: hsl(var(--heroui-primary));
+}
+
+/* 背景光斑（英雄区装饰） */
+.glow-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: -1;
+}

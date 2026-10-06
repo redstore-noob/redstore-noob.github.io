@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -113,6 +114,48 @@ function InfoTable({ columns, rows }) {
         ))}
       </TableBody>
     </Table>
+  );
+}
+
+/* 侧边栏当前章节高亮 */
+function useActiveSection(ids) {
+  const [active, setActive] = useState(ids[0] ?? "");
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) setActive(e.target.id);
+        }
+      },
+      { rootMargin: "-20% 0px -70% 0px" },
+    );
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return active;
+}
+
+function BackToTop() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 600);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  if (!show) return null;
+  return (
+    <Button
+      isIconOnly
+      aria-label="返回顶部"
+      className="fixed bottom-6 right-6 z-50 rounded-full bg-content1/80 backdrop-blur-md border border-divider"
+      onPress={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+    >
+      ↑
+    </Button>
   );
 }
 
@@ -1020,12 +1063,14 @@ function CheatSheet() {
 /* ===== 页面 ===== */
 
 export default function DocsPage() {
+  const active = useActiveSection(NAV_SECTIONS.map((s) => s.id));
   return (
     <div className="min-h-screen bg-background/30 text-foreground">
+      <BackToTop />
       <Navbar isBordered maxWidth="full" className="bg-background/70">
         <NavbarBrand>
           <a href="/" className="font-bold text-xl">
-            Neko<span className="text-primary">Launcher</span>
+            Neko<span className="text-gradient-primary">Launcher</span>
           </a>
           <Chip size="sm" variant="flat" color="secondary" className="ml-3">
             文档
@@ -1072,7 +1117,11 @@ export default function DocsPage() {
               <a
                 key={s.id}
                 href={`#${s.id}`}
-                className="text-sm text-foreground-500 hover:text-primary px-3 py-1.5 rounded-medium hover:bg-content2 transition-colors"
+                className={`text-sm px-3 py-1.5 rounded-medium transition-colors ${
+                  active === s.id
+                    ? "text-primary bg-primary/10 font-medium"
+                    : "text-foreground-500 hover:text-primary hover:bg-content2"
+                }`}
               >
                 {s.label}
               </a>
@@ -1087,7 +1136,7 @@ export default function DocsPage() {
         {/* ===== 右侧内容 ===== */}
         <main className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold">插件开发教程</h1>
+            <h1 className="text-3xl font-bold tracking-tight">插件开发教程</h1>
             <Chip size="sm" variant="flat" color="secondary">v1 API</Chip>
           </div>
           <p className="text-foreground-500 mb-10">
@@ -1149,8 +1198,8 @@ export default function DocsPage() {
 
       <footer className="border-t border-divider">
         <div className="mx-auto max-w-7xl px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-semibold">
-            Neko<span className="text-primary">Launcher</span>
+          <span className="font-semibold text-lg">
+            Neko<span className="text-gradient-primary">Launcher</span>
           </span>
           <span className="text-sm text-foreground-500">用 ❤️ 与 🐱 构建</span>
         </div>
