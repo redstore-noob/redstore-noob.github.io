@@ -1,18 +1,271 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NekoLauncher</title>
-    <meta name="description" content="NekoLauncher —— 项目已从 NyaLauncher 迁移而来。新的起点，敬请期待喵。" />
-    <link rel="icon" type="image/png" href="images/nya-icon.png" />
-    <meta name="theme-color" content="#111111" />
-    <link rel="manifest" href="manifest.json" />
-    <script type="module" crossorigin src="/assets/main-CSTKxzZt.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/app-C09p1HBM.js">
-    <link rel="stylesheet" crossorigin href="/assets/app-CYxCQOY9.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mofumofu Launcher · Mofumofu Launcher</title>
+<meta name="description" content="一只毛茸茸的 Minecraft 启动器。基于 Avalonia 12 与 SukiUI 7 构建，后端用 C# 从零实现全部 Minecraft 逻辑，前端以令牌化设计系统驱动。">
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo"><svg viewBox="0 0 24 24"><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg></div>
+      <div>
+        <div class="sb-title">Mofumofu</div>
+        <div class="sb-sub">Avalonia 12 · SukiUI 7</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+<div class="sb-group">
+<div class="sb-group-label">总览</div>
+<a class="sb-link active" href="index.html"><svg viewBox="0 0 24 24" class=""><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>首页</a>
+<a class="sb-link" href="architecture.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg>技术架构</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">功能页面</div>
+<a class="sb-link" href="download.html"><svg viewBox="0 0 24 24" class=""><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>下载大厅</a>
+<a class="sb-link" href="instances.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V20H4V4M4,9H20M9,9V20"/></svg>实例管理</a>
+<a class="sb-link" href="account.html"><svg viewBox="0 0 24 24" class=""><path d="M12,4C10,4 8,5 8,7V9H16V7C16,5 14,4 12,4M8,11H16V20H8V11Z"/></svg>账户与皮肤</a>
+<a class="sb-link" href="servers.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V16H4V4M8,20H16M12,16V20M7,8H10M14,8H17M7,12H10M14,12H17"/></svg>服务器</a>
+<a class="sb-link" href="online.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C8.1,4 4.9,6.6 4.3,10H8V14H4.3C4.9,17.4 8.1,20 12,20C13.9,20 15.7,19.3 17,18.1V15H14V11H17.9C17.6,8.1 15.2,5.3 12.2,4.2Z"/></svg>联机</a>
+<a class="sb-link" href="music.html"><svg viewBox="0 0 24 24" class=""><path d="M12,3V13.55C11.41,13.21 10.73,13 10,13A3,3 0 0,0 7,16A3,3 0 0,0 10,19A3,3 0 0,0 13,16V7H17V3H12Z"/></svg>音乐</a>
+<a class="sb-link" href="creator.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15"/></svg>创作中心</a>
+<a class="sb-link" href="plugins.html"><svg viewBox="0 0 24 24" class=""><path d="M9,2V4H15V2H9M7,4H17A2,2 0 0,1 19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6A2,2 0 0,1 7,4M10,9H14V13H10V9Z"/></svg>插件</a>
+<a class="sb-link" href="widgets.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H10V10H3V3M14,3H21V10H14V3M3,14H10V21H3V14M14,14H21V21H14V14"/></svg>桌面小组件</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">配置与生态</div>
+<a class="sb-link" href="settings.html"><svg viewBox="0 0 24 24" class=""><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,9.05 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,14.95 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 19.05,19.05L16.56,18.05C16.04,18.44 15.5,18.78 14.87,19.03L14.5,21.68C14.46,21.92 14.25,22.1 14,22.1H10C9.75,22.1 9.54,21.92 9.5,21.68L9.13,19.03C8.5,18.78 7.96,18.44 7.44,18.05L4.95,19.05C4.73,19.04 4.46,18.95 4.34,18.73L2.34,15.27C2.21,14.95 2.27,14.78 2.46,14.63L4.57,12.97Z"/></svg>设置</a>
+<a class="sb-link" href="ui-library.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,18.5A6.5,6.5 0 0,1 5.5,12A6.5,6.5 0 0,1 12,5.5A6.5,6.5 0 0,1 18.5,12A6.5,6.5 0 0,1 12,18.5M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5"/></svg>UI 库选型</a>
+<a class="sb-link" href="roadmap.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H21V21H3V3M7,9H17M7,13H17M7,17H13"/></svg>现状与缺口</a>
+</div>
+</nav>
+    <div class="sb-foot">
+      <div class="small dim">数据取自源码实测</div>
+      <div class="small dim">v1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="菜单">
+        <svg viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16"/></svg>
+      </button>
+      <div class="crumb">Mofumofu <span>/</span> <b>Mofumofu Launcher</b></div>
+      <div class="topbar-tools">
+        <div class="accent-picker"><button class="accent-dot" data-accent="teal" title="青绿" aria-label="强调色 青绿" style="background:#3FC6C1;color:#3FC6C1"></button><button class="accent-dot" data-accent="blue" title="蔚蓝" aria-label="强调色 蔚蓝" style="background:#5AA9E6;color:#5AA9E6"></button><button class="accent-dot" data-accent="green" title="新绿" aria-label="强调色 新绿" style="background:#4CC38A;color:#4CC38A"></button><button class="accent-dot" data-accent="orange" title="暖橙" aria-label="强调色 暖橙" style="background:#F2AE49;color:#F2AE49"></button><button class="accent-dot" data-accent="pink" title="樱粉" aria-label="强调色 樱粉" style="background:#E5698F;color:#E5698F"></button><button class="accent-dot" data-accent="purple" title="紫藤" aria-label="强调色 紫藤" style="background:#A78BFA;color:#A78BFA"></button></div>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15M12,2L14.5,5.5L18.5,4.5L18,8.5L21,10.5L18,12.5L18,16.5L14.5,15.5L12,19L9.5,15.5L6,16.5L6,12.5L3,10.5L6,8.5L5.5,4.5L9.5,5.5L12,2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div class="page-eyebrow">跨平台 · Avalonia 12 · SukiUI 7</div>
+        <h1 class="page-title">Mofumofu Launcher</h1>
+        <p class="page-lead">一只毛茸茸的 Minecraft 启动器。基于 Avalonia 12 与 SukiUI 7 构建，后端用 C# 从零实现全部 Minecraft 逻辑，前端以令牌化设计系统驱动。</p>
+        <div class="head-tags"><span class="tag ok">开源免费</span><span class="tag accent">跨平台</span><span class="tag ">.NET 10</span><span class="tag ">v1.0.0</span></div>
+      </div>
+      
+<div class="hero">
+  <div class="hero-badge"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15"/></svg> 开源 · 免费 · 跨平台</div>
+  <h1>一只毛茸茸的<br><span class="grad">Minecraft 启动器</span></h1>
+  <p class="lead">
+    Mofumofu 是一款基于 <b>Avalonia 12 + SukiUI 7</b> 的跨平台桌面启动器。
+    后端 <b>MofuCore</b> 用 C# 从零实现 Minecraft 的下载、账户、启动、服务器与联机逻辑，
+    前端以 SukiUI 为主题骨架、以令牌化设计系统驱动全部界面。
+  </p>
+  <div class="btn-row">
+    <a class="btn primary" href="architecture.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15"/></svg> 看看技术架构</a>
+    <a class="btn" href="ui-library.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z"/></svg> SukiUI 适配选型</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="card stat"><div class="stat-num">71K</div><div class="stat-label">行 C# / XAML</div></div>
+    <div class="card stat"><div class="stat-num">5</div><div class="stat-label">大模块</div></div>
+    <div class="card stat"><div class="stat-num">1853</div><div class="stat-label">本地化键</div></div>
+    <div class="card stat"><div class="stat-num">22</div><div class="stat-label">桌面小组件</div></div>
+    <div class="card stat"><div class="stat-num">5</div><div class="stat-label">加载器支持</div></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">项目一览</h2><p class="section-desc">五个模块，职责边界清晰；UI 与 Minecraft 逻辑彻底解耦</p></div>
+  
+<div class="grid g-auto">
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>MofuCore<span class="tag accent" style="margin-left:auto">25,873 行</span></div>
+  <p class="card-text">Minecraft 逻辑核心库，25,873 行 / 31 文件。不含任何 UI 引用，纯粹的业务内核。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>Mofumofu.Backend<span class="tag " style="margin-left:auto">467 行</span></div>
+  <p class="card-text">启动器自身的后端：本地设置持久化、日志写入、外部链接唤起。仅 467 行，极薄。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>Mofumofu.Launcher<span class="tag accent" style="margin-left:auto">35,912 行</span></div>
+  <p class="card-text">Avalonia 前端主体，35,912 行 / 77 文件。所有视图、控件、服务、主题系统。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>Mofumofu.Classic<span class="tag " style="margin-left:auto">7,073 行</span></div>
+  <p class="card-text">同内核的另一套宿主（Photino.NET），7,073 行 / 24 文件，16 个反射注册的 API 模块。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>NekoSolo<span class="tag " style="margin-left:auto">1,965 行</span></div>
+  <p class="card-text">独立的单文件整合包安装器（WPF），1,965 行。负责 CRC 校验、解压、建快捷方式。</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">02</span><h2 class="section-title">核心能力</h2><p class="section-desc">每一项都接真实后端，不是演示占位</p></div>
+  
+<div class="grid g2">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>下载与安装</div>
+    <ul class="feature"><li><b>Minecraft 本体</b>正式版下载，带磁盘缓存与 CheckBox 组筛选器</li><li><b>5 大加载器</b>：Fabric / Quilt / Forge / NeoForge / OptiFine，各自独立实现类</li><li><b>Modrinth</b> 搜索与安装：mod / 整合包 / 光影 / 材质包四类资源</li><li><b>Java 环境</b>探测与 Mojang 官方运行时下载</li><li><b>多镜像源</b>：官方 / 镜像 / 自定义，含回落源与测速选最快</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>账户与启动</div>
+    <ul class="feature"><li><b>三种登录</b>：Microsoft 正版（PKCE + 设备码）、Authlib 皮肤站、离线账号</li><li><b>凭据加密</b>：DPAPI / Keychain / libsecret 三系统原生实现</li><li><b>启动参数装配</b>：仅在用户未手写时才注入 -Xms / -Xmx</li><li><b>G1GC 调优</b>：按机器分档，低配关高配开</li><li><b>类终端控制台</b>：阶段时间线 + 等宽输出 + 命令行输入</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>服务器与联机</div>
+    <ul class="feature"><li><b>4 种服务端核心</b>：paper / vanilla / fabric / neoforge</li><li><b>完整 RCON</b>：Source RCON 协议实现，含鉴权与指令通道</li><li><b>热备份</b>：save-off / save-all 刷盘，运行中也能备份</li><li><b>玩家管理</b>：白名单 / OP / 封禁名单结构化读写</li><li><b>陶瓦联机</b>：Terracotta 客户端适配，5 态状态机</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>创作与桌面</div>
+    <ul class="feature"><li><b>8 个创作工具</b>：资源包 / 命令 / 渐变文字 / 立方体 3D / 皮肤 / 整合包 / NekoSolo / 插件</li><li><b>3D 皮肤编辑器</b>：64×64 展开图涂色，模型实时更新</li><li><b>22 个桌面小组件</b>：格子板自由摆放，真实数据源</li><li><b>Rewind 时光回溯</b>：内容寻址快照，回滚前自动备份</li><li><b>壁纸系统</b>：libVLC 视频壁纸 + 本地图片轮播</li></ul>
+  </div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">03</span><h2 class="section-title">界面一览</h2><p class="section-desc">九大功能页面 + 桌面，所有页面均接真实后端</p></div>
+  
+<div class="grid g-auto">
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>下载大厅<span class="tag " style="margin-left:auto">下载大厅</span></div>
+  <p class="card-text">7 个标签页：Minecraft / Mod / 整合包 / 光影 / 资源包 / Java / 任务。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>实例管理<span class="tag " style="margin-left:auto">实例</span></div>
+  <p class="card-text">6 个详情标签：概览 / 启动 / Java / 内容 / 游戏 / 管理。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>账户与皮肤<span class="tag " style="margin-left:auto">账户</span></div>
+  <p class="card-text">Microsoft / Authlib / 离线三种方式，含 3D 皮肤编辑。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>服务器<span class="tag " style="margin-left:auto">服务器</span></div>
+  <p class="card-text">建服、控制台、备份、玩家权限全流程。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>联机<span class="tag " style="margin-left:auto">联机</span></div>
+  <p class="card-text">Terracotta 建房 / 加入 / 退房，服务自动安装。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>音乐<span class="tag " style="margin-left:auto">音乐</span></div>
+  <p class="card-text">本地曲库 + 网易云，真实播放与歌词。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>创作中心<span class="tag " style="margin-left:auto">创作</span></div>
+  <p class="card-text">8 个工具，含 WebGL 立方体 3D 文字。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>插件<span class="tag " style="margin-left:auto">插件</span></div>
+  <p class="card-text">扫描 plugin.yaml 与 .nekoex 包。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>设置<span class="tag " style="margin-left:auto">设置</span></div>
+  <p class="card-text">5 大分区：游戏 / 通用 / 外观 / 网络 / 关于。</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">04</span><h2 class="section-title">设计系统</h2><p class="section-desc">没有一处硬编码颜色 —— 全部走令牌</p></div>
+  
+<p class="muted" style="margin-top:-4px">
+  整个界面共用 <b>41 个颜色令牌</b>，命名规则为 <code>Neko&#123;语义&#125;&#123;状态&#125;Brush</code>。
+  深浅两套色值与 6 套强调色由 <code>ThemeManager</code> 统一计算，切换即时生效（含 code-behind 自绘元素）。
+</p>
+<div class="grid g2">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>6 套强调色</div>
+    <div class="table-wrap" style="margin-top:10px">
+      <table>
+        <thead><tr><th>名称</th><th>主色</th><th>Hover</th><th>Pressed</th></tr></thead>
+        <tbody>
+          <tr><td>青绿 <span class="tag accent">默认</span></td><td><code>#3FC6C1</code></td><td><code>#57D8D3</code></td><td><code>#33BDB8</code></td></tr>
+          <tr><td>蔚蓝</td><td><code>#5AA9E6</code></td><td><code>#7CBEED</code></td><td><code>#4590CE</code></td></tr>
+          <tr><td>新绿</td><td><code>#4CC38A</code></td><td><code>#6BD3A3</code></td><td><code>#3AA876</code></td></tr>
+          <tr><td>暖橙</td><td><code>#F2AE49</code></td><td><code>#F7C470</code></td><td><code>#D8962F</code></td></tr>
+          <tr><td>樱粉</td><td><code>#E5698F</code></td><td><code>#EE8AA9</code></td><td><code>#CC5379</code></td></tr>
+          <tr><td>紫藤</td><td><code>#A78BFA</code></td><td><code>#BCA5FF</code></td><td><code>#8F6EF0</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="card-text small" style="margin-top:12px">
+      试试右上角的圆点 —— 整站会立即跟着变色。强调色相关的所有 Soft 底色都由
+      <code>Soft(ratio) = Blend(强调色, surfaceBase, ratio)</code> 动态算出。
+    </p>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>深 / 浅两套表面色</div>
+    <div class="table-wrap" style="margin-top:10px">
+      <table>
+        <thead><tr><th>令牌</th><th>浅色</th><th>深色</th></tr></thead>
+        <tbody>
+          <tr><td><code>NekoText</code></td><td><code>#1B2430</code></td><td><code>#E9EEF6</code></td></tr>
+          <tr><td><code>NekoMuted</code></td><td><code>#5C6B7E</code></td><td><code>#93A0B4</code></td></tr>
+          <tr><td><code>NekoSurface</code></td><td><code>#F2F5F8</code></td><td><code>#0A0E15</code></td></tr>
+          <tr><td><code>NekoCard</code></td><td><code>#F7FFFFFF</code></td><td><code>#D9121822</code></td></tr>
+          <tr><td><code>NekoField</code></td><td><code>#E7EEF5</code></td><td><code>#16202B</code></td></tr>
+          <tr><td><code>NekoTerminal</code></td><td><code>#F4F8FB</code></td><td><code>#05090C</code></td></tr>
+          <tr><td><code>NekoTerminalText</code></td><td><code>#1D6B57</code></td><td><code>#9FE8D5</code></td></tr>
+          <tr><td><code>NekoBorder</code></td><td><code>#D5DEE8</code></td><td><code>#26303D</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">05</span><h2 class="section-title">已知缺口</h2><p class="section-desc">如实记录，不粉饰</p></div>
+  
+<div class="notice warn"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2L1,21H23L12,2M13,18H11V16H13V18M13,14H11V10H13V14Z"/></svg><div><b>README 中的 Wallpaper Engine 章节已完全过时。</b> 代码里 <code>webwallgl</code> / <code>scene.pkg</code> 零命中，实际改用 <b>libVLC</b> 渲染视频壁纸（<code>WallpaperVideoHost.cs:13</code> 明确注释「不使用 WebView2」）。</div></div>
+<div class="grid g2" style="margin-top:14px">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>功能缺口</div>
+    <ul class="feature"><li>CurseForge 完全未适配，<code>Download/Curseforge/</code> 只有一个 info.md，API Key 仅保存不消费</li><li>插件运行时未实现 —— 只扫描目录，不加载插件代码；权限体系只有文案没有逻辑</li><li>8 个桌面组件被硬过滤掉（playtime / quickjoin / rss / music / download / network / goal / screenshots）</li><li>联机只接了 1 个服务商，索引 1 及以上直接返回 null</li><li>Rewind 仅覆盖本地，无云同步</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>细节问题</div>
+    <ul class="feature"><li>网易云部分歌曲需 VIP，接口只返回试听片段或空地址</li><li>本地音乐未读取 ID3 标签，标题直接用文件名</li><li>NekoSolo 导出的仍是 .zip 载荷，未追加 exe 尾标，需自行与 stub 合并</li><li>README 称本地化 1826 键，实测 zh-CN / en-US 各 1853 键</li><li><code>ParallelDownloads</code> 注释写 1-16，实际默认值是 32</li></ul>
+  </div>
+</div>
+</section>
+
+<div class="btn-row" style="margin-top:30px">
+  <a class="btn primary" href="architecture.html">继续：技术架构 →</a>
+  <a class="btn" href="roadmap.html">查看完整缺口清单</a>
+</div>
+
+      <div class="pager">
+<a href="architecture.html"><div class="p-dir">下一页 →</div><div class="p-name">技术架构</div></a>
+</div>
+    </main>
+
+    <footer class="foot">
+      <div>Mofumofu Launcher · 基于 Avalonia 12.1.4 + SukiUI 7.0.2-nightly 构建</div>
+      <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+    </footer>
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+</body>
 </html>

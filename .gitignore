@@ -1,9 +1,18 @@
-# 构建产物源码与依赖
-web/node_modules/
-web/dist/
+# 站点为纯静态 HTML，无需构建
+# 保留：本地预览时可能产生的依赖目录
+node_modules/
 .pnpm-store/
 .acl-recovery/
 
 # 系统文件
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+
+# 本地工具数据
+.workbuddy/

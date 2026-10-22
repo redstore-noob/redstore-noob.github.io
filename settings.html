@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设置 · Mofumofu Launcher</title>
+<meta name="description" content="5 大分区、24 个持久化属性。所有外观开关都真的生效 —— 毛玻璃、不透明度、直角模式、跟随背景取色，一项不落。">
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo"><svg viewBox="0 0 24 24"><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg></div>
+      <div>
+        <div class="sb-title">Mofumofu</div>
+        <div class="sb-sub">Avalonia 12 · SukiUI 7</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+<div class="sb-group">
+<div class="sb-group-label">总览</div>
+<a class="sb-link" href="index.html"><svg viewBox="0 0 24 24" class=""><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>首页</a>
+<a class="sb-link" href="architecture.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg>技术架构</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">功能页面</div>
+<a class="sb-link" href="download.html"><svg viewBox="0 0 24 24" class=""><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>下载大厅</a>
+<a class="sb-link" href="instances.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V20H4V4M4,9H20M9,9V20"/></svg>实例管理</a>
+<a class="sb-link" href="account.html"><svg viewBox="0 0 24 24" class=""><path d="M12,4C10,4 8,5 8,7V9H16V7C16,5 14,4 12,4M8,11H16V20H8V11Z"/></svg>账户与皮肤</a>
+<a class="sb-link" href="servers.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V16H4V4M8,20H16M12,16V20M7,8H10M14,8H17M7,12H10M14,12H17"/></svg>服务器</a>
+<a class="sb-link" href="online.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C8.1,4 4.9,6.6 4.3,10H8V14H4.3C4.9,17.4 8.1,20 12,20C13.9,20 15.7,19.3 17,18.1V15H14V11H17.9C17.6,8.1 15.2,5.3 12.2,4.2Z"/></svg>联机</a>
+<a class="sb-link" href="music.html"><svg viewBox="0 0 24 24" class=""><path d="M12,3V13.55C11.41,13.21 10.73,13 10,13A3,3 0 0,0 7,16A3,3 0 0,0 10,19A3,3 0 0,0 13,16V7H17V3H12Z"/></svg>音乐</a>
+<a class="sb-link" href="creator.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15"/></svg>创作中心</a>
+<a class="sb-link" href="plugins.html"><svg viewBox="0 0 24 24" class=""><path d="M9,2V4H15V2H9M7,4H17A2,2 0 0,1 19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6A2,2 0 0,1 7,4M10,9H14V13H10V9Z"/></svg>插件</a>
+<a class="sb-link" href="widgets.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H10V10H3V3M14,3H21V10H14V3M3,14H10V21H3V14M14,14H21V21H14V14"/></svg>桌面小组件</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">配置与生态</div>
+<a class="sb-link active" href="settings.html"><svg viewBox="0 0 24 24" class=""><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,9.05 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,14.95 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 19.05,19.05L16.56,18.05C16.04,18.44 15.5,18.78 14.87,19.03L14.5,21.68C14.46,21.92 14.25,22.1 14,22.1H10C9.75,22.1 9.54,21.92 9.5,21.68L9.13,19.03C8.5,18.78 7.96,18.44 7.44,18.05L4.95,19.05C4.73,19.04 4.46,18.95 4.34,18.73L2.34,15.27C2.21,14.95 2.27,14.78 2.46,14.63L4.57,12.97Z"/></svg>设置</a>
+<a class="sb-link" href="ui-library.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,18.5A6.5,6.5 0 0,1 5.5,12A6.5,6.5 0 0,1 12,5.5A6.5,6.5 0 0,1 18.5,12A6.5,6.5 0 0,1 12,18.5M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5"/></svg>UI 库选型</a>
+<a class="sb-link" href="roadmap.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H21V21H3V3M7,9H17M7,13H17M7,17H13"/></svg>现状与缺口</a>
+</div>
+</nav>
+    <div class="sb-foot">
+      <div class="small dim">数据取自源码实测</div>
+      <div class="small dim">v1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="菜单">
+        <svg viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16"/></svg>
+      </button>
+      <div class="crumb">Mofumofu <span>/</span> <b>设置</b></div>
+      <div class="topbar-tools">
+        <div class="accent-picker"><button class="accent-dot" data-accent="teal" title="青绿" aria-label="强调色 青绿" style="background:#3FC6C1;color:#3FC6C1"></button><button class="accent-dot" data-accent="blue" title="蔚蓝" aria-label="强调色 蔚蓝" style="background:#5AA9E6;color:#5AA9E6"></button><button class="accent-dot" data-accent="green" title="新绿" aria-label="强调色 新绿" style="background:#4CC38A;color:#4CC38A"></button><button class="accent-dot" data-accent="orange" title="暖橙" aria-label="强调色 暖橙" style="background:#F2AE49;color:#F2AE49"></button><button class="accent-dot" data-accent="pink" title="樱粉" aria-label="强调色 樱粉" style="background:#E5698F;color:#E5698F"></button><button class="accent-dot" data-accent="purple" title="紫藤" aria-label="强调色 紫藤" style="background:#A78BFA;color:#A78BFA"></button></div>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15M12,2L14.5,5.5L18.5,4.5L18,8.5L21,10.5L18,12.5L18,16.5L14.5,15.5L12,19L9.5,15.5L6,16.5L6,12.5L3,10.5L6,8.5L5.5,4.5L9.5,5.5L12,2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div class="page-eyebrow">Settings</div>
+        <h1 class="page-title">设置</h1>
+        <p class="page-lead">5 大分区、24 个持久化属性。所有外观开关都真的生效 —— 毛玻璃、不透明度、直角模式、跟随背景取色，一项不落。</p>
+        <div class="head-tags"><span class="tag accent">5 分区</span><span class="tag ">24 属性</span><span class="tag ok">1853 键 i18n</span><span class="tag ">三语言</span></div>
+      </div>
+      
+<section class="section">
+  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">五大分区</h2><p class="section-desc">SettingsView.axaml:227-271 —— 顶部带搜索框</p></div>
+  
+<div class="grid g-auto">
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>游戏<span class="tag accent" style="margin-left:auto">分区 1</span></div>
+  <p class="card-text">游戏目录（改 / 重置）、Java（自动探测 / 设为默认）、内存上限。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>通用<span class="tag accent" style="margin-left:auto">分区 2</span></div>
+  <p class="card-text">关闭行为（退出 / 最小化到托盘 / 每次询问）、单实例、S 模式、界面语言。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>外观<span class="tag accent" style="margin-left:auto">分区 3</span></div>
+  <p class="card-text">主题、图标配色、强调色 + 自定义取色器、跟随背景、毛玻璃、卓越视效、不透明度、直角模式、开始栏位置。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>网络<span class="tag accent" style="margin-left:auto">分区 4</span></div>
+  <p class="card-text">下载源、回落源、自定义源、测速、并行下载数、CurseForge Key、自动装前置。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>关于<span class="tag accent" style="margin-left:auto">分区 5</span></div>
+  <p class="card-text">应用名、真实版本号、检查更新、项目主页、许可证。</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">02</span><h2 class="section-title">外观设置的真实性</h2><p class="section-desc">每一项都真的生效</p></div>
+  
+<div class="grid g2">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>逐项对照</div>
+    <ul class="feature tight"><li><b>面板毛玻璃</b> —— <code>Fluid.Avalonia.Acrylic</code>，窗口不在前台时自动暂停模糊降 CPU</li><li><b>窗口不透明度 / 背景不透明度</b> —— 两条独立滑块</li><li><b>直角模式</b> —— 当前页面面板与输入框圆角归零</li><li><b>卓越视效</b> —— 恢复高光、阴影、折射、渐进模糊等额外渲染</li><li><b>开始栏位置</b> —— 上 / 下 / 左 / 右 + 自动隐藏</li><li><b>图标配色</b> —— theme / colorful 两档</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>强调色与跟随背景</div>
+    <ul class="feature tight"><li>6 套预设强调色 + <b>自定义取色器</b>（自研 HSV 拾色轮）</li><li><b>最近使用</b>列表，上限 8 个</li><li><b>跟随背景</b> —— 从壁纸预览算平均色，挑最接近的主题色</li><li>换色即时生效，含 code-behind 自绘元素</li></ul>
+  </div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">03</span><h2 class="section-title">配置存储</h2><p class="section-desc">settings.json —— 24 个属性 / 7 大类</p></div>
+  
+<div class="table-wrap"><table><thead><tr><th>大类</th><th>属性</th></tr></thead><tbody><tr><td><b>主题 / 语言</b></td><td><code>Theme</code> <code>Language</code> <code>AccentColor</code> <code>AccentFollowBackground</code> <code>RecentAccentColors</code>(≤8) <code>IconPalette</code></td></tr><tr><td><b>当前选择</b></td><td><code>SelectedInstanceId</code> <code>SelectedAccountName</code> <code>OfflineAccounts</code>(已废弃，仅迁移用)</td></tr><tr><td><b>窗口 / 外观</b></td><td><code>PanelBlur</code> <code>WindowOpacity</code> <code>BackgroundOpacity</code> <code>PremiumVisuals</code> <code>SquareCorners</code> <code>CloseAction</code> <code>SingleInstance</code></td></tr><tr><td><b>开始栏</b></td><td><code>StartBarPlacement</code> <code>StartBarAutoHide</code> <code>TaskbarPages</code></td></tr><tr><td><b>下载 / 网络</b></td><td><code>DownloadSource</code> <code>DownloadFallbackSource</code> <code>CustomDownloadSourceName</code> <code>CustomDownloadSourceUrl</code> <code>ParallelDownloads</code> <code>CurseForgeApiKey</code> <code>AutoInstallDependencies</code></td></tr><tr><td><b>模式</b></td><td><code>SimpleMode</code>（S 模式）</td></tr><tr><td><b>桌面组件</b></td><td><code>DesktopWidgets</code> <code>DesktopLayoutVersion</code></td></tr></tbody></table></div>
+<div class="notice info"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z"/></svg><div>存储位置：<code>%LOCALAPPDATA%\Mofumofu.Launcher\settings.json</code>，壁纸单独存 <code>wallpaper.json</code>。
+<b>游戏目录 / Java / 内存不在这里</b>，而是在 <code>config/game</code> 两域 yaml（<code>MofuCore/Config/YamlRead.cs</code>）——
+游戏相关配置与启动器自身配置刻意分离。</div></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">04</span><h2 class="section-title">S 模式与本地化</h2><p class="section-desc">
+<div class="grid g2">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>S 模式（简洁模式）</div>
+    <ul class="feature tight"><li>隐藏开始栏与开始菜单</li><li>首页变成一屏「选版本 → 选账号 → 开玩」</li><li>保留 5 个页面：home / download / instances / account / settings</li><li>可随时退出</li><li><b>无 OOBE</b> —— 不再有首次启动引导流程，启动直接进桌面</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>本地化</div>
+    <ul class="feature tight"><li>内置 <b>简体中文 / English / 跟随系统</b> 三种语言</li><li>存储于 <code>Localization/&lt;lang&gt;/&lt;Area&gt;.json</code></li><li>zh-CN 与 en-US 各 <b>1853 键</b>，完全对齐</li><li><b>切换即时生效</b>：XAML 走 <code>{{DynamicResource L.xxx}}</code>，code-behind 随页面重建刷新</li><li>不翻译：实例名 / 服务器名 / MOTD / 曲名 / MofuCore 后端消息与日志</li></ul>
+  </div>
+</div>
+
+<div class="table-wrap" style="margin-top:16px">
+  <table>
+    <thead><tr><th>Area 文件</th><th>键数</th><th>覆盖内容</th></tr></thead>
+    <tbody>
+      <tr><td><code>Creator.json</code></td><td>315</td><td>8 个创作工具全部界面文案，最大 Area</td></tr>
+      <tr><td><code>Home.json</code></td><td>266</td><td>桌面、组件盒、拖拽、外观调节、问候语</td></tr>
+      <tr><td><code>Pages.json</code></td><td>201</td><td>Plugins（~38）+ Music（~60）+ Online（~100）</td></tr>
+      <tr><td><code>Settings.json</code></td><td>187</td><td>5 分区全部设置项 + Toast</td></tr>
+      <tr><td><code>Servers.json</code></td><td>167</td><td>服务器控制台 / 玩家 / 备份 / 配置</td></tr>
+      <tr><td><code>Instances.json</code></td><td>152</td><td>实例 6 标签 + 管理操作</td></tr>
+      <tr><td><code>Download.json</code></td><td>132</td><td>下载 7 标签 + 资源详情</td></tr>
+      <tr><td><code>Launch.json</code></td><td>108</td><td>启动阶段时间线 + 崩溃原因诊断文案</td></tr>
+      <tr><td><code>Account.json</code></td><td>103</td><td>三种登录 + 皮肤编辑 + 皮肤图库</td></tr>
+      <tr><td><code>Widgets.json</code></td><td>58</td><td>22 个组件的 Title / Desc</td></tr>
+      <tr><td><code>Rewind.json</code></td><td>58</td><td>时间轴、回滚确认、调度错误</td></tr>
+      <tr><td><code>Shell.json</code></td><td>55</td><td>标题栏 / 开始栏 / 开始菜单 / S 模式</td></tr>
+      <tr><td><code>Common.json</code></td><td>28</td><td>通用词（Enabled / Disabled / Stopped…）</td></tr>
+      <tr><td><code>Wallpaper.json</code></td><td>23</td><td>4 种壁纸模式</td></tr>
+    </tbody>
+  </table>
+</div></p></div>
+  
+</section>
+
+      <div class="pager">
+<a href="widgets.html"><div class="p-dir">← 上一页</div><div class="p-name">桌面小组件</div></a>
+<a href="roadmap.html"><div class="p-dir">下一页 →</div><div class="p-name">现状与缺口</div></a>
+</div>
+    </main>
+
+    <footer class="foot">
+      <div>Mofumofu Launcher · 基于 Avalonia 12.1.4 + SukiUI 7.0.2-nightly 构建</div>
+      <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+    </footer>
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

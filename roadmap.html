@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>现状与缺口 · Mofumofu Launcher</title>
+<meta name="description" content="把 README 承认的、源码佐证的、以及文档与仓库的偏差全部摊开讲。如实记录，比粉饰更有价值。">
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo"><svg viewBox="0 0 24 24"><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg></div>
+      <div>
+        <div class="sb-title">Mofumofu</div>
+        <div class="sb-sub">Avalonia 12 · SukiUI 7</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+<div class="sb-group">
+<div class="sb-group-label">总览</div>
+<a class="sb-link" href="index.html"><svg viewBox="0 0 24 24" class=""><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>首页</a>
+<a class="sb-link" href="architecture.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg>技术架构</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">功能页面</div>
+<a class="sb-link" href="download.html"><svg viewBox="0 0 24 24" class=""><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>下载大厅</a>
+<a class="sb-link" href="instances.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V20H4V4M4,9H20M9,9V20"/></svg>实例管理</a>
+<a class="sb-link" href="account.html"><svg viewBox="0 0 24 24" class=""><path d="M12,4C10,4 8,5 8,7V9H16V7C16,5 14,4 12,4M8,11H16V20H8V11Z"/></svg>账户与皮肤</a>
+<a class="sb-link" href="servers.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V16H4V4M8,20H16M12,16V20M7,8H10M14,8H17M7,12H10M14,12H17"/></svg>服务器</a>
+<a class="sb-link" href="online.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C8.1,4 4.9,6.6 4.3,10H8V14H4.3C4.9,17.4 8.1,20 12,20C13.9,20 15.7,19.3 17,18.1V15H14V11H17.9C17.6,8.1 15.2,5.3 12.2,4.2Z"/></svg>联机</a>
+<a class="sb-link" href="music.html"><svg viewBox="0 0 24 24" class=""><path d="M12,3V13.55C11.41,13.21 10.73,13 10,13A3,3 0 0,0 7,16A3,3 0 0,0 10,19A3,3 0 0,0 13,16V7H17V3H12Z"/></svg>音乐</a>
+<a class="sb-link" href="creator.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15"/></svg>创作中心</a>
+<a class="sb-link" href="plugins.html"><svg viewBox="0 0 24 24" class=""><path d="M9,2V4H15V2H9M7,4H17A2,2 0 0,1 19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6A2,2 0 0,1 7,4M10,9H14V13H10V9Z"/></svg>插件</a>
+<a class="sb-link" href="widgets.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H10V10H3V3M14,3H21V10H14V3M3,14H10V21H3V14M14,14H21V21H14V14"/></svg>桌面小组件</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">配置与生态</div>
+<a class="sb-link" href="settings.html"><svg viewBox="0 0 24 24" class=""><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,9.05 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,14.95 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 19.05,19.05L16.56,18.05C16.04,18.44 15.5,18.78 14.87,19.03L14.5,21.68C14.46,21.92 14.25,22.1 14,22.1H10C9.75,22.1 9.54,21.92 9.5,21.68L9.13,19.03C8.5,18.78 7.96,18.44 7.44,18.05L4.95,19.05C4.73,19.04 4.46,18.95 4.34,18.73L2.34,15.27C2.21,14.95 2.27,14.78 2.46,14.63L4.57,12.97Z"/></svg>设置</a>
+<a class="sb-link" href="ui-library.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,18.5A6.5,6.5 0 0,1 5.5,12A6.5,6.5 0 0,1 12,5.5A6.5,6.5 0 0,1 18.5,12A6.5,6.5 0 0,1 12,18.5M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5"/></svg>UI 库选型</a>
+<a class="sb-link active" href="roadmap.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H21V21H3V3M7,9H17M7,13H17M7,17H13"/></svg>现状与缺口</a>
+</div>
+</nav>
+    <div class="sb-foot">
+      <div class="small dim">数据取自源码实测</div>
+      <div class="small dim">v1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="菜单">
+        <svg viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16"/></svg>
+      </button>
+      <div class="crumb">Mofumofu <span>/</span> <b>现状与缺口</b></div>
+      <div class="topbar-tools">
+        <div class="accent-picker"><button class="accent-dot" data-accent="teal" title="青绿" aria-label="强调色 青绿" style="background:#3FC6C1;color:#3FC6C1"></button><button class="accent-dot" data-accent="blue" title="蔚蓝" aria-label="强调色 蔚蓝" style="background:#5AA9E6;color:#5AA9E6"></button><button class="accent-dot" data-accent="green" title="新绿" aria-label="强调色 新绿" style="background:#4CC38A;color:#4CC38A"></button><button class="accent-dot" data-accent="orange" title="暖橙" aria-label="强调色 暖橙" style="background:#F2AE49;color:#F2AE49"></button><button class="accent-dot" data-accent="pink" title="樱粉" aria-label="强调色 樱粉" style="background:#E5698F;color:#E5698F"></button><button class="accent-dot" data-accent="purple" title="紫藤" aria-label="强调色 紫藤" style="background:#A78BFA;color:#A78BFA"></button></div>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15M12,2L14.5,5.5L18.5,4.5L18,8.5L21,10.5L18,12.5L18,16.5L14.5,15.5L12,19L9.5,15.5L6,16.5L6,12.5L3,10.5L6,8.5L5.5,4.5L9.5,5.5L12,2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div class="page-eyebrow">Status & Gaps</div>
+        <h1 class="page-title">现状与缺口</h1>
+        <p class="page-lead">把 README 承认的、源码佐证的、以及文档与仓库的偏差全部摊开讲。如实记录，比粉饰更有价值。</p>
+        <div class="head-tags"><span class="tag warn">如实记录</span><span class="tag ">16 章免责声明</span></div>
+      </div>
+      
+<section class="section">
+  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">如实记录</h2><p class="section-desc">README 自己承认的 + 源码里能佐证的</p></div>
+  
+<div class="grid g2">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>README 明确承认</div>
+    <ul class="feature tight"><li><b>网易云 VIP</b> —— 部分歌曲需 VIP，接口只返回试听片段或空地址</li><li><b>本地音乐无 ID3</b> —— 标题直接用文件名</li><li><b>插件运行时未实现</b> —— 只扫描目录，不加载插件代码</li><li><b>AI 对话占位</b> —— 未配置 Key 时使用本地回复（且代码中已无 Ai 页面）</li><li><b>NekoSolo 尾标</b> —— 导出仍是 .zip，未追加 exe 尾标</li><li><b>Rewind 玻璃外框</b> —— 离屏渲染下边缘轻微透出下层页面</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>源码佐证但 README 未列</div>
+    <ul class="feature tight"><li><b>README 的 Wallpaper Engine 章节已完全过时</b> —— webwallgl / scene.pkg 零命中，实际用 libVLC</li><li><b>8 个桌面组件被硬过滤</b> —— 注册 30 个只暴露 22 个</li><li><b>CurseForge 完全未适配</b> —— 目录下只有 info.md，Key 只存不用</li><li><b>插件权限只在文案层</b> —— 8 种权限有文案无逻辑</li><li><b>联机只接 1 个服务商</b> —— index ≥ 1 直接返回 null</li><li><b>ParallelDownloads 注释与实际矛盾</b> —— 注释 1-16，实际 32</li></ul>
+  </div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">02</span><h2 class="section-title">文档与仓库偏差</h2><p class="section-desc">README 描述与仓库实况</p></div>
+  
+<div class="table-wrap"><table><thead><tr><th>README 描述</th><th>仓库实况</th></tr></thead><tbody><tr><td>本地化 1826 键</td><td>实测 zh-CN / en-US <b>各 1853 键</b>，完全对齐</td></tr><tr><td><code>docs/rebuild/</code>（PLAN / LOCALIZATION / INTEGRATION）</td><td><b>不存在</b>，<code>docs/</code> 只有 <code>免责声明.md</code></td></tr><tr><td><code>docs/reference/</code> 参考截图</td><td><b>不存在</b></td></tr><tr><td><code>scripts/build-locked.ps1</code> 等三个脚本</td><td><b>不存在</b></td></tr><tr><td><code>web/</code> WebView 页面源码</td><td><b>不存在</b>（<code>WebAssets/</code> 里只剩 skin 与 cubetext）</td></tr><tr><td>Wallpaper Engine 全类型支持</td><td><b>已完全过时</b>，改用 libVLC</td></tr><tr><td>Views 含 <code>Ai</code> 页面</td><td><b>已移除</b>，属残留描述</td></tr></tbody></table></div>
+<div class="notice warn"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2L1,21H23L12,2M13,18H11V16H13V18M13,14H11V10H13V14Z"/></svg><div><b>提交历史只有 2 个 commit</b>，最新一个标题是
+「snapshot: Avalonia launcher implementation before Photino/React pivot」——
+说明 Classic 那套是后续试验分支，<b>Avalonia 版才是主线</b>。另外仓库根目录有个 0 字节的
+<code>MainWindow.axaml.cs</code> 残留文件。</div></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">03</span><h2 class="section-title">免责声明要点</h2><p class="section-desc">docs/免责声明.md —— 975 行 / 16 章 + 6 附录</p></div>
+  
+<div class="grid g2">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>软件定位</div>
+    <ul class="feature tight"><li><b>第三方辅助工具</b>，不是外挂 / 作弊器 / 修改器 / 注入器</li><li><b>免费</b> —— 无内购、无付费解锁、无订阅、无会员等级</li><li>个人开发者独立开发</li><li>与 Mojang / Microsoft <b>无隶属、合作、授权或代理关系</b></li><li>不提供、不托管、不分发游戏本体，不指向盗版下载源</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>数据与隐私</div>
+    <ul class="feature tight"><li>原则上<b>不收集个人身份信息</b></li><li>联网时只传必要技术信息（软件版本号、系统类型）</li><li><b>不在设备上存储游戏账号密码</b>，凭据由官方服务处理</li><li>绝大多数功能在本地完成，不需要把游戏控制权交给远端</li></ul>
+  </div>
+</div>
+</section>
+
+      <div class="pager">
+<a href="settings.html"><div class="p-dir">← 上一页</div><div class="p-name">设置</div></a>
+<a href="index.html"><div class="p-dir">下一页 →</div><div class="p-name">回到首页</div></a>
+</div>
+    </main>
+
+    <footer class="foot">
+      <div>Mofumofu Launcher · 基于 Avalonia 12.1.4 + SukiUI 7.0.2-nightly 构建</div>
+      <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+    </footer>
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

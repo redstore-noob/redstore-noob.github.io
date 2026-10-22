@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>下载大厅 · Mofumofu Launcher</title>
+<meta name="description" content="7 个标签页覆盖从游戏本体到第三方资源的全部下载路径。5 大加载器各自独立实现，Modrinth 四类资源支持真实搜索与安装。">
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo"><svg viewBox="0 0 24 24"><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg></div>
+      <div>
+        <div class="sb-title">Mofumofu</div>
+        <div class="sb-sub">Avalonia 12 · SukiUI 7</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+<div class="sb-group">
+<div class="sb-group-label">总览</div>
+<a class="sb-link" href="index.html"><svg viewBox="0 0 24 24" class=""><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>首页</a>
+<a class="sb-link" href="architecture.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg>技术架构</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">功能页面</div>
+<a class="sb-link active" href="download.html"><svg viewBox="0 0 24 24" class=""><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>下载大厅</a>
+<a class="sb-link" href="instances.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V20H4V4M4,9H20M9,9V20"/></svg>实例管理</a>
+<a class="sb-link" href="account.html"><svg viewBox="0 0 24 24" class=""><path d="M12,4C10,4 8,5 8,7V9H16V7C16,5 14,4 12,4M8,11H16V20H8V11Z"/></svg>账户与皮肤</a>
+<a class="sb-link" href="servers.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V16H4V4M8,20H16M12,16V20M7,8H10M14,8H17M7,12H10M14,12H17"/></svg>服务器</a>
+<a class="sb-link" href="online.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C8.1,4 4.9,6.6 4.3,10H8V14H4.3C4.9,17.4 8.1,20 12,20C13.9,20 15.7,19.3 17,18.1V15H14V11H17.9C17.6,8.1 15.2,5.3 12.2,4.2Z"/></svg>联机</a>
+<a class="sb-link" href="music.html"><svg viewBox="0 0 24 24" class=""><path d="M12,3V13.55C11.41,13.21 10.73,13 10,13A3,3 0 0,0 7,16A3,3 0 0,0 10,19A3,3 0 0,0 13,16V7H17V3H12Z"/></svg>音乐</a>
+<a class="sb-link" href="creator.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15"/></svg>创作中心</a>
+<a class="sb-link" href="plugins.html"><svg viewBox="0 0 24 24" class=""><path d="M9,2V4H15V2H9M7,4H17A2,2 0 0,1 19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6A2,2 0 0,1 7,4M10,9H14V13H10V9Z"/></svg>插件</a>
+<a class="sb-link" href="widgets.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H10V10H3V3M14,3H21V10H14V3M3,14H10V21H3V14M14,14H21V21H14V14"/></svg>桌面小组件</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">配置与生态</div>
+<a class="sb-link" href="settings.html"><svg viewBox="0 0 24 24" class=""><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,9.05 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,14.95 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 19.05,19.05L16.56,18.05C16.04,18.44 15.5,18.78 14.87,19.03L14.5,21.68C14.46,21.92 14.25,22.1 14,22.1H10C9.75,22.1 9.54,21.92 9.5,21.68L9.13,19.03C8.5,18.78 7.96,18.44 7.44,18.05L4.95,19.05C4.73,19.04 4.46,18.95 4.34,18.73L2.34,15.27C2.21,14.95 2.27,14.78 2.46,14.63L4.57,12.97Z"/></svg>设置</a>
+<a class="sb-link" href="ui-library.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,18.5A6.5,6.5 0 0,1 5.5,12A6.5,6.5 0 0,1 12,5.5A6.5,6.5 0 0,1 18.5,12A6.5,6.5 0 0,1 12,18.5M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5"/></svg>UI 库选型</a>
+<a class="sb-link" href="roadmap.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H21V21H3V3M7,9H17M7,13H17M7,17H13"/></svg>现状与缺口</a>
+</div>
+</nav>
+    <div class="sb-foot">
+      <div class="small dim">数据取自源码实测</div>
+      <div class="small dim">v1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="菜单">
+        <svg viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16"/></svg>
+      </button>
+      <div class="crumb">Mofumofu <span>/</span> <b>下载大厅</b></div>
+      <div class="topbar-tools">
+        <div class="accent-picker"><button class="accent-dot" data-accent="teal" title="青绿" aria-label="强调色 青绿" style="background:#3FC6C1;color:#3FC6C1"></button><button class="accent-dot" data-accent="blue" title="蔚蓝" aria-label="强调色 蔚蓝" style="background:#5AA9E6;color:#5AA9E6"></button><button class="accent-dot" data-accent="green" title="新绿" aria-label="强调色 新绿" style="background:#4CC38A;color:#4CC38A"></button><button class="accent-dot" data-accent="orange" title="暖橙" aria-label="强调色 暖橙" style="background:#F2AE49;color:#F2AE49"></button><button class="accent-dot" data-accent="pink" title="樱粉" aria-label="强调色 樱粉" style="background:#E5698F;color:#E5698F"></button><button class="accent-dot" data-accent="purple" title="紫藤" aria-label="强调色 紫藤" style="background:#A78BFA;color:#A78BFA"></button></div>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15M12,2L14.5,5.5L18.5,4.5L18,8.5L21,10.5L18,12.5L18,16.5L14.5,15.5L12,19L9.5,15.5L6,16.5L6,12.5L3,10.5L6,8.5L5.5,4.5L9.5,5.5L12,2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div class="page-eyebrow">Download Hall</div>
+        <h1 class="page-title">下载大厅</h1>
+        <p class="page-lead">7 个标签页覆盖从游戏本体到第三方资源的全部下载路径。5 大加载器各自独立实现，Modrinth 四类资源支持真实搜索与安装。</p>
+        <div class="head-tags"><span class="tag accent">5 加载器</span><span class="tag ">Modrinth</span><span class="tag ">多镜像源</span><span class="tag ">任务面板</span></div>
+      </div>
+      
+<section class="section">
+  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">七个标签页</h2><p class="section-desc">DownloadView.axaml:204-241</p></div>
+  
+<div class="grid g-auto">
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>Minecraft<span class="tag accent" style="margin-left:auto">独立安装页</span></div>
+  <p class="card-text">正式版列表 + 磁盘缓存 + 搜索 + CheckBox 组筛选器 + 翻页。加载时显示旋转渐变圈。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>Mod</div>
+  <p class="card-text">Modrinth 搜索，防抖 + 离线降级。真实安装，支持中文资源名匹配。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>整合包</div>
+  <p class="card-text">.mrpack 安装，并发下载（默认 16）+ 重试 2 次 + 自动装加载器。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>光影</div>
+  <p class="card-text">shader 资源搜索与安装。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>资源包</div>
+  <p class="card-text">resourcepack 资源搜索与安装。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>Java</div>
+  <p class="card-text">Mojang 运行时清单、本机探测、设为全局、删除。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>任务</div>
+  <p class="card-text">真实暂停 / 继续 / 取消 / 清除已完成。</p>
+</div>
+</div>
+<div class="notice info"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z"/></svg><div><b>资源详情已从弹层改为独立页面</b>（<code>OpenResourceDetail:1626</code>）：游戏版本 / 加载器 / 安装目标 / 版本列表 四段联动，每段变化都会重新拉取下一段。</div></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">02</span><h2 class="section-title">Minecraft 本体安装</h2><p class="section-desc">切换加载器 → 拉取加载器版本 → 选目标实例 → 安装</p></div>
+  
+<div class="flow">
+  <div class="flow-step"><div class="flow-num">STEP 01</div><div class="flow-title">选择原版</div><div class="flow-desc">正式版列表</div></div>
+  <div class="flow-step"><div class="flow-num">STEP 02</div><div class="flow-title">选择加载器</div><div class="flow-desc">5 选 1</div></div>
+  <div class="flow-step"><div class="flow-num">STEP 03</div><div class="flow-title">选择版本</div><div class="flow-desc">拉取加载器版本列表</div></div>
+  <div class="flow-step"><div class="flow-num">STEP 04</div><div class="flow-title">选择实例</div><div class="flow-desc">安装目标</div></div>
+  <div class="flow-step"><div class="flow-num">STEP 05</div><div class="flow-title">安装</div><div class="flow-desc">解析库依赖</div></div>
+</div>
+
+<div class="section-head" style="margin-top:26px;margin-bottom:12px">
+  <span class="section-num">02.1</span><h2 class="section-title">5 个加载器，各自独立实现</h2>
+</div>
+<div class="table-wrap"><table><thead><tr><th>加载器</th><th>实现文件</th><th>备注</th></tr></thead><tbody><tr><td><b>Fabric</b></td><td><code>FabricDownload.cs</code></td><td>标准流程</td></tr><tr><td><b>Quilt</b></td><td><code>QuiltLoaderDownload.cs</code></td><td><span class="tag warn">无镜像</span> 直连官方</td></tr><tr><td><b>Forge</b></td><td><code>ForgeDownload.cs</code></td><td><code>files.minecraftforge.net</code> 是官网非 Maven 镜像，需特殊处理</td></tr><tr><td><b>NeoForge</b></td><td><code>NeoforgeLoaderDownload.cs</code></td><td>标准流程</td></tr><tr><td><b>OptiFine</b></td><td><code>OptifineInstaller.cs</code></td><td>独立安装器逻辑</td></tr></tbody></table></div>
+<div class="notice warn"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2L1,21H23L12,2M13,18H11V16H13V18M13,14H11V10H13V14Z"/></svg><div><b>.mrpack 整合包仅支持 Fabric / Quilt</b> —— <code>ModpackRequirements.LoaderSupported</code>（<code>ModrinthBundleInstall.cs:34</code>）明确限制。</div></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">03</span><h2 class="section-title">下载源</h2><p class="section-desc">官方 / 镜像 / 自定义，含回落与测速</p></div>
+  
+<div class="table-wrap"><table><thead><tr><th>源</th><th>地址</th><th>说明</th></tr></thead><tbody><tr><td><b>official</b></td><td><code>piston-meta.mojang.com</code></td><td>Mojang 官方</td></tr><tr><td><b>bmcl</b></td><td><code>bmclapi2.bangbang93.com</code></td><td>默认源，带 <code>/maven</code> + <code>/assets</code></td></tr><tr><td><b>custom</b></td><td>自定义名称 + URL</td><td>URL 重写覆盖 piston-meta / piston-data / launchermeta 三类域名</td></tr></tbody></table></div>
+<div class="grid g3" style="margin-top:16px">
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>回落源<span class="tag " style="margin-left:auto">独立配置</span></div>
+  <p class="card-text">独立配置的 <code>DownloadFallbackSource</code>：none / bmcl / official / custom。主源挂了自动切。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>测速选最快<span class="tag " style="margin-left:auto">一键切换</span></div>
+  <p class="card-text">逐源测量延迟，可一键自动选最快。</p>
+</div>
+  <div class="card hoverable">
+  <div class="card-title"><span class="dot"></span>并行下载数<span class="tag warn" style="margin-left:auto">默认 32</span></div>
+  <p class="card-text">可配置，实测默认值 32（代码注释写 1-16，实际生效前会再按 MofuCore 限制夹取）。</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">04</span><h2 class="section-title">合规与限制</h2><p class="section-desc">
+<div class="notice warn"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2L1,21H23L12,2M13,18H11V16H13V18M13,14H11V10H13V14Z"/></svg><div>下载大厅有一条<b>中国大陆地区合规警告条</b>（SukiUI <code>InfoBar</code>，<code>DownloadView.axaml:188-194</code>），
+<b>仅在中文 locale 显示</b>。代码里带着一句注释：「风波过后我会删除，临时增加的一条警告」。</div></div>
+<div class="grid g2" style="margin-top:16px">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>CurseForge 未适配</div>
+    <ul class="feature tight"><li><code>Download/Curseforge/</code> 目录下只有一个 <code>info.md</code></li><li>说明：「由于 Curseforge 的部分政策原因，暂时不予 Curseforge 功能适配」</li><li><code>LocalSettings.CurseForgeApiKey</code> 只保存不消费</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>版本清单缓存</div>
+    <ul class="feature tight"><li><code>TryLoadVersionCache</code> / <code>WriteVersionCache</code> 落盘缓存</li><li>搜索 + CheckBox 组筛选 + 翻页</li><li>Minecraft 默认只显示正式版</li></ul>
+  </div>
+</div></p></div>
+  
+</section>
+
+      <div class="pager">
+<a href="ui-library.html"><div class="p-dir">← 上一页</div><div class="p-name">UI 库选型</div></a>
+<a href="instances.html"><div class="p-dir">下一页 →</div><div class="p-name">实例管理</div></a>
+</div>
+    </main>
+
+    <footer class="foot">
+      <div>Mofumofu Launcher · 基于 Avalonia 12.1.4 + SukiUI 7.0.2-nightly 构建</div>
+      <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+    </footer>
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

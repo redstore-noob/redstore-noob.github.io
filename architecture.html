@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>技术架构 · Mofumofu Launcher</title>
+<meta name="description" content="五个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：同一份 MofuCore 内核，既能跑在 Avalonia 桌面上，也能跑在 Photino Web 宿主里。">
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo"><svg viewBox="0 0 24 24"><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg></div>
+      <div>
+        <div class="sb-title">Mofumofu</div>
+        <div class="sb-sub">Avalonia 12 · SukiUI 7</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+<div class="sb-group">
+<div class="sb-group-label">总览</div>
+<a class="sb-link" href="index.html"><svg viewBox="0 0 24 24" class=""><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>首页</a>
+<a class="sb-link active" href="architecture.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg>技术架构</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">功能页面</div>
+<a class="sb-link" href="download.html"><svg viewBox="0 0 24 24" class=""><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>下载大厅</a>
+<a class="sb-link" href="instances.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V20H4V4M4,9H20M9,9V20"/></svg>实例管理</a>
+<a class="sb-link" href="account.html"><svg viewBox="0 0 24 24" class=""><path d="M12,4C10,4 8,5 8,7V9H16V7C16,5 14,4 12,4M8,11H16V20H8V11Z"/></svg>账户与皮肤</a>
+<a class="sb-link" href="servers.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V16H4V4M8,20H16M12,16V20M7,8H10M14,8H17M7,12H10M14,12H17"/></svg>服务器</a>
+<a class="sb-link" href="online.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C8.1,4 4.9,6.6 4.3,10H8V14H4.3C4.9,17.4 8.1,20 12,20C13.9,20 15.7,19.3 17,18.1V15H14V11H17.9C17.6,8.1 15.2,5.3 12.2,4.2Z"/></svg>联机</a>
+<a class="sb-link" href="music.html"><svg viewBox="0 0 24 24" class=""><path d="M12,3V13.55C11.41,13.21 10.73,13 10,13A3,3 0 0,0 7,16A3,3 0 0,0 10,19A3,3 0 0,0 13,16V7H17V3H12Z"/></svg>音乐</a>
+<a class="sb-link" href="creator.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15"/></svg>创作中心</a>
+<a class="sb-link" href="plugins.html"><svg viewBox="0 0 24 24" class=""><path d="M9,2V4H15V2H9M7,4H17A2,2 0 0,1 19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6A2,2 0 0,1 7,4M10,9H14V13H10V9Z"/></svg>插件</a>
+<a class="sb-link" href="widgets.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H10V10H3V3M14,3H21V10H14V3M3,14H10V21H3V14M14,14H21V21H14V14"/></svg>桌面小组件</a>
+</div>
+<div class="sb-group">
+<div class="sb-group-label">配置与生态</div>
+<a class="sb-link" href="settings.html"><svg viewBox="0 0 24 24" class=""><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,9.05 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,14.95 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 19.05,19.05L16.56,18.05C16.04,18.44 15.5,18.78 14.87,19.03L14.5,21.68C14.46,21.92 14.25,22.1 14,22.1H10C9.75,22.1 9.54,21.92 9.5,21.68L9.13,19.03C8.5,18.78 7.96,18.44 7.44,18.05L4.95,19.05C4.73,19.04 4.46,18.95 4.34,18.73L2.34,15.27C2.21,14.95 2.27,14.78 2.46,14.63L4.57,12.97Z"/></svg>设置</a>
+<a class="sb-link" href="ui-library.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,18.5A6.5,6.5 0 0,1 5.5,12A6.5,6.5 0 0,1 12,5.5A6.5,6.5 0 0,1 18.5,12A6.5,6.5 0 0,1 12,18.5M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5"/></svg>UI 库选型</a>
+<a class="sb-link" href="roadmap.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H21V21H3V3M7,9H17M7,13H17M7,17H13"/></svg>现状与缺口</a>
+</div>
+</nav>
+    <div class="sb-foot">
+      <div class="small dim">数据取自源码实测</div>
+      <div class="small dim">v1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="菜单">
+        <svg viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16"/></svg>
+      </button>
+      <div class="crumb">Mofumofu <span>/</span> <b>技术架构</b></div>
+      <div class="topbar-tools">
+        <div class="accent-picker"><button class="accent-dot" data-accent="teal" title="青绿" aria-label="强调色 青绿" style="background:#3FC6C1;color:#3FC6C1"></button><button class="accent-dot" data-accent="blue" title="蔚蓝" aria-label="强调色 蔚蓝" style="background:#5AA9E6;color:#5AA9E6"></button><button class="accent-dot" data-accent="green" title="新绿" aria-label="强调色 新绿" style="background:#4CC38A;color:#4CC38A"></button><button class="accent-dot" data-accent="orange" title="暖橙" aria-label="强调色 暖橙" style="background:#F2AE49;color:#F2AE49"></button><button class="accent-dot" data-accent="pink" title="樱粉" aria-label="强调色 樱粉" style="background:#E5698F;color:#E5698F"></button><button class="accent-dot" data-accent="purple" title="紫藤" aria-label="强调色 紫藤" style="background:#A78BFA;color:#A78BFA"></button></div>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15M12,2L14.5,5.5L18.5,4.5L18,8.5L21,10.5L18,12.5L18,16.5L14.5,15.5L12,19L9.5,15.5L6,16.5L6,12.5L3,10.5L6,8.5L5.5,4.5L9.5,5.5L12,2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div class="page-eyebrow">Architecture</div>
+        <h1 class="page-title">技术架构</h1>
+        <p class="page-lead">五个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：同一份 MofuCore 内核，既能跑在 Avalonia 桌面上，也能跑在 Photino Web 宿主里。</p>
+        <div class="head-tags"><span class="tag accent">Avalonia 12.1.4</span><span class="tag ">.NET 10</span><span class="tag ">SukiUI 7.0.2-nightly</span><span class="tag ">5 模块</span></div>
+      </div>
+      
+<section class="section">
+  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">分层结构</h2><p class="section-desc">UI 与 Minecraft 逻辑彻底解耦，同一份内核可换宿主</p></div>
+  
+<div class="grid g3">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>表现层</div>
+    <p class="card-text">Mofumofu.Launcher（Avalonia 12.1.4）<br>Mofumofu.Classic（Photino.NET）</p>
+    <div class="divider"></div>
+    <p class="card-text small">Views / Controls / Services / Styles / Web<br>经典版走 <code>Api/</code> 反射注册</p>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>后端层</div>
+    <p class="card-text">Mofumofu.Backend<br><span class="dim small">467 行 / 3 文件</span></p>
+    <div class="divider"></div>
+    <p class="card-text small">LocalSettings / LogWrite / OpenLinkBrowser<br>只管启动器自身的配置</p>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>内核层</div>
+    <p class="card-text">MofuCore<br><span class="dim small">25,873 行 / 31 文件</span></p>
+    <div class="divider"></div>
+    <p class="card-text small">零 UI 引用 · 可被任意宿主复用</p>
+  </div>
+</div>
+
+<div class="flow" style="margin-top:20px">
+  <div class="flow-step"><div class="flow-num">STEP 01</div><div class="flow-title">用户操作</div><div class="flow-desc">点击 / 拖拽 / 输入</div></div>
+  <div class="flow-step"><div class="flow-num">STEP 02</div><div class="flow-title">Service 编排</div><div class="flow-desc">主题 / 进度 / 状态</div></div>
+  <div class="flow-step"><div class="flow-num">STEP 03</div><div class="flow-title">MofuCore 调用</div><div class="flow-desc">下载 / 账户 / 启动 / 服务</div></div>
+  <div class="flow-step"><div class="flow-num">STEP 04</div><div class="flow-title">回写状态</div><div class="flow-desc">Observable 通知界面</div></div>
+</div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">02</span><h2 class="section-title">MofuCore 能力地图</h2><p class="section-desc">31 个文件，覆盖 Minecraft 启动器的全部核心域</p></div>
+  
+<div class="table-wrap"><table><thead><tr><th>域</th><th>关键文件</th><th>职责</th></tr></thead><tbody><tr><td><b>Config</b></td><td><code>YamlRead.cs</code></td><td>config / game 两域 yaml 解析 + 默认游戏目录 <code>./.minecraft</code></td></tr><tr><td><b>Download</b></td><td><code>MinecraftDownload</code> <code>MinecraftManifest</code> <code>LibraryResolver</code></td><td>版本清单、资源下载、库依赖解析</td></tr><tr><td><b>加载器</b></td><td><code>FabricDownload</code> <code>QuiltLoaderDownload</code> <code>ForgeDownload</code> <code>NeoforgeLoaderDownload</code> <code>OptifineInstaller</code></td><td>5 个加载器各自独立实现类</td></tr><tr><td><b>Modrinth</b></td><td><code>ModrinthResourceSearch</code> <code>ModrinthBundleInstall</code> <code>ModrinthBundleMake</code></td><td>资源搜索 / 整合包安装 / 打包</td></tr><tr><td><b>Java</b></td><td><code>JavaPathSearch</code> <code>JavaDownload</code></td><td>环境变量 + 注册表 + 常见目录探测；Mojang 运行时下载</td></tr><tr><td><b>Launch</b></td><td><code>GameLaunch</code> <code>LaunchProfile</code> <code>VersionLoader</code></td><td>启动参数装配、进程启动、继承链合并</td></tr><tr><td><b>Account</b></td><td><code>AccountStore</code> <code>AuthlibAccountManage</code> <code>MinecraftTokenHandle</code></td><td>Microsoft / Authlib / 离线账号 + 令牌加密</td></tr><tr><td><b>Server</b></td><td><code>ServerManage</code> <code>ServerDownload</code></td><td>进程 / RCON / 备份 / 玩家，2,800+ 行</td></tr><tr><td><b>Tools</b></td><td><code>MemoryRead</code> <code>ResourcePackMake</code> <code>RewindSystem</code></td><td>内存与磁盘占用、资源包打包、时光回溯</td></tr><tr><td><b>Online</b></td><td><code>Terracotta.cs</code></td><td>陶瓦联机客户端适配</td></tr><tr><td><b>Log</b></td><td><code>LogShareAPI.cs</code></td><td>LogShare 日志上传</td></tr></tbody></table></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">03</span><h2 class="section-title">SukiUI 实际用量</h2><p class="section-desc">关键发现：SukiUI 只提供了外壳，交互控件全是原生 Avalonia 自绘</p></div>
+  
+<div class="notice info"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z"/></svg><div>全项目 grep <code>Suki[A-Za-z0-9_]+</code> 的结果：<b>SukiWindow × 6</b>、<b>SukiDialogHost × 8</b>、<b>SukiDialogManager × 1</b>、
+<b>SukiTheme × 3</b>、<b>SukiColorTheme × 3</b>、<b>GlassCard × 8</b>、<b>InfoBar × 1</b>。
+<b>没有用到</b> SukiButton / SukiToggleSwitch / SukiComboBox / SukiNumericUpDown / SukiTabControl / SukiTextBox / SukiToast / SukiSideMenu。</div></div>
+
+<div class="grid g2" style="margin-top:16px">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>用到的 SukiUI 能力</div>
+    <ul class="feature tight"><li><b>SukiWindow</b> —— 无边框外壳，标题栏 / 阴影 / 圆角随主题</li><li><b>SukiDialogHost + Manager</b> —— 模态对话框宿主</li><li><b>SukiTheme / SukiColorTheme</b> —— 全局主题注册与强调色切换</li><li><b>GlassCard</b> —— 毛玻璃卡片（创作中心 / 实例 / 联机）</li><li><b>InfoBar</b> —— 下载大厅的中国大陆合规警告条</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>自己实现的部分</div>
+    <ul class="feature tight"><li><b>Toast</b> —— 自绘 ToastStack，最多 4 条，异步淡出</li><li><b>按钮 / 输入框 / 下拉 / 开关</b> —— 原生 Avalonia 控件 + <code>Classes="primary"</code> 等自定义样式类</li><li><b>ColorWheel</b> —— 自研 HSV 拾色轮（色相环 + 饱和度盘 + 明度条）</li><li><b>IconParkIcon</b> —— 自研多色矢量图标控件</li><li><b>GradientSpinner</b> —— 自绘旋转渐变加载圈</li></ul>
+  </div>
+</div>
+
+<div class="section-head" style="margin-top:26px;margin-bottom:12px">
+  <span class="section-num">03.1</span><h2 class="section-title">主题切换的坑（已踩过）</h2>
+</div>
+<pre class="code">&lt;span class=&quot;c&quot;&gt;// ThemeManager.cs:135-139 —— SukiUI 对同名主题不覆盖&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// 所以主题名必须带递增序号，否则换强调色无效&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;int&lt;/span&gt; _sukiThemeSerial = &lt;span class=&quot;n&quot;&gt;0&lt;/span&gt;;
+
+&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; theme = &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; SukiColorTheme(...);
+SukiTheme.&lt;span class=&quot;p&quot;&gt;AddColorTheme&lt;/span&gt;(&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; SukiThemeVariant(
+    &lt;span class=&quot;s&quot;&gt;$&quot;Mofumofu {accentKey} {++_sukiThemeSerial}&quot;&lt;/span&gt;, theme));
+SukiTheme.&lt;span class=&quot;p&quot;&gt;ChangeColorTheme&lt;/span&gt;(...);</pre>
+<div class="notice warn"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2L1,21H23L12,2M13,18H11V16H13V18M13,14H11V10H13V14Z"/></svg><div>这一条是选型时的重要参考：<b>SukiUI 的主题覆盖语义有坑</b>，任何补充 UI 库如果也走「注册主题 + 按名切换」的模型，都需要考虑同样的序号问题。</div></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">04</span><h2 class="section-title">Classic 宿主</h2><p class="section-desc">同内核的另一套前端：Photino.NET + 16 个反射注册 API</p></div>
+  
+<p class="muted" style="margin-top:-4px">
+  <code>Mofumofu.Classic/Program.cs</code> 的入口注释直书「Mofumofu 启动器（Photino.NET 宿主）」。
+  启动流程是：日志 → 本地设置 → <code>StaticServer(wwwroot)</code> → AppWindow + Bridge → 反射注册程序集里所有 <code>ApiBase</code> 子类 → runtime 命令 → Load。
+</p>
+<pre class="code">&lt;span class=&quot;c&quot;&gt;// Program.cs:73 —— 反射注册所有 ApiBase 子类&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; (&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; t &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; asm.&lt;span class=&quot;p&quot;&gt;GetTypes&lt;/span&gt;())
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; (&lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;(ApiBase).&lt;span class=&quot;p&quot;&gt;IsAssignableFrom&lt;/span&gt;(t) &amp;&amp; !t.&lt;span class=&quot;p&quot;&gt;IsAbstract&lt;/span&gt;)
+        &lt;span class=&quot;p&quot;&gt;RegisterApi&lt;/span&gt;(&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; t());
+
+&lt;span class=&quot;c&quot;&gt;// ApiBase.cs:101-106 —— 方法不存在时优雅降级&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// 「未接入 MofuCore」的模块不会崩，只是返回 null&lt;/span&gt;</pre>
+<div class="table-wrap"><table><thead><tr><th>API 模块</th><th>行数</th><th>状态</th></tr></thead><tbody><tr><td><code>DownloadApi</code></td><td>832</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>ServerHostApi</code></td><td>614</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>InstanceApi</code></td><td>666</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>AccountApi</code></td><td>643</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>ConfigApi</code></td><td>514</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>SystemApi</code></td><td>421</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>LauncherApi</code></td><td>420</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>OnlineApi</code></td><td>261</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>WorldApi</code></td><td>65</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>MonitorApi</code></td><td>53</td><td><span class="tag ok">完整</span></td></tr><tr><td><code>ServerApi</code></td><td>49</td><td><span class="tag warn">部分</span> 只实现了 <code>ParseServerAddress</code></td></tr><tr><td><code>ContentApi</code></td><td>20</td><td><span class="tag err">桩</span></td></tr><tr><td><code>ModpackApi</code></td><td>9</td><td><span class="tag err">空</span> MofuCore 无对应服务</td></tr><tr><td><code>MusicApi</code></td><td>10</td><td><span class="tag err">空</span> MofuCore 本轮无音乐模块</td></tr><tr><td><code>UpdateApi</code></td><td>9</td><td><span class="tag err">空</span> 移植版暂无更新通道</td></tr></tbody></table></div>
+</section>
+
+<section class="section">
+  <div class="section-head"><span class="section-num">05</span><h2 class="section-title">构建与运行</h2><p class="section-desc">
+<div class="grid g2">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>前置要求</div>
+    <ul class="feature tight"><li>.NET 10 SDK</li><li>WebView2 Runtime（Win11 自带，Win10 需装 Evergreen）</li><li>首次启动自动创建 <code>./.minecraft</code> 版本文件夹</li></ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>常用命令</div>
+    <pre class="code">&lt;span class=&quot;c&quot;&gt;# 运行桌面版&lt;/span&gt;
+dotnet run --project Mofumofu.Launcher
+
+&lt;span class=&quot;c&quot;&gt;# 经典版（Web 前端）&lt;/span&gt;
+dotnet run --project Mofumofu.Classic -- --dev
+&lt;span class=&quot;c&quot;&gt;#   默认连 http://127.0.0.1:5173 的 Vite dev server&lt;/span&gt;</pre>
+  </div>
+</div></p></div>
+  
+</section>
+
+      <div class="pager">
+<a href="index.html"><div class="p-dir">← 上一页</div><div class="p-name">首页</div></a>
+<a href="ui-library.html"><div class="p-dir">下一页 →</div><div class="p-name">SukiUI 适配选型</div></a>
+</div>
+    </main>
+
+    <footer class="foot">
+      <div>Mofumofu Launcher · 基于 Avalonia 12.1.4 + SukiUI 7.0.2-nightly 构建</div>
+      <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+    </footer>
+  </div>
+</div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
