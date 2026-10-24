@@ -617,6 +617,153 @@ details.acc .acc-body { padding: 0 16px 16px; color: var(--muted); font-size: 13
 .command-item:hover, .command-item.selected { color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
 .command-empty { padding: 34px; color: var(--dim); text-align: center; }
 
+/* ============================================================
+   首页 · 产品界面示意（Fake UI）
+   纯 HTML/CSS 复刻启动器桌面：窗口栏 / 桌面标签 / 小组件 / 启动栏。
+   自带一套明暗变量，切主题时整块跟着变，不依赖截图。
+   ============================================================ */
+.fui {
+  --fui-bg: #0b1118;
+  --fui-bg-2: #111b25;
+  --fui-bar: rgba(255, 255, 255, .03);
+  --fui-panel: rgba(255, 255, 255, .05);
+  --fui-panel-2: rgba(255, 255, 255, .08);
+  --fui-line: rgba(255, 255, 255, .1);
+  --fui-line-2: rgba(255, 255, 255, .19);
+  --fui-text: #e9eff5;
+  --fui-dim: #8494a4;
+  --fui-grid: rgba(255, 255, 255, .03);
+  --fui-shadow: 0 36px 80px -34px rgba(0, 0, 0, .85), 0 0 90px -40px color-mix(in srgb, var(--accent) 30%, transparent);
+  position: relative;
+  margin: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--fui-bg-2), var(--fui-bg));
+  box-shadow: var(--fui-shadow), inset 0 1px 0 rgba(255, 255, 255, .07);
+  overflow: hidden;
+  isolation: isolate;
+}
+html[data-theme="light"] .fui {
+  --fui-bg: #f8f8f3;
+  --fui-bg-2: #fdfdfa;
+  --fui-bar: rgba(255, 255, 255, .72);
+  --fui-panel: rgba(255, 255, 255, .92);
+  --fui-panel-2: #ffffff;
+  --fui-line: #d6dbd6;
+  --fui-line-2: #bcc4bf;
+  --fui-text: #172028;
+  --fui-dim: #6d7a84;
+  --fui-grid: rgba(23, 32, 40, .045);
+  --fui-shadow: 0 30px 64px -30px rgba(31, 43, 44, .38);
+}
+.fui svg { stroke-width: 3; }
+
+/* 窗口标题栏 */
+.fui-bar { display: flex; align-items: center; gap: 13px; height: 40px; padding: 0 15px; border-bottom: 1px solid var(--fui-line); background: var(--fui-bar); }
+.fui-dots { display: flex; gap: 6px; }
+.fui-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--fui-line-2); }
+.fui-dots i:first-child { background: var(--accent); }
+.fui-win { color: var(--fui-dim); font: 600 10.5px "Cascadia Code", monospace; letter-spacing: .12em; text-transform: uppercase; }
+.fui-sys { margin-left: auto; color: var(--fui-dim); font: 9px "Cascadia Code", monospace; letter-spacing: .16em; opacity: .8; }
+.fui-ctl { display: flex; align-items: center; gap: 14px; }
+.fui-ctl i { width: 10px; height: 1px; background: var(--fui-line-2); }
+.fui-ctl i:nth-child(2) { width: 9px; height: 9px; border: 1px solid var(--fui-line-2); background: none; }
+.fui-ctl i:nth-child(3) { transform: rotate(45deg); }
+
+/* 桌面 */
+.fui-desk {
+  padding: 12px 14px 14px;
+  background-image:
+    linear-gradient(var(--fui-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--fui-grid) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+.fui-tabs { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.fui-pill { display: inline-flex; align-items: center; height: 22px; padding: 0 11px; color: var(--fui-dim); border: 1px solid var(--fui-line); border-radius: 999px; font-size: 10.5px; }
+.fui-pill.on { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.fui-pill.add { width: 22px; justify-content: center; padding: 0; font-size: 13px; }
+.fui-fill { flex: 1; }
+.fui-tab-meta { color: var(--fui-dim); font: 9px "Cascadia Code", "Microsoft YaHei", monospace; letter-spacing: .1em; }
+
+.fui-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px; }
+
+/* 小组件 */
+.wg { position: relative; min-height: 104px; padding: 11px 12px; border: 1px solid var(--fui-line); border-radius: 9px; background: var(--fui-panel); transition: border-color .3s var(--ease), background .3s var(--ease); }
+.fui:hover .wg { border-color: var(--fui-line-2); }
+.wg-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.wg-t { color: var(--fui-text); font-size: 11.5px; font-weight: 650; letter-spacing: .01em; }
+.wg-s { color: var(--fui-dim); font-size: 9.5px; }
+.wg-sub { color: var(--fui-dim); font-size: 10px; line-height: 1.5; }
+.wg-chip { display: inline-flex; align-items: center; height: 18px; padding: 0 7px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 999px; background: color-mix(in srgb, var(--accent) 9%, transparent); font-size: 9px; }
+.wg-pill { display: inline-flex; align-items: center; gap: 5px; height: 18px; padding: 0 7px; color: var(--success); border: 1px solid color-mix(in srgb, var(--success) 38%, transparent); border-radius: 999px; background: var(--success-soft); font-size: 9px; }
+.wg-pill i { width: 4px; height: 4px; border-radius: 50%; background: var(--success); }
+
+.wg-clock { grid-column: span 3; display: flex; flex-direction: column; justify-content: center; }
+.wg-clock .wg-h { position: absolute; top: 11px; left: 12px; right: 12px; margin: 0; }
+.wg-time { color: var(--fui-text); font: 500 34px/1 "Cascadia Code", monospace; letter-spacing: -.03em; }
+.wg-clock .wg-sub { margin-top: 7px; }
+
+.wg-worlds { grid-column: span 5; }
+.wg-list { display: grid; gap: 6px; }
+.wg-row { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border: 1px solid var(--fui-line); border-radius: 6px; background: color-mix(in srgb, var(--fui-panel-2) 60%, transparent); }
+.sq { width: 17px; height: 17px; flex: 0 0 auto; border-radius: 4px; background: var(--c, var(--accent)); opacity: .92; }
+.wg-row b { display: block; color: var(--fui-text); font-size: 11px; font-weight: 600; }
+.wg-row .wr-b span { display: block; margin-top: 1px; color: var(--fui-dim); font-size: 9px; }
+.chev { margin-left: auto; width: 5px; height: 5px; border-top: 1.3px solid var(--fui-dim); border-right: 1.3px solid var(--fui-dim); transform: rotate(45deg); }
+
+.wg-music { grid-column: span 4; display: flex; flex-direction: column; }
+.wg-track { margin: 2px 0 0; color: var(--fui-text); font-size: 11px; }
+.wave { display: flex; align-items: flex-end; gap: 2px; height: 44px; margin-top: auto; padding-top: 10px; }
+.wave i { flex: 1; border-radius: 1px; background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 22%, transparent)); transform-origin: bottom; animation: fuiWave 2.6s var(--ease) infinite; }
+@keyframes fuiWave { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.55); } }
+
+.wg-server { grid-column: span 4; }
+.wg-big { color: var(--fui-text); font: 500 26px/1 "Cascadia Code", monospace; letter-spacing: -.02em; }
+.wg-big span { color: var(--fui-dim); font-size: 14px; }
+.wg-kv { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; color: var(--fui-dim); font-size: 10px; }
+.wg-kv b { color: var(--fui-text); font: 400 10px "Cascadia Code", monospace; }
+.meter { height: 5px; margin: 7px 0 8px; border-radius: 3px; background: var(--fui-line); overflow: hidden; }
+.meter i { display: block; width: 62%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--info)); }
+
+.wg-dl { grid-column: span 4; }
+.wg-pct { margin-top: 3px; color: var(--fui-text); font: 500 26px/1 "Cascadia Code", monospace; }
+.wg-pct span { color: var(--fui-dim); font-size: 13px; }
+.bar { height: 6px; margin: 9px 0 7px; border-radius: 3px; background: var(--fui-line); overflow: hidden; }
+.bar i { display: block; width: 78%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-hover)); }
+
+.wg-rewind { grid-column: span 4; }
+.tl { display: flex; align-items: center; gap: 6px; margin: 10px 0 12px; }
+.tl i { width: 7px; height: 7px; flex: 0 0 auto; border: 1px solid var(--fui-line-2); border-radius: 50%; }
+.tl i.on { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 55%, transparent); }
+.tl span { flex: 1; height: 1px; background: var(--fui-line); }
+
+.wg-fav { grid-column: span 12; min-height: 0; padding-bottom: 12px; }
+.fav-row { display: flex; gap: 8px; }
+.fav { flex: 1; display: flex; align-items: center; gap: 8px; padding: 7px 9px; border: 1px solid var(--fui-line); border-radius: 6px; background: color-mix(in srgb, var(--fui-panel-2) 55%, transparent); }
+.fav b { display: block; color: var(--fui-text); font-size: 10.5px; font-weight: 600; }
+.fav .fb span { display: block; margin-top: 1px; color: var(--fui-dim); font-size: 9px; }
+
+/* 启动栏 */
+.fui-dock { display: flex; align-items: center; gap: 6px; margin-top: 12px; padding: 7px 9px; border: 1px solid var(--fui-line); border-radius: 10px; background: var(--fui-panel-2); box-shadow: 0 -10px 24px -18px rgba(0, 0, 0, .6); }
+.fui-logo { display: grid; place-content: center; width: 29px; height: 29px; grid-template-columns: 6px 6px; grid-template-rows: 6px 6px; gap: 3px; border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent); border-radius: 7px; background: color-mix(in srgb, var(--accent) 11%, transparent); }
+.fui-logo i { border-radius: 1px; background: var(--accent); }
+.fui-sep { width: 1px; height: 20px; margin: 0 4px; background: var(--fui-line); }
+.fui-nav { display: flex; gap: 2px; }
+.fui-dock-ico { display: grid; place-items: center; width: 29px; height: 29px; color: var(--fui-dim); border-radius: 7px; transition: .25s var(--ease); }
+.fui-dock-ico svg { width: 15px; height: 15px; }
+.fui-dock-ico.on { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.fui:hover .fui-dock-ico:hover { color: var(--fui-text); background: var(--fui-panel); }
+.fui-sel { display: inline-flex; align-items: center; gap: 6px; height: 29px; padding: 0 10px; color: var(--fui-text); border: 1px solid var(--fui-line); border-radius: 7px; background: var(--fui-panel); font-size: 10.5px; white-space: nowrap; }
+.fui-sel .sq { width: 11px; height: 11px; border-radius: 3px; }
+.fui-sel .av { display: grid; place-content: center; width: 19px; height: 19px; color: #06121a; border-radius: 6px; background: linear-gradient(135deg, var(--info), #a78bfa); font-size: 10px; font-weight: 700; }
+.caret { width: 4px; height: 4px; border-right: 1.3px solid var(--fui-dim); border-bottom: 1.3px solid var(--fui-dim); transform: rotate(45deg) translateY(-1px); }
+.fui-play { display: inline-flex; align-items: center; gap: 7px; height: 31px; padding: 0 15px; color: var(--accent-on); border-radius: 8px; background: linear-gradient(180deg, var(--accent-hover), var(--accent)); font-size: 11px; font-weight: 700; box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--accent) 60%, transparent); }
+.fui-play .tri { width: 0; height: 0; border-left: 7px solid var(--accent-on); border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; }
+
+.fui-cap { display: flex; align-items: baseline; gap: 10px; margin: 10px 0 30px; color: var(--dim); font: 9px "Cascadia Code", "Microsoft YaHei", monospace; letter-spacing: .14em; }
+.fui-cap::before { content: ""; width: 22px; height: 1px; background: var(--accent); transform: translateY(-3px); }
+.fui-cap b { color: var(--accent); font-weight: 700; }
+
 /* Reveal is progressive enhancement, never a content dependency. */
 .js .reveal { opacity: 0; transform: translateY(24px); }
 .js .reveal.in { opacity: 1; transform: none; transition: opacity .65s var(--ease), transform .65s var(--ease); }
@@ -682,6 +829,10 @@ details.acc .acc-body { padding: 0 16px 16px; color: var(--muted); font-size: 13
   .g2 > *:nth-child(odd), .g-auto > *:nth-child(5n + 1) { grid-column: span 12 !important; }
   .adv { grid-template-columns: 1fr; column-gap: 0; }
   .foot { padding: 22px 20px; flex-direction: column; }
+  .fui-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .wg-clock, .wg-worlds, .wg-music, .wg-server, .wg-dl, .wg-rewind { grid-column: span 3; }
+  .wg-fav { grid-column: span 6; }
+  .fui-tab-meta { display: none; }
 }
 
 @media (max-width: 560px) {
@@ -716,6 +867,29 @@ details.acc .acc-body { padding: 0 16px 16px; color: var(--muted); font-size: 13
   .pager a { min-height: 105px; }
   .command-meta span:last-child { display: none; }
   .command { margin-top: 4vh; }
+  /* Fake UI 收窄成手机比例：只留四块核心组件 */
+  .fui-bar { height: 34px; padding: 0 11px; gap: 9px; }
+  .fui-sys { display: none; }
+  .fui-desk { padding: 10px 10px 11px; background-size: 34px 34px; }
+  .fui-tabs { margin-bottom: 9px; }
+  .fui-pill { height: 20px; padding: 0 9px; font-size: 9.5px; }
+  .fui-grid { gap: 8px; }
+  .wg-music, .wg-server, .wg-rewind { display: none; }
+  .wg-clock, .wg-dl { grid-column: span 3; }
+  .wg-clock { order: 1; justify-content: flex-start; }
+  .wg-clock .wg-h { position: static; margin-bottom: 4px; }
+  .wg-dl { order: 2; }
+  .wg-worlds { order: 3; grid-column: span 6; }
+  .wg-fav { order: 4; }
+  .wg { min-height: 92px; padding: 9px 10px; }
+  .wg-time, .wg-pct { font-size: 26px; }
+  .fav-row { flex-wrap: wrap; gap: 6px; }
+  .fav { flex: 1 1 100%; }
+  .fui-dock { margin-top: 9px; padding: 6px 7px; gap: 4px; }
+  .fui-sep, .fui-sel.acc { display: none; }
+  .fui-nav .fui-dock-ico:nth-child(n + 3) { display: none; }
+  .fui-sel { height: 27px; padding: 0 7px; font-size: 9.5px; }
+  .fui-play { height: 29px; padding: 0 11px; font-size: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -731,4 +905,5 @@ details.acc .acc-body { padding: 0 16px 16px; color: var(--muted); font-size: 13
   .page-head { min-height: 0; }
   .section > .section-head { position: static; }
   .card { break-inside: avoid; }
+  .fui { break-inside: avoid; box-shadow: none; }
 }

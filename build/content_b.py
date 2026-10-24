@@ -11,16 +11,16 @@ from build import page, sec, card, ul, table, write, icon
 # 2. 技术架构
 # ══════════════════════════════════════════════════════════
 body = f"""
-{sec("01", "分层结构", "UI 与 Minecraft 逻辑彻底解耦，同一份内核可换宿主", f"""
+{sec("01", "分层结构", "UI 与 Minecraft 逻辑彻底解耦，内核零 UI 引用", f"""
 <div class="grid g3">
   <div class="card">
     <div class="card-title">{icon("IconMonitor", "card-ico")} 表现层</div>
     <p class="card-text">
-      桌面版跑在 <b>Avalonia 12</b> 上，经典版跑在 <b>Photino.NET</b> 上 ——
-      同一套内核，两种外壳。
+      整个桌面端构建在 <b>Avalonia 12 + SukiUI 7</b> 上 ——
+      视图、控件、主题、交互全在这一层。
     </p>
     <div class="divider"></div>
-    <p class="card-text small">视图、控件、主题、交互全在这一层，换宿主不影响内核。</p>
+    <p class="card-text small">不碰任何游戏逻辑，换一套外壳也不影响内核。</p>
   </div>
   <div class="card">
     <div class="card-title">{icon("IconSettings", "card-ico")} 后端层</div>
@@ -68,8 +68,8 @@ body = f"""
 
 write("architecture.html", page(
     "architecture.html", "技术架构", "Architecture",
-    "五个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：同一份 MofuCore 内核，"
-    "既能跑在 Avalonia 桌面上，也能跑在 Photino Web 宿主里。",
+    "四个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦："
+    "MofuCore 零 UI 引用，可被任意宿主复用。",
     body,
     tags=[("Avalonia 12", "accent"), (".NET 10", ""), ("跨平台", ""), ("内核零 UI 引用", "")],
     prev=("index.html", "首页"),

@@ -33,26 +33,113 @@ ADVANTAGES = [
     ("创作中心", "IconCreator", "<b>8 个创作工具</b> · 立方体 3D 文字 · 资源包与命令生成"),
     ("插件", "IconPlugin", "<b>.NET 类库热装卸</b> · 8 个权限区 · 可在线更新"),
     ("桌面小组件", "IconMonitor", "<b>22 个组件</b> · 格子板自由摆放 · 接真实数据源"),
-    ("设置", "IconSettings", "<b>5 大分区</b> · 6 套强调色 · 三语言即时切换"),
+    ("设置", "IconSettings", "<b>5 大分区</b> · 6 套强调色 · 多语言即时切换"),
 ]
 
 MODULES = [
     ["<b>MofuCore</b>", "Minecraft 逻辑内核：版本、加载器、账户、启动、服务器、联机。零 UI 引用。"],
     ["<b>Mofumofu.Launcher</b>", "Avalonia 前端主体：全部视图、控件、服务与主题系统。"],
-    ["<b>Mofumofu.Classic</b>", "同一内核的另一套宿主（Photino.NET）。"],
     ["<b>NekoSolo</b>", "独立的单文件整合包安装器：校验、解压、建快捷方式。"],
     ["<b>Mofumofu.Backend</b>", "启动器自身后端：设置持久化、日志、外部链接唤起。"],
 ]
 
 ENTRIES = [
     ("技术架构", "architecture.html", "分层 · 内核 · 模块边界",
-     "五个模块怎么切、依赖往哪个方向走、UI 与业务如何彻底解耦。"),
+     "四个模块怎么切、依赖往哪个方向走、UI 与业务如何彻底解耦。"),
     ("插件文档", "docs/index.html", "Extension Guide · 八章",
      "从跑通第一个插件到 UI 扩展、下载域与启动钩子，全部接口都在这里。"),
 ]
 
 stats_html = "".join(
     f'<div class="stat-item"><b>{n}</b><span>{l}</span></div>' for n, l in STATS)
+
+# ── 首页第 01 章的配图：用 HTML/CSS 复刻的启动器界面（纯 DOM，不依赖截图） ──
+# 版式与配色对齐 E:/Mofumofu/promo 的 S2「桌面自由」镜头：窗口栏 → 桌面标签 →
+# 小组件网格 → 启动栏。数据取自 ADVANTAGES 的真实能力，非占位文案。
+_WAVE = [34, 58, 42, 86, 51, 69, 38, 62, 29, 78, 47, 57, 33, 71, 43, 55]
+_wave_html = "".join(
+    f'<i style="height:{h}%;animation-delay:-{i * 0.14:.2f}s"></i>'
+    for i, h in enumerate(_WAVE))
+
+FUI = f"""
+  <div class="fui reveal" role="img" aria-label="Mofumofu Launcher 主界面示意：桌面小组件网格与底部启动栏">
+    <div class="fui-bar">
+      <span class="fui-dots"><i></i><i></i><i></i></span>
+      <span class="fui-win">Mofumofu Launcher</span>
+      <span class="fui-sys">AVALONIA 12 · .NET 10</span>
+      <span class="fui-ctl"><i></i><i></i><i></i></span>
+    </div>
+    <div class="fui-desk">
+      <div class="fui-tabs">
+        <span class="fui-pill on">桌面</span>
+        <span class="fui-pill">第二页</span>
+        <span class="fui-pill add">+</span>
+        <span class="fui-fill"></span>
+        <span class="fui-tab-meta">22 个小组件 · 拖到任意位置</span>
+      </div>
+      <div class="fui-grid">
+        <div class="wg wg-clock">
+          <div class="wg-h"><span class="wg-t">时钟</span><span class="wg-chip">组件</span></div>
+          <div class="wg-time">21:48</div>
+          <div class="wg-sub">10 月 24 日 · 周五</div>
+        </div>
+        <div class="wg wg-worlds">
+          <div class="wg-h"><span class="wg-t">最近存档</span><span class="wg-s">2 个世界</span></div>
+          <div class="wg-list">
+            <div class="wg-row"><span class="sq" style="--c:#4cc38a"></span><div class="wr-b"><b>Neko Valley</b><span>1.21.1 · 2 小时前</span></div><i class="chev"></i></div>
+            <div class="wg-row"><span class="sq" style="--c:#e5698f"></span><div class="wr-b"><b>Redstone Lab</b><span>1.20.1 · 昨天</span></div><i class="chev"></i></div>
+          </div>
+        </div>
+        <div class="wg wg-music">
+          <div class="wg-h"><span class="wg-t">音乐</span><span class="wg-s">本地 · 24 首</span></div>
+          <div class="wg-track">Aurora Drift</div>
+          <div class="wave">{_wave_html}</div>
+        </div>
+        <div class="wg wg-server">
+          <div class="wg-h"><span class="wg-t">托管服务器</span><span class="wg-pill"><i></i>运行中</span></div>
+          <div class="wg-big">3<span>/8</span></div>
+          <div class="meter"><i></i></div>
+          <div class="wg-kv"><span>内存</span><b>2.4 / 4 GB</b></div>
+          <div class="wg-kv"><span>端口</span><b>25565</b></div>
+        </div>
+        <div class="wg wg-dl">
+          <div class="wg-h"><span class="wg-t">下载任务</span><span class="wg-s">1 个进行中</span></div>
+          <div class="wg-pct">78<span>%</span></div>
+          <div class="bar"><i></i></div>
+          <div class="wg-sub">1.21.4 · Fabric · 12.4 MB/s</div>
+        </div>
+        <div class="wg wg-rewind">
+          <div class="wg-h"><span class="wg-t">时光回溯</span><span class="wg-s">3 个快照</span></div>
+          <div class="tl"><i class="on"></i><span></span><i class="on"></i><span></span><i class="on"></i><span></span><i></i></div>
+          <div class="wg-kv"><span>最新 · 10 分钟前</span><b>回滚</b></div>
+        </div>
+        <div class="wg wg-fav">
+          <div class="wg-h"><span class="wg-t">常用实例</span><span class="wg-s">3 个实例 · 一键启动</span></div>
+          <div class="fav-row">
+            <div class="fav"><span class="sq" style="--c:#4cc38a"></span><div class="fb"><b>1.21.1 · Fabric</b><span>48 个模组</span></div></div>
+            <div class="fav"><span class="sq" style="--c:#5aa9e6"></span><div class="fb"><b>1.20.1 · Forge</b><span>76 个模组</span></div></div>
+            <div class="fav"><span class="sq" style="--c:#a78bfa"></span><div class="fb"><b>1.21.4 · NeoForge</b><span>12 个模组</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="fui-dock">
+        <span class="fui-logo"><i></i><i></i><i></i><i></i></span>
+        <span class="fui-sep"></span>
+        <span class="fui-nav">
+          <span class="fui-dock-ico on">{icon("IconHome")}</span>
+          <span class="fui-dock-ico">{icon("IconDownload")}</span>
+          <span class="fui-dock-ico">{icon("IconCube")}</span>
+          <span class="fui-dock-ico">{icon("IconMusic")}</span>
+        </span>
+        <span class="fui-fill"></span>
+        <span class="fui-sel"><span class="sq"></span>1.21.1 · Fabric<span class="caret"></span></span>
+        <span class="fui-sel acc"><span class="av">N</span>Neko<span class="caret"></span></span>
+        <span class="fui-play"><span class="tri"></span>启动游戏</span>
+      </div>
+    </div>
+  </div>
+  <p class="fui-cap"><b>FIG. 01</b>默认桌面 · 22 个小组件自由摆放 · 数值接真实实例</p>"""
+
 
 adv_html = "".join(f"""
   <div class="adv-item">
@@ -93,10 +180,11 @@ body = f"""
 </div>
 
 {sec("01", "一个启动器，十项全能", "别人装五个软件才凑齐的活，这里一个窗口干完", f"""
+{FUI}
 <div class="adv">{adv_html}
 </div>""")}
 
-{sec("02", "模块构成", "五个模块，职责边界清晰", table(
+{sec("02", "模块构成", "四个模块，职责边界清晰", table(
     ["模块", "职责"],
     MODULES,
 ))}
@@ -133,7 +221,7 @@ body404 = f"""
   </a>
   <a class="card hoverable" href="architecture.html" style="text-decoration:none;color:inherit">
     <div class="card-title">{icon("IconCube", "card-ico")}技术架构</div>
-    <p class="card-text">五模块分层 · 内核能力域</p>
+    <p class="card-text">四模块分层 · 内核能力域</p>
   </a>
   <a class="card hoverable" href="docs/index.html" style="text-decoration:none;color:inherit">
     <div class="card-title">{icon("IconFluentCode", "card-ico")}插件文档</div>

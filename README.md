@@ -12,7 +12,7 @@
 | 页面 | 文件 | 内容 |
 | --- | --- | --- |
 | 首页 | `index.html` | Hero、十项能力（一条优势）、模块构成、深入入口 |
-| 技术架构 | `architecture.html` | 五模块分层、内核能力域 |
+| 技术架构 | `architecture.html` | 四模块分层、内核能力域 |
 | 插件文档 | `docs/index.html` | 扩展开发指南：概览 + 八章（见下） |
 | 404 | `404.html` | GitHub Pages 无效链接兜底页 |
 

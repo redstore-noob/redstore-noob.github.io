@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>技术架构 · Mofumofu Launcher</title>
-<meta name="description" content="五个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：同一份 MofuCore 内核，既能跑在 Avalonia 桌面上，也能跑在 Photino Web 宿主里。">
+<meta name="description" content="四个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：MofuCore 零 UI 引用，可被任意宿主复用。">
 <meta name="theme-color" content="#080b10">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mofumofu Launcher">
 <meta property="og:title" content="技术架构 · Mofumofu Launcher">
-<meta property="og:description" content="五个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：同一份 MofuCore 内核，既能跑在 Avalonia 桌面上，也能跑在 Photino Web 宿主里。">
+<meta property="og:description" content="四个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：MofuCore 零 UI 引用，可被任意宿主复用。">
 <meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
 <meta property="og:image:width" content="1600">
 <meta property="og:image:height" content="900">
@@ -72,22 +72,22 @@
       <div class="page-head" data-page="02">
         <div class="page-eyebrow"><span>FIELD NOTES / 02</span>Architecture</div>
         <h1 class="page-title">技术架构</h1>
-        <p class="page-lead">五个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：同一份 MofuCore 内核，既能跑在 Avalonia 桌面上，也能跑在 Photino Web 宿主里。</p>
+        <p class="page-lead">四个模块，职责边界清晰。UI 与 Minecraft 逻辑彻底解耦：MofuCore 零 UI 引用，可被任意宿主复用。</p>
         <div class="head-tags"><span class="tag accent">Avalonia 12</span><span class="tag ">.NET 10</span><span class="tag ">跨平台</span><span class="tag ">内核零 UI 引用</span></div>
       </div>
       
 <section class="section">
-  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">分层结构</h2><p class="section-desc">UI 与 Minecraft 逻辑彻底解耦，同一份内核可换宿主</p></div>
+  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">分层结构</h2><p class="section-desc">UI 与 Minecraft 逻辑彻底解耦，内核零 UI 引用</p></div>
   
 <div class="grid g3">
   <div class="card">
     <div class="card-title"><svg viewBox="0 0 48 48" class="card-ico" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4,10 H36 V38 H4 Z" fill="currentColor" fill-opacity=".14"/><path d="M44 14L36 20.75V27.25L44 34V14Z" fill="none"/><path d="M17 19L23 24L17 29" fill="none"/></svg> 表现层</div>
     <p class="card-text">
-      桌面版跑在 <b>Avalonia 12</b> 上，经典版跑在 <b>Photino.NET</b> 上 ——
-      同一套内核，两种外壳。
+      整个桌面端构建在 <b>Avalonia 12 + SukiUI 7</b> 上 ——
+      视图、控件、主题、交互全在这一层。
     </p>
     <div class="divider"></div>
-    <p class="card-text small">视图、控件、主题、交互全在这一层，换宿主不影响内核。</p>
+    <p class="card-text small">不碰任何游戏逻辑，换一套外壳也不影响内核。</p>
   </div>
   <div class="card">
     <div class="card-title"><svg viewBox="0 0 48 48" class="card-ico" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M36.686 15.171C37.9364 16.9643 38.8163 19.0352 39.2147 21.2727H44V26.7273H39.2147C38.8163 28.9648 37.9364 31.0357 36.686 32.829L40.0706 36.2137L36.2137 40.0706L32.829 36.686C31.0357 37.9364 28.9648 38.8163 26.7273 39.2147V44H21.2727V39.2147C19.0352 38.8163 16.9643 37.9364 15.171 36.686L11.7863 40.0706L7.92939 36.2137L11.314 32.829C10.0636 31.0357 9.18372 28.9648 8.78533 26.7273H4V21.2727H8.78533C9.18372 19.0352 10.0636 16.9643 11.314 15.171L7.92939 11.7863L11.7863 7.92939L15.171 11.314C16.9643 10.0636 19.0352 9.18372 21.2727 8.78533V4H26.7273V8.78533C28.9648 9.18372 31.0357 10.0636 32.829 11.314L36.2137 7.92939L40.0706 11.7863L36.686 15.171Z" fill="currentColor" fill-opacity=".14"/><path d="M24 29C26.7614 29 29 26.7614 29 24C29 21.2386 26.7614 19 24 19C21.2386 19 19 21.2386 19 24C19 26.7614 21.2386 29 24 29Z" fill="none"/></svg> 后端层</div>

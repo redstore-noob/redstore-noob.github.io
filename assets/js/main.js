@@ -257,7 +257,7 @@
   }
 
   function setupMotion() {
-    var revealables = document.querySelectorAll('.section > .section-head, .card, .table-wrap, .flow, .code, .notice, .timeline, .pager');
+    var revealables = document.querySelectorAll('.section > .section-head, .section > .fui, .card, .table-wrap, .flow, .code, .notice, .timeline, .pager');
     revealables.forEach(function (el) { el.classList.add('reveal'); });
     if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       var observer = new IntersectionObserver(function (entries) {
