@@ -1,50 +1,39 @@
-/* ============================================================
-   Mofumofu Web · 运行时
-   主题/强调色切换逻辑对齐 ThemeManager.cs 的行为
-   ============================================================ */
+/* Mofumofu / navigation, theme and editorial motion */
 (function () {
   'use strict';
 
-  /* ---- 6 套强调色（与 ThemeManager.cs:35-40 完全一致） ---- */
-  var ACCENTS = {
-    teal:   { name: '青绿', primary: '#3FC6C1', hover: '#57D8D3', pressed: '#33BDB8' },
-    blue:   { name: '蔚蓝', primary: '#5AA9E6', hover: '#7CBEED', pressed: '#4590CE' },
-    green:  { name: '新绿', primary: '#4CC38A', hover: '#6BD3A3', pressed: '#3AA876' },
-    orange: { name: '暖橙', primary: '#F2AE49', hover: '#F7C470', pressed: '#D8962F' },
-    pink:   { name: '樱粉', primary: '#E5698F', hover: '#EE8AA9', pressed: '#CC5379' },
-    purple: { name: '紫藤', primary: '#A78BFA', hover: '#BCA5FF', pressed: '#8F6EF0' }
-  };
+  document.documentElement.classList.add('js');
 
+  var ACCENTS = {
+    teal:   { primary: '#3FC6C1', hover: '#70E2DD', pressed: '#33BDB8' },
+    blue:   { primary: '#5AA9E6', hover: '#82C4F2', pressed: '#4590CE' },
+    green:  { primary: '#4CC38A', hover: '#75DDA9', pressed: '#3AA876' },
+    orange: { primary: '#F2AE49', hover: '#F7C470', pressed: '#D8962F' },
+    pink:   { primary: '#E5698F', hover: '#EE8AA9', pressed: '#CC5379' },
+    purple: { primary: '#A78BFA', hover: '#BCA5FF', pressed: '#8F6EF0' }
+  };
   var LS_THEME = 'mofu.theme';
   var LS_ACCENT = 'mofu.accent';
 
-  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-
-  /* ---------- 主题 ---------- */
-  function applyTheme(mode) {
-    var root = document.documentElement;
-    if (mode === 'light') {
-      root.setAttribute('data-theme', 'light');
-    } else {
-      root.removeAttribute('data-theme');
-    }
-    var btn = document.getElementById('themeBtn');
-    if (btn) {
-      btn.setAttribute('aria-label', mode === 'light' ? '切换到深色主题' : '切换到浅色主题');
-      btn.innerHTML = mode === 'light'
-        ? '<svg viewBox="0 0 24 24"><path d="M12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16Z"/></svg>'
-        : '<svg viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15M12,2L14.5,5.5L18.5,4.5L18,8.5L21,10.5L18,12.5L18,16.5L14.5,15.5L12,19L9.5,15.5L6,16.5L6,12.5L3,10.5L6,8.5L5.5,4.5L9.5,5.5L12,2Z"/></svg>';
-    }
+  function lsGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function lsSet(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+  function hex2rgb(hex) {
+    hex = hex.replace('#', '');
+    return [parseInt(hex.substr(0, 2), 16), parseInt(hex.substr(2, 2), 16), parseInt(hex.substr(4, 2), 16)];
   }
-
-  function currentTheme() {
-    var saved = lsGet(LS_THEME);
-    if (saved) return saved;
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  function mix(a, b, t) {
+    var x = hex2rgb(a), y = hex2rgb(b);
+    return 'rgb(' + Math.round(x[0] + (y[0] - x[0]) * t) + ',' +
+      Math.round(x[1] + (y[1] - x[1]) * t) + ',' +
+      Math.round(x[2] + (y[2] - x[2]) * t) + ')';
   }
-
-  /* ---------- 强调色 ---------- */
+  function luminance(hex) {
+    var c = hex2rgb(hex);
+    return .299 * c[0] + .587 * c[1] + .114 * c[2];
+  }
+  function surfaceBase() {
+    return document.documentElement.getAttribute('data-theme') === 'light' ? '#F2F1EC' : '#090D12';
+  }
   function applyAccent(key) {
     var a = ACCENTS[key] || ACCENTS.teal;
     var root = document.documentElement;
@@ -52,134 +41,296 @@
     root.style.setProperty('--accent-hover', a.hover);
     root.style.setProperty('--accent-pressed', a.pressed);
     root.style.setProperty('--accent-line', a.primary);
-    /* Soft(ratio) = Blend(强调色, surfaceBase, ratio)，与 ThemeManager 同算法 */
-    var soft = mix(a.primary, surfaceBase(), 0.82);
-    var softHover = mix(a.primary, surfaceBase(), 0.72);
-    root.style.setProperty('--accent-soft', soft);
-    root.style.setProperty('--accent-soft-hover', softHover);
-    /* onAccent 按亮度自动判黑/白（阈值 140，同 ThemeManager:165-169） */
+    root.style.setProperty('--accent-soft', mix(a.primary, surfaceBase(), .82));
+    root.style.setProperty('--accent-soft-hover', mix(a.primary, surfaceBase(), .72));
     root.style.setProperty('--accent-on', luminance(a.primary) > 140 ? '#06121A' : '#FFFFFF');
-
-    var dots = document.querySelectorAll('.accent-dot');
-    for (var i = 0; i < dots.length; i++) {
-      dots[i].classList.toggle('on', dots[i].getAttribute('data-accent') === key);
-    }
+    document.querySelectorAll('.accent-dot').forEach(function (dot) {
+      dot.classList.toggle('on', dot.getAttribute('data-accent') === key);
+      dot.setAttribute('aria-pressed', dot.getAttribute('data-accent') === key ? 'true' : 'false');
+    });
     lsSet(LS_ACCENT, key);
   }
-
-  function surfaceBase() {
-    return document.documentElement.getAttribute('data-theme') === 'light' ? '#F2F5F8' : '#0A0E15';
-  }
-
-  function hex2rgb(h) {
-    h = h.replace('#', '');
-    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
-    return [parseInt(h.substr(0, 2), 16), parseInt(h.substr(2, 2), 16), parseInt(h.substr(4, 2), 16)];
-  }
-
-  /* 与 ThemeTokens.Blend 一致 */
-  function mix(a, b, t) {
-    var x = hex2rgb(a), y = hex2rgb(b);
-    var r = Math.round(x[0] + (y[0] - x[0]) * t);
-    var g = Math.round(x[1] + (y[1] - x[1]) * t);
-    var bl = Math.round(x[2] + (y[2] - x[2]) * t);
-    return 'rgb(' + r + ',' + g + ',' + bl + ')';
-  }
-
-  function luminance(hex) {
-    var c = hex2rgb(hex);
-    return 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2];
-  }
-
-  /* ---------- 初始化 ---------- */
-  document.addEventListener('DOMContentLoaded', function () {
-    applyTheme(currentTheme());
-
-    var accent = lsGet(LS_ACCENT) || 'teal';
-    if (!ACCENTS[accent]) accent = 'teal';
-    applyAccent(accent);
-
-    var themeBtn = document.getElementById('themeBtn');
-    if (themeBtn) {
-      themeBtn.addEventListener('click', function () {
-        var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        applyTheme(next);
-        lsSet(LS_THEME, next);
-        applyAccent(lsGet(LS_ACCENT) || 'teal');
-      });
+  function applyTheme(mode) {
+    var root = document.documentElement;
+    if (mode === 'light') root.setAttribute('data-theme', 'light');
+    else root.removeAttribute('data-theme');
+    var btn = document.getElementById('themeBtn');
+    if (btn) {
+      btn.setAttribute('aria-label', mode === 'light' ? '切换到深色主题' : '切换到浅色主题');
+      btn.innerHTML = mode === 'light'
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>';
     }
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', mode === 'light' ? '#f2f1ec' : '#090d12');
+  }
+  function currentTheme() {
+    var saved = lsGet(LS_THEME);
+    if (saved) return saved;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
 
-    var dots = document.querySelectorAll('.accent-dot');
-    for (var i = 0; i < dots.length; i++) {
-      (function (d) {
-        d.addEventListener('click', function () {
-          applyAccent(d.getAttribute('data-accent'));
-        });
-      })(dots[i]);
-    }
-
-    /* 移动端侧栏 */
+  function setupNavigation() {
     var menuBtn = document.getElementById('menuBtn');
     var sidebar = document.getElementById('sidebar');
+    var scrim = document.getElementById('navScrim');
+    function setMenu(open) {
+      if (!sidebar || !menuBtn) return;
+      sidebar.classList.toggle('open', open);
+      document.body.classList.toggle('nav-open', open);
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menuBtn.setAttribute('aria-label', open ? '关闭导航' : '打开导航');
+    }
     if (menuBtn && sidebar) {
-      menuBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        sidebar.classList.toggle('open');
+      menuBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+        setMenu(!sidebar.classList.contains('open'));
       });
-      document.addEventListener('click', function (e) {
-        if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) {
-          sidebar.classList.remove('open');
-        }
+      if (scrim) scrim.addEventListener('click', function () { setMenu(false); });
+      sidebar.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () { setMenu(false); });
+      });
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 820) setMenu(false);
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && sidebar.classList.contains('open')) setMenu(false);
       });
     }
 
-    /* 滚动进场动画（页面切换淡入上滑，同应用行为） */
-    var revealables = document.querySelectorAll('.card, .table-wrap, .flow, .code, .notice, .timeline');
-    if ('IntersectionObserver' in window && revealables.length) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting) {
-            en.target.classList.add('in');
-            io.unobserve(en.target);
+    var here = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.sb-link').forEach(function (link) {
+      var active = (link.getAttribute('href') || '').split('/').pop() === here;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+  }
+
+  function setupChapters() {
+    var nav = document.getElementById('chapterNav');
+    var current = document.getElementById('chapterCurrent');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('.content > .section'));
+    if (!sections.length) return;
+    sections.forEach(function (section, index) {
+      var number = String(index + 1).padStart(2, '0');
+      var title = section.querySelector('.section-title');
+      section.id = 'chapter-' + number;
+      if (nav && title) {
+        var link = document.createElement('a');
+        link.href = '#' + section.id;
+        link.setAttribute('aria-label', number + ' ' + title.textContent);
+        var label = document.createElement('span');
+        label.textContent = number + ' / ' + title.textContent;
+        link.appendChild(label);
+        nav.appendChild(link);
+      }
+    });
+    function activate(id, title) {
+      if (nav) nav.querySelectorAll('a').forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+      if (current && title) current.textContent = title;
+    }
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var title = entry.target.querySelector('.section-title');
+            activate(entry.target.id, title ? title.textContent : 'OVERVIEW');
           }
         });
-      }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
-      for (var i = 0; i < revealables.length; i++) io.observe(revealables[i]);
-    } else {
-      for (var j = 0; j < revealables.length; j++) revealables[j].classList.add('in');
+      }, { rootMargin: '-18% 0px -68% 0px', threshold: 0 });
+      sections.forEach(function (section) { observer.observe(section); });
     }
+  }
 
-    /* 进度条动画 */
-    var bars = document.querySelectorAll('.bar > i[data-w]');
-    function fillBars() {
-      for (var i = 0; i < bars.length; i++) {
-        var b = bars[i];
-        var r = b.getBoundingClientRect();
-        if (r.top < window.innerHeight * 0.92) {
-          b.style.width = b.getAttribute('data-w');
-        }
+  function setupCommandPalette() {
+    var dialog = document.getElementById('commandPalette');
+    var openBtn = document.getElementById('commandBtn');
+    var input = document.getElementById('commandInput');
+    var results = document.getElementById('commandResults');
+    if (!dialog || !openBtn || !input || !results) return;
+    var pages = [];
+    document.querySelectorAll('.sb-group').forEach(function (group) {
+      var groupName = group.querySelector('.sb-group-label');
+      group.querySelectorAll('.sb-link').forEach(function (link, index) {
+        var label = link.querySelector('.sb-label');
+        var num = link.querySelector('.nav-num');
+        pages.push({
+          href: link.getAttribute('href'),
+          label: label ? label.textContent : link.textContent.trim(),
+          group: groupName ? groupName.textContent : '',
+          num: num ? num.textContent : String(index + 1).padStart(2, '0')
+        });
+      });
+    });
+    var filtered = pages.slice();
+    var selected = 0;
+    function render() {
+      results.innerHTML = '';
+      if (!filtered.length) {
+        var empty = document.createElement('div');
+        empty.className = 'command-empty';
+        empty.textContent = '没有找到这个目的地，换个关键词试试。';
+        results.appendChild(empty);
+        return;
       }
+      filtered.forEach(function (page, index) {
+        var link = document.createElement('a');
+        link.className = 'command-item' + (index === selected ? ' selected' : '');
+        link.href = page.href;
+        link.setAttribute('data-index', index);
+        var num = document.createElement('span');
+        num.className = 'ci-num';
+        num.textContent = page.num;
+        var label = document.createElement('span');
+        label.className = 'ci-label';
+        label.textContent = page.label;
+        var group = document.createElement('span');
+        group.className = 'ci-group';
+        group.textContent = page.group + ' ↗';
+        link.appendChild(num);
+        link.appendChild(label);
+        link.appendChild(group);
+        link.addEventListener('mouseenter', function () {
+          selected = index;
+          results.querySelectorAll('.command-item').forEach(function (item, i) {
+            item.classList.toggle('selected', i === selected);
+          });
+        });
+        results.appendChild(link);
+      });
     }
-    if (bars.length) {
+    function open() {
+      filtered = pages.slice();
+      selected = 0;
+      input.value = '';
+      render();
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+      window.setTimeout(function () { input.focus(); }, 30);
+    }
+    function close() {
+      if (typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
+    }
+    function move(delta) {
+      if (!filtered.length) return;
+      selected = (selected + delta + filtered.length) % filtered.length;
+      render();
+      var active = results.querySelector('.command-item.selected');
+      if (active) active.scrollIntoView({ block: 'nearest' });
+    }
+    openBtn.addEventListener('click', open);
+    input.addEventListener('input', function () {
+      var query = input.value.trim().toLowerCase();
+      filtered = pages.filter(function (page) {
+        return (page.label + ' ' + page.group + ' ' + page.href).toLowerCase().indexOf(query) !== -1;
+      });
+      selected = 0;
+      render();
+    });
+    dialog.addEventListener('click', function (event) {
+      if (event.target !== dialog) return;
+      var box = dialog.getBoundingClientRect();
+      if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) close();
+    });
+    document.addEventListener('keydown', function (event) {
+      var tag = event.target && event.target.tagName;
+      var typing = tag === 'INPUT' || tag === 'TEXTAREA' || (event.target && event.target.isContentEditable);
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        if (dialog.open) close(); else open();
+      } else if (event.key === '/' && !typing && !dialog.open) {
+        event.preventDefault();
+        open();
+      }
+      if (!dialog.open) return;
+      if (event.key === 'ArrowDown') { event.preventDefault(); move(1); }
+      if (event.key === 'ArrowUp') { event.preventDefault(); move(-1); }
+      if (event.key === 'Enter' && filtered[selected]) {
+        event.preventDefault();
+        location.href = filtered[selected].href;
+      }
+    });
+  }
+
+  function setupMotion() {
+    var revealables = document.querySelectorAll('.section > .section-head, .card, .table-wrap, .flow, .code, .notice, .timeline, .pager');
+    revealables.forEach(function (el) { el.classList.add('reveal'); });
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: .04, rootMargin: '0px 0px -20px 0px' });
+      revealables.forEach(function (el) { observer.observe(el); });
+    } else {
+      revealables.forEach(function (el) { el.classList.add('in'); });
+    }
+    window.requestAnimationFrame(function () { document.body.classList.add('ready'); });
+  }
+
+  function setupScrollEffects() {
+    var progress = document.getElementById('scrollProgress');
+    var ticking = false;
+    function update() {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      if (progress) progress.style.width = (ratio * 100).toFixed(2) + '%';
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(update);
+      }
+    }, { passive: true });
+    update();
+    document.querySelectorAll('.grid').forEach(function (grid) {
+      Array.prototype.slice.call(grid.children).forEach(function (card, index) {
+        if (card.classList.contains('card')) card.setAttribute('data-card-index', String(index + 1).padStart(2, '0'));
+      });
+    });
+    document.querySelectorAll('.bar > i[data-w]').forEach(function (bar) {
       if ('IntersectionObserver' in window) {
-        var io2 = new IntersectionObserver(function (es) {
-          es.forEach(function (en) {
-            if (en.isIntersecting) {
-              en.target.style.width = en.target.getAttribute('data-w');
-              io2.unobserve(en.target);
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.style.width = entry.target.getAttribute('data-w');
+              observer.unobserve(entry.target);
             }
           });
-        }, { threshold: 0.2 });
-        for (var k = 0; k < bars.length; k++) io2.observe(bars[k]);
-      } else { fillBars(); }
-    }
+        }, { threshold: .2 });
+        observer.observe(bar);
+      } else bar.style.width = bar.getAttribute('data-w');
+    });
+  }
 
-    /* 当前页高亮 */
-    var here = location.pathname.split('/').pop() || 'index.html';
-    var links = document.querySelectorAll('.sb-link');
-    for (var m = 0; m < links.length; m++) {
-      var href = (links[m].getAttribute('href') || '').split('/').pop();
-      if (href === here) links[m].classList.add('active');
-    }
+  document.addEventListener('DOMContentLoaded', function () {
+    applyTheme(currentTheme());
+    var accent = lsGet(LS_ACCENT) || 'teal';
+    applyAccent(ACCENTS[accent] ? accent : 'teal');
+
+    var themeBtn = document.getElementById('themeBtn');
+    if (themeBtn) themeBtn.addEventListener('click', function () {
+      var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      lsSet(LS_THEME, next);
+      applyAccent(lsGet(LS_ACCENT) || 'teal');
+    });
+    document.querySelectorAll('.accent-dot').forEach(function (dot) {
+      dot.addEventListener('click', function () { applyAccent(dot.getAttribute('data-accent')); });
+    });
+
+    setupNavigation();
+    setupChapters();
+    setupCommandPalette();
+    setupMotion();
+    setupScrollEffects();
   });
 })();

@@ -14,5 +14,9 @@ desktop.ini
 .idea/
 *.swp
 
+# Python 生成器缓存
+__pycache__/
+*.pyc
+
 # 本地工具数据
 .workbuddy/

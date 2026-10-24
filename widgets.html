@@ -5,142 +5,167 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>桌面小组件 · Mofumofu Launcher</title>
 <meta name="description" content="格子板上自由摆放的 22 个组件，全部接真实数据源。统一遵循「定时刷新 + 不可见时停表」，滚出视野即停止空转。">
+<meta name="theme-color" content="#080b10">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="桌面小组件 · Mofumofu Launcher">
+<meta property="og:description" content="格子板上自由摆放的 22 个组件，全部接真实数据源。统一遵循「定时刷新 + 不可见时停表」，滚出视野即停止空转。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="900">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="assets/img/app-icon-tile.png">
 <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body>
+<body data-page="widgets.html" data-page-no="11">
+<a class="skip-link" href="#mainContent">跳到正文</a>
+<div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
 <div class="shell">
-  <aside class="sidebar" id="sidebar">
-    <div class="sb-head">
-      <div class="sb-logo"><svg viewBox="0 0 24 24"><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg></div>
-      <div>
+  <aside class="sidebar" id="sidebar" aria-label="主导航">
+    <a class="sb-head" href="index.html" aria-label="Mofumofu 首页">
+      <div class="sb-logo"><img src="assets/img/app-icon.png" alt="" width="44" height="44" decoding="async"></div>
+      <div class="sb-brand">
         <div class="sb-title">Mofumofu</div>
-        <div class="sb-sub">Avalonia 12 · SukiUI 7</div>
+        <div class="sb-sub">LAUNCHER / FIELD NOTES</div>
       </div>
-    </div>
-    <nav class="sb-nav">
+    </a>
+    <nav class="sb-nav" aria-label="全站导航">
 <div class="sb-group">
 <div class="sb-group-label">总览</div>
-<a class="sb-link" href="index.html"><svg viewBox="0 0 24 24" class=""><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>首页</a>
-<a class="sb-link" href="architecture.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15M4,9.8L11,13.3V19.8L4,16.3V9.8M13,19.8V13.3L20,9.8V16.3L13,19.8Z"/></svg>技术架构</a>
+<a class="sb-link" href="index.html" title="首页"><span class="nav-num">01</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V42H39V18L24 6L9 18Z" fill="currentColor" fill-opacity=".14"/><path d="M19 29V42H29V29H19Z" fill="none"/><path d="M9 42H39" fill="none"/></svg><span class="sb-label">首页</span></a>
+<a class="sb-link" href="architecture.html" title="技术架构"><span class="nav-num">02</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 9L7 14V24V34L15.5 39L24 44L32.5001 39L41 34V24V14L32.5001 9L24 4L15.5 9Z" fill="none"/><path d="M41 14L24 24" fill="none"/><path d="M7 14L24 24" fill="none"/><path d="M24 44V24" fill="none"/><path d="M32 19L32 39" fill="none"/><path d="M41 24L24 34" fill="none"/><path d="M24 34L7 24" fill="none"/><path d="M16 39L16 19" fill="none"/><path d="M32 9L16 19" fill="none"/><path d="M32 19L16 9" fill="none"/></svg><span class="sb-label">技术架构</span></a>
 </div>
 <div class="sb-group">
 <div class="sb-group-label">功能页面</div>
-<a class="sb-link" href="download.html"><svg viewBox="0 0 24 24" class=""><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>下载大厅</a>
-<a class="sb-link" href="instances.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V20H4V4M4,9H20M9,9V20"/></svg>实例管理</a>
-<a class="sb-link" href="account.html"><svg viewBox="0 0 24 24" class=""><path d="M12,4C10,4 8,5 8,7V9H16V7C16,5 14,4 12,4M8,11H16V20H8V11Z"/></svg>账户与皮肤</a>
-<a class="sb-link" href="servers.html"><svg viewBox="0 0 24 24" class=""><path d="M4,4H20V16H4V4M8,20H16M12,16V20M7,8H10M14,8H17M7,12H10M14,12H17"/></svg>服务器</a>
-<a class="sb-link" href="online.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C8.1,4 4.9,6.6 4.3,10H8V14H4.3C4.9,17.4 8.1,20 12,20C13.9,20 15.7,19.3 17,18.1V15H14V11H17.9C17.6,8.1 15.2,5.3 12.2,4.2Z"/></svg>联机</a>
-<a class="sb-link" href="music.html"><svg viewBox="0 0 24 24" class=""><path d="M12,3V13.55C11.41,13.21 10.73,13 10,13A3,3 0 0,0 7,16A3,3 0 0,0 10,19A3,3 0 0,0 13,16V7H17V3H12Z"/></svg>音乐</a>
-<a class="sb-link" href="creator.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,4.15L19.5,8L12,11.85L4.5,8L12,4.15"/></svg>创作中心</a>
-<a class="sb-link" href="plugins.html"><svg viewBox="0 0 24 24" class=""><path d="M9,2V4H15V2H9M7,4H17A2,2 0 0,1 19,6V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6A2,2 0 0,1 7,4M10,9H14V13H10V9Z"/></svg>插件</a>
-<a class="sb-link active" href="widgets.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H10V10H3V3M14,3H21V10H14V3M3,14H10V21H3V14M14,14H21V21H14V14"/></svg>桌面小组件</a>
+<a class="sb-link" href="download.html" title="下载大厅"><span class="nav-num">03</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 24.0083V42H42V24" fill="none"/><path d="M33 23L24 32L15 23" fill="none"/><path d="M23.9917 6V32" fill="none"/></svg><span class="sb-label">下载大厅</span></a>
+<a class="sb-link" href="instances.html" title="实例管理"><span class="nav-num">04</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6H8C6.89543 6 6 6.89543 6 8V18C6 19.1046 6.89543 20 8 20H18C19.1046 20 20 19.1046 20 18V8C20 6.89543 19.1046 6 18 6Z" fill="currentColor" fill-opacity=".14"/><path d="M18 28H8C6.89543 28 6 28.8954 6 30V40C6 41.1046 6.89543 42 8 42H18C19.1046 42 20 41.1046 20 40V30C20 28.8954 19.1046 28 18 28Z" fill="currentColor" fill-opacity=".14"/><path d="M40 6H30C28.8954 6 28 6.89543 28 8V18C28 19.1046 28.8954 20 30 20H40C41.1046 20 42 19.1046 42 18V8C42 6.89543 41.1046 6 40 6Z" fill="currentColor" fill-opacity=".14"/><path d="M40 28H30C28.8954 28 28 28.8954 28 30V40C28 41.1046 28.8954 42 30 42H40C41.1046 42 42 41.1046 42 40V30C42 28.8954 41.1046 28 40 28Z" fill="currentColor" fill-opacity=".14"/></svg><span class="sb-label">实例管理</span></a>
+<a class="sb-link" href="account.html" title="账户与皮肤"><span class="nav-num">05</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16,12.0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0" fill="currentColor" fill-opacity=".14"/><path d="M42 44C42 34.0589 33.9411 26 24 26C14.0589 26 6 34.0589 6 44" fill="none"/></svg><span class="sb-label">账户与皮肤</span></a>
+<a class="sb-link" href="servers.html" title="服务器"><span class="nav-num">06</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M44 4H4V20H44V4Z" fill="currentColor" fill-opacity=".14"/><path d="M44 28H4V44H44V28Z" fill="currentColor" fill-opacity=".14"/><path d="M13 10H11C10.4477 10 10 10.4477 10 11V13C10 13.5523 10.4477 14 11 14H13C13.5523 14 14 13.5523 14 13V11C14 10.4477 13.5523 10 13 10Z" fill="currentColor" stroke="none"/><path d="M13 34H11C10.4477 34 10 34.4477 10 35V37C10 37.5523 10.4477 38 11 38H13C13.5523 38 14 37.5523 14 37V35C14 34.4477 13.5523 34 13 34Z" fill="currentColor" stroke="none"/><path d="M21 10H19C18.4477 10 18 10.4477 18 11V13C18 13.5523 18.4477 14 19 14H21C21.5523 14 22 13.5523 22 13V11C22 10.4477 21.5523 10 21 10Z" fill="currentColor" stroke="none"/><path d="M21 34H19C18.4477 34 18 34.4477 18 35V37C18 37.5523 18.4477 38 19 38H21C21.5523 38 22 37.5523 22 37V35C22 34.4477 21.5523 34 21 34Z" fill="currentColor" stroke="none"/></svg><span class="sb-label">服务器</span></a>
+<a class="sb-link" href="online.html" title="联机"><span class="nav-num">07</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="none"/><path d="M4 24H44" fill="none"/><path d="M24 44C28.4183 44 32 35.0457 32 24C32 12.9543 28.4183 4 24 4C19.5817 4 16 12.9543 16 24C16 35.0457 19.5817 44 24 44Z" fill="none"/><path d="M9.85791 10.1421C13.4772 13.7614 18.4772 16 24 16C29.5229 16 34.5229 13.7614 38.1422 10.1421" fill="none"/><path d="M38.1422 37.8579C34.5229 34.2386 29.5229 32 24 32C18.4772 32 13.4772 34.2386 9.85791 37.8579" fill="none"/></svg><span class="sb-label">联机</span></a>
+<a class="sb-link" href="music.html" title="音乐"><span class="nav-num">08</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M30 34.5C30 32.567 31.567 31 33.5 31H41V34.4C41 36.3882 39.3882 38 37.4 38H33.5C31.567 38 30 36.433 30 34.5Z" fill="currentColor" fill-opacity=".14"/><path d="M6 38.5C6 36.567 7.567 35 9.5 35H16V38.4C16 40.3882 14.3882 42 12.4 42H9.5C7.567 42 6 40.433 6 38.5Z" fill="currentColor" fill-opacity=".14"/><path d="M16 18.044V18.044L41 12.125" fill="none"/><path d="M16 38V10L41 4V33.6924" fill="none"/></svg><span class="sb-label">音乐</span></a>
+<a class="sb-link" href="creator.html" title="创作中心"><span class="nav-num">09</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 42H43" fill="none"/><path d="M11 26.7199V34H18.3172L39 13.3081L31.6951 6L11 26.7199Z" fill="currentColor" fill-opacity=".14"/></svg><span class="sb-label">创作中心</span></a>
+<a class="sb-link" href="plugins.html" title="插件"><span class="nav-num">10</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 24V12H13V10C13 6.68629 15.6863 4 19 4C22.3137 4 25 6.68629 25 10V12H34V24H38C41.3137 24 44 26.6863 44 30C44 33.3137 41.3137 36 38 36H34V44H4V36H8C11.3137 36 14 33.3137 14 30C14 26.6863 11.3137 24 8 24H4Z" fill="currentColor" fill-opacity=".14"/></svg><span class="sb-label">插件</span></a>
+<a class="sb-link active" href="widgets.html" title="桌面小组件" aria-current="page"><span class="nav-num">11</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4,10 H36 V38 H4 Z" fill="currentColor" fill-opacity=".14"/><path d="M44 14L36 20.75V27.25L44 34V14Z" fill="none"/><path d="M17 19L23 24L17 29" fill="none"/></svg><span class="sb-label">桌面小组件</span></a>
 </div>
 <div class="sb-group">
 <div class="sb-group-label">配置与生态</div>
-<a class="sb-link" href="settings.html"><svg viewBox="0 0 24 24" class=""><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,9.05 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,14.95 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.04 19.05,19.05L16.56,18.05C16.04,18.44 15.5,18.78 14.87,19.03L14.5,21.68C14.46,21.92 14.25,22.1 14,22.1H10C9.75,22.1 9.54,21.92 9.5,21.68L9.13,19.03C8.5,18.78 7.96,18.44 7.44,18.05L4.95,19.05C4.73,19.04 4.46,18.95 4.34,18.73L2.34,15.27C2.21,14.95 2.27,14.78 2.46,14.63L4.57,12.97Z"/></svg>设置</a>
-<a class="sb-link" href="ui-library.html"><svg viewBox="0 0 24 24" class=""><path d="M12,2L2,7V17L12,22L22,17V7L12,2M12,18.5A6.5,6.5 0 0,1 5.5,12A6.5,6.5 0 0,1 12,5.5A6.5,6.5 0 0,1 18.5,12A6.5,6.5 0 0,1 12,18.5M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5"/></svg>UI 库选型</a>
-<a class="sb-link" href="roadmap.html"><svg viewBox="0 0 24 24" class=""><path d="M3,3H21V21H3V3M7,9H17M7,13H17M7,17H13"/></svg>现状与缺口</a>
+<a class="sb-link" href="settings.html" title="设置"><span class="nav-num">12</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M36.686 15.171C37.9364 16.9643 38.8163 19.0352 39.2147 21.2727H44V26.7273H39.2147C38.8163 28.9648 37.9364 31.0357 36.686 32.829L40.0706 36.2137L36.2137 40.0706L32.829 36.686C31.0357 37.9364 28.9648 38.8163 26.7273 39.2147V44H21.2727V39.2147C19.0352 38.8163 16.9643 37.9364 15.171 36.686L11.7863 40.0706L7.92939 36.2137L11.314 32.829C10.0636 31.0357 9.18372 28.9648 8.78533 26.7273H4V21.2727H8.78533C9.18372 19.0352 10.0636 16.9643 11.314 15.171L7.92939 11.7863L11.7863 7.92939L15.171 11.314C16.9643 10.0636 19.0352 9.18372 21.2727 8.78533V4H26.7273V8.78533C28.9648 9.18372 31.0357 10.0636 32.829 11.314L36.2137 7.92939L40.0706 11.7863L36.686 15.171Z" fill="currentColor" fill-opacity=".14"/><path d="M24 29C26.7614 29 29 26.7614 29 24C29 21.2386 26.7614 19 24 19C21.2386 19 19 21.2386 19 24C19 26.7614 21.2386 29 24 29Z" fill="none"/></svg><span class="sb-label">设置</span></a>
 </div>
 </nav>
     <div class="sb-foot">
-      <div class="small dim">数据取自源码实测</div>
-      <div class="small dim">v1.0.0 · .NET 10</div>
+      <span class="sb-status" aria-hidden="true"></span>
+      <div class="sb-foot-copy"><div>SOURCE VERIFIED</div><div>v1.0.0 · .NET 10</div></div>
     </div>
   </aside>
 
   <div class="main">
     <header class="topbar">
-      <button class="icon-btn menu-btn" id="menuBtn" aria-label="菜单">
-        <svg viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16"/></svg>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar">
+        <svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15H39" fill="none"/><path d="M9 24H39" fill="none"/><path d="M9 33H39" fill="none"/></svg>
       </button>
-      <div class="crumb">Mofumofu <span>/</span> <b>桌面小组件</b></div>
+      <div class="page-code">MF/<span>11</span></div>
+      <div class="crumb"><span>Mofumofu</span><i>/</i><b>桌面小组件</b></div>
+      <div class="chapter-current" id="chapterCurrent">OVERVIEW</div>
       <div class="topbar-tools">
+        <button class="command-trigger" id="commandBtn" aria-label="快速跳转，Ctrl K">
+          <span>快速跳转</span><kbd>Ctrl K</kbd>
+        </button>
         <div class="accent-picker"><button class="accent-dot" data-accent="teal" title="青绿" aria-label="强调色 青绿" style="background:#3FC6C1;color:#3FC6C1"></button><button class="accent-dot" data-accent="blue" title="蔚蓝" aria-label="强调色 蔚蓝" style="background:#5AA9E6;color:#5AA9E6"></button><button class="accent-dot" data-accent="green" title="新绿" aria-label="强调色 新绿" style="background:#4CC38A;color:#4CC38A"></button><button class="accent-dot" data-accent="orange" title="暖橙" aria-label="强调色 暖橙" style="background:#F2AE49;color:#F2AE49"></button><button class="accent-dot" data-accent="pink" title="樱粉" aria-label="强调色 樱粉" style="background:#E5698F;color:#E5698F"></button><button class="accent-dot" data-accent="purple" title="紫藤" aria-label="强调色 紫藤" style="background:#A78BFA;color:#A78BFA"></button></div>
         <button class="icon-btn" id="themeBtn" aria-label="切换主题">
-          <svg viewBox="0 0 24 24"><path d="M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15M12,2L14.5,5.5L18.5,4.5L18,8.5L21,10.5L18,12.5L18,16.5L14.5,15.5L12,19L9.5,15.5L6,16.5L6,12.5L3,10.5L6,8.5L5.5,4.5L9.5,5.5L12,2Z"/></svg>
+          <svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.15039 9.15088L11.3778 11.3783" fill="none"/><path d="M3 24H6.15" fill="none"/><path d="M9.15039 38.8495L11.3778 36.6221" fill="none"/><path d="M38.8495 38.8495L36.6221 36.6221" fill="none"/><path d="M44.9996 24H41.8496" fill="none"/><path d="M38.8495 9.15088L36.6221 11.3783" fill="none"/><path d="M24 3V6.15" fill="none"/><path d="M24 36C30.6274 36 36 30.6274 36 24C36 17.3726 30.6274 12 24 12C17.3726 12 12 17.3726 12 24C12 30.6274 17.3726 36 24 36Z" fill="currentColor" fill-opacity=".14"/><path d="M24 45.0001V41.8501" fill="none"/></svg>
         </button>
       </div>
     </header>
 
-    <main class="content">
-      <div class="page-head">
-        <div class="page-eyebrow">Desktop Widgets</div>
+    <main class="content" id="mainContent" tabindex="-1">
+      <div class="page-head" data-page="11">
+        <div class="page-eyebrow"><span>FIELD NOTES / 11</span>Desktop Widgets</div>
         <h1 class="page-title">桌面小组件</h1>
         <p class="page-lead">格子板上自由摆放的 22 个组件，全部接真实数据源。统一遵循「定时刷新 + 不可见时停表」，滚出视野即停止空转。</p>
         <div class="head-tags"><span class="tag accent">22 个组件</span><span class="tag ">3 大类</span><span class="tag ok">不可见停表</span></div>
       </div>
       
 <section class="section">
-  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">自由摆放的桌面</h2><p class="section-desc">HomeView.axaml</p></div>
+  <div class="section-head"><span class="section-num">01</span><h2 class="section-title">自由摆放的桌面</h2><p class="section-desc">拖、吸、丢，像摆一张真实的桌面</p></div>
   
 <div class="grid g2">
   <div class="card">
-    <div class="card-title"><span class="dot"></span>交互</div>
+    <div class="card-title">交互</div>
     <ul class="feature"><li><b>8 列网格</b>，长按磁贴 1 秒浮现格子线</li><li>拖动吸附 + 落点预览</li><li><b>拖到开始栏即移除</b>：幽灵卡跟随指针，底部显示红色「松手移除」提示</li><li>右下角圆形「+」按钮打开组件盒抽屉（352px 侧滑），带搜索过滤</li><li>空桌面时显示居中引导提示</li></ul>
   </div>
   <div class="card">
-    <div class="card-title"><span class="dot"></span>持久化</div>
+    <div class="card-title">持久化</div>
     <p class="card-text">
-      布局存在 <code>settings.json</code> 的 <code>DesktopWidgets</code> 字段
-      （<code>DesktopWidgetPlacement</code>，8 列 / 行单位），另有 <code>DesktopLayoutVersion</code> 便于后续迁移。
+      摆好的布局<b>自动保存</b>，关掉再开还是原样。
     </p>
     <div class="divider"></div>
     <p class="card-text small">
-      首次进入默认摆 7 个：worlds(0,0)、hosted-server(6,0)、log(5,4)、rewind(12,5)、
-      appearance-quick(16,5)、quick-settings(0,7)、quick-download(4,7)
+      首次进入会预置一套常用的七个组件：最近存档、托管服务器、运行日志、时光回溯、
+      外观调节、快速设置、快速下载。
     </p>
   </div>
 </div>
 </section>
 
 <section class="section">
-  <div class="section-head"><span class="section-num">02</span><h2 class="section-title">22 个组件</h2><p class="section-desc">注册 30 个，硬过滤掉 8 个未接后端的</p></div>
+  <div class="section-head"><span class="section-num">02</span><h2 class="section-title">22 个组件</h2><p class="section-desc">三大类，全部接真实数据源</p></div>
   
-<div class="notice info"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M13,17H11V15H13V17M13,13H11V7H13V13Z"/></svg><div><code>WidgetRegistry.cs:146-147</code> 用 <code>.Where(...)</code> 过滤掉了
-<b>playtime / quickjoin / rss / music / download / network / goal / screenshots</b> 这 8 个未接后端的组件，
-实际暴露 <b>22 个</b>。未接后端的不再展示示例数据。</div></div>
+<div class="notice info"><svg viewBox="0 0 48 48" class="n-ico" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 44C29.5228 44 34.5228 41.7614 38.1421 38.1421C41.7614 34.5228 44 29.5228 44 24C44 18.4772 41.7614 13.4772 38.1421 9.85786C34.5228 6.23858 29.5228 4 24 4C18.4772 4 13.4772 6.23858 9.85786 9.85786C6.23858 13.4772 4 18.4772 4 24C4 29.5228 6.23858 34.5228 9.85786 38.1421C13.4772 41.7614 18.4772 44 24 44Z" fill="currentColor" fill-opacity=".14"/><path d="M24 11C25.3807 11 26.5 12.1193 26.5 13.5C26.5 14.8807 25.3807 16 24 16C22.6193 16 21.5 14.8807 21.5 13.5C21.5 12.1193 22.6193 11 24 11Z" fill="currentColor" stroke="none"/><path d="M24.5 34V20H23.5H22.5" fill="none"/><path d="M21 34H28" fill="none"/></svg><div>还有 <b>8 个</b>组件（播放时长、RSS、音乐、目标、截图等）因为后端未接，
+<b>暂时不放出</b>。没有真实数据就不占你的桌面 —— 这是我们不加示例数据的理由。</div></div>
 
 <div class="section-head" style="margin-top:22px;margin-bottom:12px">
   <span class="section-num">02.1</span><h2 class="section-title">Core · 核心信息</h2>
 </div>
-<div class="table-wrap"><table><thead><tr><th>组件</th><th>读什么数据源</th></tr></thead><tbody><tr><td><b>worlds</b> 最近存档</td><td><code>WidgetBackend.LoadWorldsAsync</code> → 扫 <code>saves/*/level.dat</code>，按 LastWrite 排序</td></tr><tr><td><b>hosted-server</b> 托管服务器</td><td><code>ServerManage.ListServerInfos()</code>，支持真实启停</td></tr><tr><td><b>log</b> 运行日志</td><td>实时输出 + 退出后推测崩溃原因</td></tr><tr><td><b>favorites</b> 常用实例</td><td><code>WidgetBackend.LoadInstancesAsync</code></td></tr><tr><td><b>rewind</b> 时光回溯</td><td><code>RewindSystem.ListSnapshotsAsync</code> + <code>GetSummaryAsync</code>，横向迷你时间轴</td></tr><tr><td><b>quick-download</b> 快速下载</td><td>跳下载页 + Java 下载直达</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>组件</th><th>显示什么</th></tr></thead><tbody><tr><td><b>最近存档</b></td><td>扫本机存档目录，按最后游玩时间排序，点一下直接进档</td></tr><tr><td><b>托管服务器</b></td><td>当前托管的服务端，支持真实启停</td></tr><tr><td><b>运行日志</b></td><td>实时输出，退出后推测崩溃原因</td></tr><tr><td><b>常用实例</b></td><td>按使用频率排的实例快捷入口</td></tr><tr><td><b>时光回溯</b></td><td>横向迷你时间轴，一眼看到最近的快照</td></tr><tr><td><b>快速下载</b></td><td>跳下载页，也能直接下 Java</td></tr></tbody></table></div>
 
 <div class="section-head" style="margin-top:24px;margin-bottom:12px">
   <span class="section-num">02.2</span><h2 class="section-title">System · 系统监控</h2>
 </div>
-<div class="table-wrap"><table><thead><tr><th>组件</th><th>读什么数据源</th></tr></thead><tbody><tr><td><b>memory</b> 内存监控</td><td><code>MemoryRead.SystemUsageNowAsync</code> + <code>SnapshotAsync</code></td></tr><tr><td><b>performance</b> 性能监控</td><td>同上，CPU / GPU / 内存折线图</td></tr><tr><td><b>java</b> Java 环境</td><td><code>MofuCore.Java</code>，一键跳 Java 下载页</td></tr><tr><td><b>disk</b> 磁盘空间</td><td><code>MemoryRead.GetDiskUsageAsync</code>（游戏目录所在盘），快满变红</td></tr><tr><td><b>quick-settings</b> 快速设置</td><td>启动 / 内存 / Java / 下载 / 网络 分区直达</td></tr><tr><td><b>appearance-quick</b> 外观调节</td><td>直接读写 <code>LocalSettings</code>：毛玻璃 + 窗口 / 壁纸不透明度滑块</td></tr><tr><td><b>skin</b> 皮肤展示</td><td>当前账号 3D 皮肤（双层皮肤 / 披风）</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>组件</th><th>显示什么</th></tr></thead><tbody><tr><td><b>内存监控</b></td><td>当前内存占用与历史曲线</td></tr><tr><td><b>性能监控</b></td><td>CPU / GPU / 内存三条折线</td></tr><tr><td><b>Java 环境</b></td><td>本机 Java 探测结果，一键跳下载页</td></tr><tr><td><b>磁盘空间</b></td><td>游戏目录所在盘，快满变红</td></tr><tr><td><b>快速设置</b></td><td>启动 / 内存 / Java / 下载 / 网络 分区直达</td></tr><tr><td><b>外观调节</b></td><td>毛玻璃开关 + 窗口与壁纸不透明度滑块</td></tr><tr><td><b>皮肤展示</b></td><td>当前账号 3D 皮肤，双层模型与披风</td></tr></tbody></table></div>
 
 <div class="section-head" style="margin-top:24px;margin-bottom:12px">
   <span class="section-num">02.3</span><h2 class="section-title">Fun · 趣味组件</h2>
 </div>
-<div class="table-wrap"><table><thead><tr><th>组件</th><th>行为</th></tr></thead><tbody><tr><td><b>luck</b> 今日运气</td><td>日期 + 设备码 hash，每天 0 点重摇</td></tr><tr><td><b>muyu</b> 敲木鱼</td><td>纯本地交互，敲一下积功德</td></tr><tr><td><b>mascot</b> 看板娘</td><td>点击弹跳 + 随机气泡</td></tr><tr><td><b>hitokoto</b> 一言</td><td>Hitokoto API，可刷新</td></tr><tr><td><b>greeting</b> 问候</td><td>按时段问候 + MC 小句子</td></tr><tr><td><b>countdown</b> 假期倒计时</td><td>距周末天数 + 最近假期</td></tr><tr><td><b>clock</b> 时钟</td><td>数字时钟 + 日期星期，秒级跳动</td></tr><tr><td><b>calendar</b> 日历</td><td>月历视图，节假日红字</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>组件</th><th>行为</th></tr></thead><tbody><tr><td><b>今日运气</b></td><td>每天零点重摇一次，纯本地计算</td></tr><tr><td><b>敲木鱼</b></td><td>敲一下积一次功德，纯本地</td></tr><tr><td><b>看板娘</b></td><td>点一下会弹跳，随机吐气泡</td></tr><tr><td><b>一言</b></td><td>随机句子，可以刷新</td></tr><tr><td><b>问候</b></td><td>按时段打招呼，附带一句 Minecraft 小句子</td></tr><tr><td><b>假期倒计时</b></td><td>距周末多少天，下一个假期是哪天</td></tr><tr><td><b>时钟</b></td><td>数字时钟 + 日期星期，秒级跳动</td></tr><tr><td><b>日历</b></td><td>月历视图，节假日标红</td></tr></tbody></table></div>
 </section>
 
 <section class="section">
-  <div class="section-head"><span class="section-num">03</span><h2 class="section-title">统一原语</h2><p class="section-desc">WidgetChrome.cs —— 429 行</p></div>
+  <div class="section-head"><span class="section-num">03</span><h2 class="section-title">长得像一家人</h2><p class="section-desc">22 个组件共用同一套积木</p></div>
   
 <p class="muted" style="margin-top:-4px">
-  所有组件共用 <code>WidgetChrome</code> 提供的 28 个构建原语：
-  Card / Stat / Pill / Bar / ListItem / ChipButton / EmptyStateCard 等，
-  保证 22 个组件的视觉与交互完全一致。
+  所有组件共用同一套构建原语：卡片、指标、标签、进度条、列表项、空状态 ——
+  所以 22 个组件放在一起，视觉与交互完全一致，不会各长各的。
 </p>
-<div class="notice ok"><svg class="n-ico" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M10,17L5,12L6.4,10.6L10,14.2L17.6,6.6L19,8L10,17Z"/></svg><div><b>定时器统一管理</b>：所有组件遵循「定时刷新 + 不可见时停表」——
-<code>WidgetChrome.OnBecameVisible:429</code> 与 <code>OnDetach:428</code> 负责挂起与恢复。
-组件滚出视野就不再空转刷新，省 CPU 也省电。</div></div>
+<div class="notice ok"><svg viewBox="0 0 48 48" class="n-ico" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M43 11L16.875 37L5 25.1818" fill="none"/></svg><div><b>定时器统一管理</b>：所有组件遵循「定时刷新 + 不可见时停表」——
+滚出视野就不再空转刷新，省 CPU 也省电。</div></div>
 </section>
 
       <div class="pager">
-<a href="plugins.html"><div class="p-dir">← 上一页</div><div class="p-name">插件与 NekoSolo</div></a>
-<a href="settings.html"><div class="p-dir">下一页 →</div><div class="p-name">设置</div></a>
+<a href="plugins.html"><div class="p-dir"><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M31 36L19 24L31 12" fill="none"/></svg><span>上一页</span></div><div class="p-name">插件与 NekoSolo</div></a>
+<a href="settings.html"><div class="p-dir"><span>下一页</span><svg viewBox="0 0 48 48" class="" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12L31 24L19 36" fill="none"/></svg></div><div class="p-name">设置</div></a>
 </div>
     </main>
 
     <footer class="foot">
-      <div>Mofumofu Launcher · 基于 Avalonia 12.1.4 + SukiUI 7.0.2-nightly 构建</div>
+      <div class="foot-brand"><img src="assets/img/app-icon-192.png" alt="" width="18" height="18" loading="lazy"> <span>Mofumofu Launcher · 基于 Avalonia 12.1.4 + SukiUI 7.0.2-nightly 构建</span></div>
       <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
     </footer>
   </div>
 </div>
+<nav class="chapter-nav" id="chapterNav" aria-label="本页章节"></nav>
+<button class="nav-scrim" id="navScrim" aria-label="关闭导航" tabindex="-1"></button>
+<dialog class="command" id="commandPalette" aria-labelledby="commandTitle">
+  <div class="command-head">
+    <span class="command-mark">MF</span>
+    <input id="commandInput" type="search" autocomplete="off" placeholder="输入页面名称，马上出发…" aria-label="搜索页面">
+    <kbd>ESC</kbd>
+  </div>
+  <div class="command-meta"><span id="commandTitle">NAVIGATION / 全站直达</span><span>↑↓ 选择 · Enter 前往</span></div>
+  <div class="command-results" id="commandResults"></div>
+</dialog>
 <script src="assets/js/main.js"></script>
 </body>
 </html>
