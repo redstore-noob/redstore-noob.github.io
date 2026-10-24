@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>打包与发布 · Mofumofu 插件文档</title>
+<meta name="description" content="把清单、详情、程序集、图标四件套压成一个 .nekoex，玩家双击即装。">
+<meta name="theme-color" content="#090d12">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="打包与发布 · 插件文档">
+<meta property="og:description" content="把清单、详情、程序集、图标四件套压成一个 .nekoex，玩家双击即装。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="../assets/img/app-icon-tile.png">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#docMain">跳到正文</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" id="docSide">
+    <a class="side-brand" href="../index.html" aria-label="返回 Mofumofu 官网">
+      <img src="../assets/img/app-icon.png" alt="" width="36" height="36" decoding="async">
+      <span class="side-brand-t"><b>Mofumofu</b><i>PLUGIN DEV DOCS</i></span>
+    </a>
+    <nav class="dn-list" aria-label="文档目录">
+<div class="dn-group"><div class="dn-label">起点</div>
+<a class="dn-link" href="index.html"><span class="dn-num">00</span><span class="dn-text">概览</span></a>
+</div>
+<div class="dn-group"><div class="dn-label">八章指南</div>
+<a class="dn-link" href="01-setup.html"><span class="dn-num">01</span><span class="dn-text">开发环境</span></a>
+<a class="dn-link" href="02-first-plugin.html"><span class="dn-num">02</span><span class="dn-text">第一个插件</span></a>
+<a class="dn-link" href="03-api.html"><span class="dn-num">03</span><span class="dn-text">API 对照表</span></a>
+<a class="dn-link active" href="04-packaging.html" aria-current="page"><span class="dn-num">04</span><span class="dn-text">打包与发布</span></a>
+<a class="dn-link" href="05-mirror.html"><span class="dn-num">05</span><span class="dn-text">仓库镜像</span></a>
+<a class="dn-link" href="06-ui.html"><span class="dn-num">06</span><span class="dn-text">UI 扩展</span></a>
+<a class="dn-link" href="07-download.html"><span class="dn-num">07</span><span class="dn-text">下载与实例</span></a>
+<a class="dn-link" href="08-hooks.html"><span class="dn-num">08</span><span class="dn-text">钩子</span></a>
+</div></nav>
+    <div class="side-foot">
+      <a class="side-back" href="../index.html">← 返回官网</a>
+      <div class="side-meta">API 1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <main class="doc-main" id="docMain" tabindex="-1">
+    <header class="doc-top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开目录" aria-expanded="false" aria-controls="docSide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="doc-crumb"><a href="index.html">文档</a><i>/</i><b>打包与发布</b></div>
+      <div class="doc-top-tools">
+        <span class="api-badge">API 1.0.0</span>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <article class="doc-body">
+      <div class="doc-eyebrow"><span>CHAPTER 04 / PACKAGING</span><i>04</i></div>
+      <h1 class="doc-title">打包与发布</h1>
+      <p class="doc-lead">把清单、详情、程序集、图标四件套压成一个 .nekoex，玩家双击即装。</p>
+      <h2 id="sec-1">关于打包<a class="anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<p>插件的文件格式为.nekoex，格式本质为.zip格式，具体目录为:</p>
+<ul>
+<li>info.yaml  存储关于插件展示信息的内容</li>
+<li>description.md  在启动器详细信息中展示的Markdown描述文件</li>
+<li>extension.dll  插件编译后产物</li>
+<li>icon.png  插件在启动器内展示图标</li>
+</ul>
+<h2 id="sec-2">包内四件套<a class="anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>文件</th><th>必填</th><th>作用</th></tr></thead><tbody><tr><td><code>info.yaml</code></td><td>是</td><td>插件清单，内容与开发期的 <code>plugin.yaml</code> 一致</td></tr><tr><td><code>description.md</code></td><td>否</td><td>插件详情页展示的 Markdown 简介</td></tr><tr><td><code>extension.dll</code></td><td>是</td><td>编译产物，发布前记得改名（开发期 DLL 名不限）</td></tr><tr><td><code>icon.png</code></td><td>否</td><td>插件在启动器内展示的图标</td></tr></tbody></table></div>
+<blockquote><code>.nekoex</code> 本质就是 zip：四个文件放在压缩包根目录，别再套一层文件夹。</blockquote>
+<h2 id="sec-3">发布流程<a class="anchor" href="#sec-3" aria-label="本节链接">#</a></h2>
+<ol>
+<li><code>dotnet build -c Release</code> 出 DLL，重命名为 <code>extension.dll</code></li>
+<li>按上表把四件套放进同一个目录（官方示例项目里附了 <code>pack.ps1</code> 一键打包）</li>
+<li>压成 zip 后把扩展名改成 <code>.nekoex</code></li>
+<li>建 GitHub 仓库，<strong>仓库名与清单 <code>id</code> 保持一致</strong>；发 Release，tag 写版本号，资产上传 <code>.nekoex</code></li>
+<li>玩家在 下载 → 插件 粘贴仓库地址，即可在线安装与更新（见<a href="05-mirror.html">第五章</a>）</li>
+</ol>
+      <nav class="doc-pager" aria-label="章节切换"><a class="pg prev" href="03-api.html"><span class="pg-dir">← 上一章</span><span class="pg-t">API 对照表</span></a><a class="pg next" href="05-mirror.html"><span class="pg-dir">下一章 →</span><span class="pg-t">仓库镜像</span></a></nav>
+      <footer class="doc-foot">
+        <div>本页内容来自启动器仓库 <code>docs/Extension_Guide</code></div>
+        <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+      </footer>
+    </article>
+  </main>
+
+  <aside class="doc-toc" aria-label="本页目录"><div class="toc-label">本页目录</div><ul class="toc-list"><li><a href="#sec-1" data-toc="sec-1">关于打包</a></li><li><a href="#sec-2" data-toc="sec-2">包内四件套</a></li><li><a href="#sec-3" data-toc="sec-3">发布流程</a></li></ul></aside>
+</div>
+
+<button class="nav-scrim" id="navScrim" aria-label="关闭目录" tabindex="-1"></button>
+<script src="assets/docs.js"></script>
+</body>
+</html>

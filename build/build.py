@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 Mofumofu Web · 站点生成器
-从 build/content_*.py 的结构化数据生成 13 个静态页面（12 个站点页 + 404）。
+从内容模块生成主站页面：首页 / 技术架构 / 404。
+插件文档站（docs/）由同目录的 docs_build.py 单独产出。
 
 用法：
     cd E:/redstore-noob.github.io/build
-    python -c "import build, content_a, content_b, content_c, content_d, content_e"
+    python -c "import build, content_a, content_b"
+    python docs_build.py
 
 所有事实均来自对 E:/Mofumofu 仓库源码的实测，非编造。
 """
@@ -25,19 +27,8 @@ NAV = [
         ("index.html",   "首页",         "IconHome"),
         ("architecture.html", "技术架构", "IconCube"),
     ]),
-    ("功能页面", [
-        ("download.html",   "下载大厅",  "IconDownload"),
-        ("instances.html",  "实例管理",  "IconGrid"),
-        ("account.html",    "账户与皮肤","IconAccount"),
-        ("servers.html",    "服务器",    "IconServer"),
-        ("online.html",     "联机",      "IconGlobe"),
-        ("music.html",      "音乐",      "IconMusic"),
-        ("creator.html",    "创作中心",  "IconCreator"),
-        ("plugins.html",    "插件",      "IconPlugin"),
-        ("widgets.html",    "桌面小组件","IconMonitor"),
-    ]),
-    ("配置与生态", [
-        ("settings.html",   "设置",      "IconSettings"),
+    ("开发者", [
+        ("docs/index.html", "插件文档", "IconFluentCode"),
     ]),
 ]
 

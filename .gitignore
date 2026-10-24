@@ -20,3 +20,6 @@ __pycache__/
 
 # 本地工具数据
 .workbuddy/
+
+# 本地视频代理工具目录
+.video_agent/

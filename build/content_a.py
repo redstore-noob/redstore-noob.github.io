@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Mofumofu Web · 页面内容 A 组（首页）
+"""Mofumofu Web · 页面内容 A 组（首页 / 404）
 
 首页只回答三件事：这是什么 / 能干什么 / 想深入看哪里。
-细节一律外链到各专页，不在首页重复堆砌。
+十项常规功能合并为一条优势，不单独成页；想动手的只留架构与插件文档两个入口。
 """
 from build import page, sec, card, ul, table, write, icon
 
-# 主下载入口：GitHub Releases（站内 download.html 只讲下载大厅的能力，不放安装包）
+# 主下载入口：GitHub Releases
 RELEASES_URL = "https://github.com/redstore-noob/Mofumofu/releases"
 
 # ══════════════════════════════════════════════════════════
@@ -22,40 +22,18 @@ STATS = [
     ("3", "种登录方式"),
 ]
 
-PAGES = [
-    ("download.html", "下载大厅"),
-    ("instances.html", "实例管理"),
-    ("account.html", "账户与皮肤"),
-    ("servers.html", "服务器"),
-    ("online.html", "联机"),
-    ("music.html", "音乐"),
-    ("creator.html", "创作中心"),
-    ("plugins.html", "插件"),
-    ("widgets.html", "桌面小组件"),
-    ("settings.html", "设置"),
-]
-
-CAPABILITIES = [
-    ("下载与安装", "download.html", "下载大厅", "IconDownload", [
-        "<b>5 大加载器</b>：Fabric / Quilt / Forge / NeoForge / OptiFine，各自独立实现类",
-        "<b>Modrinth</b>：mod / 整合包 / 光影 / 材质包四类资源搜索与安装",
-        "<b>多镜像源</b>：官方 / 镜像 / 自定义，含回落源与测速选最快",
-    ]),
-    ("账户与启动", "account.html", "账户与皮肤", "IconAccount", [
-        "<b>三种登录</b>：Microsoft 正版（PKCE + 设备码）、Authlib 皮肤站、离线账号",
-        "<b>凭据加密</b>：DPAPI / Keychain / libsecret 三系统原生实现",
-        "<b>启动装配</b>：仅在用户未手写时注入参数，G1GC 按机器分档",
-    ]),
-    ("服务器与联机", "servers.html", "服务器", "IconServer", [
-        "<b>4 种服务端核心</b>：paper / vanilla / fabric / neoforge",
-        "<b>完整 RCON</b>：Source RCON 协议实现，热备份运行中也能刷盘",
-        "<b>陶瓦联机</b>：Terracotta 客户端适配，5 态状态机",
-    ]),
-    ("创作与桌面", "creator.html", "创作中心", "IconCreator", [
-        "<b>8 个创作工具</b>：资源包 / 命令 / 渐变文字 / 立方体 3D / 皮肤 / 整合包 …",
-        "<b>3D 皮肤编辑器</b>：64×64 展开图涂色，模型实时更新",
-        "<b>22 个桌面小组件</b>：格子板自由摆放，真实数据源",
-    ]),
+# 十项能力合并成主页的一条优势：只留最有说服力的事实，细节不再展开
+ADVANTAGES = [
+    ("下载大厅", "IconDownload", "<b>5 大加载器</b> · Modrinth 四类资源 · 多镜像测速回落"),
+    ("实例管理", "IconGrid", "<b>6 个详情标签</b> · 每实例独立内存 · 一键导入导出"),
+    ("账户与皮肤", "IconAccount", "<b>3 种登录</b> · 三系统原生加密 · 3D 皮肤涂色"),
+    ("服务器", "IconServer", "<b>4 种服务端核心</b> · 完整 RCON · 运行中热备份"),
+    ("联机", "IconGlobe", "<b>陶瓦客户端</b> · 五态状态机 · 房间码一键入房"),
+    ("音乐", "IconMusic", "<b>本地 + 网易云双源</b> · 队列与歌词逐句跟随"),
+    ("创作中心", "IconCreator", "<b>8 个创作工具</b> · 立方体 3D 文字 · 资源包与命令生成"),
+    ("插件", "IconPlugin", "<b>.NET 类库热装卸</b> · 8 个权限区 · 可在线更新"),
+    ("桌面小组件", "IconMonitor", "<b>22 个组件</b> · 格子板自由摆放 · 接真实数据源"),
+    ("设置", "IconSettings", "<b>5 大分区</b> · 6 套强调色 · 三语言即时切换"),
 ]
 
 MODULES = [
@@ -69,26 +47,21 @@ MODULES = [
 ENTRIES = [
     ("技术架构", "architecture.html", "分层 · 内核 · 模块边界",
      "五个模块怎么切、依赖往哪个方向走、UI 与业务如何彻底解耦。"),
-    ("下载大厅", "download.html", "版本 · 加载器 · 资源",
-     "从装游戏本体到找 mod 与整合包，一条链路走完。"),
-    ("插件系统", "plugins.html", "plugin.yaml · 安装器",
-     "插件包怎么描述、权限怎么声明、安装器怎么校验。"),
-    ("服务器与联机", "servers.html", "建服 · RCON · 热备份",
-     "四种服务端核心、完整 RCON、运行中也能备份。"),
+    ("插件文档", "docs/index.html", "Extension Guide · 八章",
+     "从跑通第一个插件到 UI 扩展、下载域与启动钩子，全部接口都在这里。"),
 ]
 
 stats_html = "".join(
     f'<div class="stat-item"><b>{n}</b><span>{l}</span></div>' for n, l in STATS)
 
-pages_html = '<span class="pi-label">功能页面</span>' + "".join(
-    f'<a href="{h}">{t}</a>' for h, t in PAGES)
-
-caps_html = "".join(f"""
-  <div class="card hoverable">
-    <div class="card-title">{icon(k, "card-ico")}{t}</div>
-    {ul(items)}
-    <a class="card-more" href="{h}">{link} {icon("IconArrowRight")}</a>
-  </div>""" for t, h, link, k, items in CAPABILITIES)
+adv_html = "".join(f"""
+  <div class="adv-item">
+    <span class="adv-ico">{icon(k)}</span>
+    <div class="adv-body">
+      <div class="adv-t">{t}</div>
+      <p class="adv-d">{d}</p>
+    </div>
+  </div>""" for t, k, d in ADVANTAGES)
 
 entries_html = "".join(f"""
   <a class="card hoverable entry" href="{h}">
@@ -117,11 +90,10 @@ body = f"""
     <a class="btn" href="architecture.html">{icon("IconCube")} 看看技术架构</a>
   </div>
   <div class="stat-strip">{stats_html}</div>
-  <div class="page-index">{pages_html}</div>
 </div>
 
-{sec("01", "核心能力", "每一项都接真实后端，不是演示占位", f"""
-<div class="grid g2">{caps_html}
+{sec("01", "一个启动器，十项全能", "别人装五个软件才凑齐的活，这里一个窗口干完", f"""
+<div class="adv">{adv_html}
 </div>""")}
 
 {sec("02", "模块构成", "五个模块，职责边界清晰", table(
@@ -129,7 +101,7 @@ body = f"""
     MODULES,
 ))}
 
-{sec("03", "想深入看哪里", "首页只给轮廓，细节在各专页", f"""
+{sec("03", "想深入看哪里", "常规功能都在上一节，这两个入口留给想动手的人", f"""
 <div class="grid g2">{entries_html}
 </div>""")}
 """
@@ -150,19 +122,28 @@ body404 = f"""
 <div class="lost-mark"><img src="assets/img/app-icon-192.png" alt="" width="72" height="72" loading="lazy"></div>
 <div class="btn-row" style="margin-bottom:8px">
   <a class="btn primary" href="index.html">{icon("IconHome")} 回到首页</a>
-  <a class="btn" href="download.html">{icon("IconDownload")} 看下载大厅</a>
+  <a class="btn" href="docs/index.html">{icon("IconFluentCode")} 看插件文档</a>
 </div>
 
 {sec("01", "也许你想找这些", "", f"""
 <div class="grid g-auto">
-  {card("下载大厅", "7 个标签页 · 5 大加载器 · Modrinth 资源搜索", iconp="IconDownload")}
-  {card("技术架构", "五模块分层 · 内核能力域", iconp="IconCube")}
-  {card("插件系统", "plugin.yaml · .nekoex · 安装器校验", iconp="IconPlugin")}
+  <a class="card hoverable" href="index.html" style="text-decoration:none;color:inherit">
+    <div class="card-title">{icon("IconHome", "card-ico")}功能一览</div>
+    <p class="card-text">十项能力、模块构成，一页看完全貌</p>
+  </a>
+  <a class="card hoverable" href="architecture.html" style="text-decoration:none;color:inherit">
+    <div class="card-title">{icon("IconCube", "card-ico")}技术架构</div>
+    <p class="card-text">五模块分层 · 内核能力域</p>
+  </a>
+  <a class="card hoverable" href="docs/index.html" style="text-decoration:none;color:inherit">
+    <div class="card-title">{icon("IconFluentCode", "card-ico")}插件文档</div>
+    <p class="card-text">Extension Guide · 八章完整开发指南</p>
+  </a>
 </div>""")}
 """
 
 write("404.html", page(
     "404.html", "页面走丢了", "404 · Not Found",
-    "你要找的页面不存在，或者已经被移走了。回首页看看，或者从左边挑一个功能？",
+    "你要找的页面不存在，或者已经被移走了。回首页看看，或者从左边挑一个方向？",
     body404,
 ))

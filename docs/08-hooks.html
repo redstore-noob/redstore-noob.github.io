@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>钩子 · Mofumofu 插件文档</title>
+<meta name="description" content="启动钩子与下载任务钩子：不只是事后通知，还能参与决策、改写参数、拦截启动。">
+<meta name="theme-color" content="#090d12">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="钩子 · 插件文档">
+<meta property="og:description" content="启动钩子与下载任务钩子：不只是事后通知，还能参与决策、改写参数、拦截启动。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="../assets/img/app-icon-tile.png">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#docMain">跳到正文</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" id="docSide">
+    <a class="side-brand" href="../index.html" aria-label="返回 Mofumofu 官网">
+      <img src="../assets/img/app-icon.png" alt="" width="36" height="36" decoding="async">
+      <span class="side-brand-t"><b>Mofumofu</b><i>PLUGIN DEV DOCS</i></span>
+    </a>
+    <nav class="dn-list" aria-label="文档目录">
+<div class="dn-group"><div class="dn-label">起点</div>
+<a class="dn-link" href="index.html"><span class="dn-num">00</span><span class="dn-text">概览</span></a>
+</div>
+<div class="dn-group"><div class="dn-label">八章指南</div>
+<a class="dn-link" href="01-setup.html"><span class="dn-num">01</span><span class="dn-text">开发环境</span></a>
+<a class="dn-link" href="02-first-plugin.html"><span class="dn-num">02</span><span class="dn-text">第一个插件</span></a>
+<a class="dn-link" href="03-api.html"><span class="dn-num">03</span><span class="dn-text">API 对照表</span></a>
+<a class="dn-link" href="04-packaging.html"><span class="dn-num">04</span><span class="dn-text">打包与发布</span></a>
+<a class="dn-link" href="05-mirror.html"><span class="dn-num">05</span><span class="dn-text">仓库镜像</span></a>
+<a class="dn-link" href="06-ui.html"><span class="dn-num">06</span><span class="dn-text">UI 扩展</span></a>
+<a class="dn-link" href="07-download.html"><span class="dn-num">07</span><span class="dn-text">下载与实例</span></a>
+<a class="dn-link active" href="08-hooks.html" aria-current="page"><span class="dn-num">08</span><span class="dn-text">钩子</span></a>
+</div></nav>
+    <div class="side-foot">
+      <a class="side-back" href="../index.html">← 返回官网</a>
+      <div class="side-meta">API 1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <main class="doc-main" id="docMain" tabindex="-1">
+    <header class="doc-top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开目录" aria-expanded="false" aria-controls="docSide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="doc-crumb"><a href="index.html">文档</a><i>/</i><b>钩子</b></div>
+      <div class="doc-top-tools">
+        <span class="api-badge">API 1.0.0</span>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <article class="doc-body">
+      <div class="doc-eyebrow"><span>CHAPTER 08 / HOOKS</span><i>08</i></div>
+      <h1 class="doc-title">钩子</h1>
+      <p class="doc-lead">启动钩子与下载任务钩子：不只是事后通知，还能参与决策、改写参数、拦截启动。</p>
+      <p>钩子与事件的区别：<strong>事件是事后通知（改不了任何事），钩子能参与决策</strong>。 钩子接口在 <code>Mofumofu.ExtensionAPI.Actions</code>，插件实现 <code>ILaunchAction</code> / <code>IDownloadAction</code> 后，宿主自动发现并调用——<strong>不需要在任何地方注册</strong>。</p>
+<h2 id="sec-1">0. 宿主策略（写钩子前必读）<a class="anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<ul>
+<li>钩子全部在 <strong>UI 线程</strong>回调</li>
+<li><code>LaunchingAsync</code> 单个钩子 <strong>5 秒超时</strong>，超时按"放行"处理并记日志</li>
+<li>钩子抛异常按"不作为"处理并记日志——<strong>单个坏插件不会拦死其他人的启动</strong></li>
+<li>多个插件按加载顺序依次调用，先到先改</li>
+</ul>
+<h2 id="sec-2">1. 启动钩子：<code>ILaunchAction</code><a class="anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="k">using</span> Mofumofu.ExtensionAPI;
+<span class="k">using</span> Mofumofu.ExtensionAPI.Actions;
+
+<span class="k">public</span> <span class="k">class</span> LaunchGuard : ILaunchAction
+{
+    <span class="c">// 启动前：检查 + 注入 JVM 参数 + 可拦截</span>
+    <span class="k">public</span> <span class="k">Task</span>&lt;<span class="k">Boolean</span>&gt; LaunchingAsync(ILaunchContext launch)
+    {
+        <span class="c">// 注入 JVM 参数（宿主会采用）</span>
+        launch.JvmArguments.Add(<span class="s">"-XX:+UseG1GC"</span>);
+
+        <span class="c">// 前置检查：不满足就拦截（reason 会显示在启动控制台，玩家看得见）</span>
+        <span class="k">if</span> (!<span class="k">File</span>.Exists(<span class="k">Path</span>.Combine(launch.GameDirectory, <span class="s">"essential.jar"</span>)))
+        {
+            launch.Cancel(<span class="s">"缺少前置模组 essential.jar，请先安装"</span>);
+            <span class="k">return</span> <span class="k">Task</span>.FromResult(<span class="k">false</span>);
+        }
+
+        <span class="k">return</span> <span class="k">Task</span>.FromResult(<span class="k">true</span>);   <span class="c">// 放行</span>
+    }
+
+    <span class="c">// 游戏崩溃（非玩家手动停止的异常退出）</span>
+    <span class="k">public</span> <span class="k">void</span> GameCrashedHook(<span class="k">string</span> crashedLog)
+    {
+        <span class="c">// crashedLog 是宿主整理的崩溃摘要</span>
+    }
+
+    <span class="c">// 正常退出 / 手动停止：session 里有本次会话的全部数据</span>
+    <span class="k">public</span> <span class="k">void</span> GameStoppedHook(GameSessionData session)
+    {
+        <span class="c">// session.PlayDuration  本次游玩时长（会话级）</span>
+        <span class="c">// session.StartedAt    启动时刻</span>
+        <span class="c">// session.ExitCode     退出码（手动停止 -1）</span>
+        <span class="c">// 累计总时长用 context.Game.GetInstancesAsync 查 TotalPlaytime</span>
+    }
+}</code></pre></figure>
+<p><code>ILaunchContext</code> 一览：<code>InstanceId</code> / <code>VersionId</code> / <code>GameDirectory</code> 只读；<code>JvmArguments</code> 可变列表（唯一可写面）；<code>Cancel(reason)</code> 拦截。</p>
+<h3>钩子 vs 事件怎么选</h3>
+<div class="table-wrap"><table><thead><tr><th>场景</th><th>用哪个</th></tr></thead><tbody><tr><td>统计游玩时长、启动时自动开始 ping 服务器</td><td><code>IGameLaunch</code> 的 <strong>事件</strong>（<code>GameLaunched</code> / <code>GameExited</code>，事后通知）</td></tr><tr><td>拦截启动、改启动参数</td><td><code>ILaunchAction.LaunchingAsync</code> <strong>钩子</strong>（能参与决策）</td></tr><tr><td>游戏退出后自动备份存档</td><td>事件即可</td></tr></tbody></table></div>
+<p>判断口诀：<strong>需要改变结果 → 钩子；只需要知道结果 → 事件</strong>。</p>
+<h2 id="sec-3">2. 下载任务钩子：<code>IDownloadAction</code><a class="anchor" href="#sec-3" aria-label="本节链接">#</a></h2>
+<p>任务有 4 位数字编号（<code>0001</code>~<code>9999</code>，下载页任务卡标题前的 <code>#0007</code> 就是它）。 编号会话内唯一、<strong>任务结束后回收复用</strong>——不要长期缓存。</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="k">public</span> <span class="k">class</span> DownloadWatcher : IDownloadAction
+{
+    <span class="c">// 任务完成：编号 + 标题</span>
+    <span class="k">public</span> <span class="k">void</span> DownloadCompletedHook(<span class="k">int</span> taskNumber, <span class="k">string</span> title)
+        =&gt; <span class="k">File</span>.AppendAllText(<span class="s">"log.txt"</span>, $<span class="s">"#{taskNumber:0000} {title} 完成\n"</span>);
+
+    <span class="c">// 任务失败：带原因</span>
+    <span class="k">public</span> <span class="k">void</span> DownloadFailedHook(<span class="k">int</span> taskNumber, <span class="k">string</span> title, <span class="k">string</span> reason) { }
+
+    <span class="c">// 按编号查询 / 操作任务</span>
+    <span class="k">public</span> <span class="k">async</span> <span class="k">Task</span> PeekAsync(IPluginContext ctx)
+    {
+        <span class="k">var</span> task = <span class="k">await</span> ctx.DownloadAction.GetTaskAsync(<span class="n">7</span>);
+        <span class="k">if</span> (task <span class="k">is</span> { State: Data.DownloadTaskState.Downloading })
+            ctx.DownloadAction.SetPaused(<span class="n">7</span>, paused: <span class="k">true</span>);   <span class="c">// #0007 暂停</span>
+        <span class="c">// ctx.DownloadAction.Cancel(7);                      // 或取消（含清理已下载文件）</span>
+    }
+}</code></pre></figure>
+<h2 id="sec-4">3. 权限与提醒<a class="anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
+<ul>
+<li><code>IDownloadAction</code> 的通知与查询要 <strong>networkReadonly</strong>；取消 / 暂停要 <strong>network</strong></li>
+<li><code>ILaunchAction</code> 本身不需要权限，但注意：<strong>你的钩子会影响所有玩家的启动流程</strong>——前置检查逻辑务必保守，拿不准就放行</li>
+<li>钩子异常宿主会兜住，但这不是写坏代码的理由喵</li>
+</ul>
+      <nav class="doc-pager" aria-label="章节切换"><a class="pg prev" href="07-download.html"><span class="pg-dir">← 上一章</span><span class="pg-t">下载与实例</span></a></nav>
+      <footer class="doc-foot">
+        <div>本页内容来自启动器仓库 <code>docs/Extension_Guide</code></div>
+        <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+      </footer>
+    </article>
+  </main>
+
+  <aside class="doc-toc" aria-label="本页目录"><div class="toc-label">本页目录</div><ul class="toc-list"><li><a href="#sec-1" data-toc="sec-1">0. 宿主策略（写钩子前必读）</a></li><li><a href="#sec-2" data-toc="sec-2">1. 启动钩子：ILaunchAction</a></li><li><a href="#sec-3" data-toc="sec-3">2. 下载任务钩子：IDownloadAction</a></li><li><a href="#sec-4" data-toc="sec-4">3. 权限与提醒</a></li></ul></aside>
+</div>
+
+<button class="nav-scrim" id="navScrim" aria-label="关闭目录" tabindex="-1"></button>
+<script src="assets/docs.js"></script>
+</body>
+</html>

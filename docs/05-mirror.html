@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>插件仓库镜像 · Mofumofu 插件文档</title>
+<meta name="description" content="借 GitHub / Gitee / GitCode 的 Release 做在线安装与自动更新，不用自己搭服务器。">
+<meta name="theme-color" content="#090d12">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="插件仓库镜像 · 插件文档">
+<meta property="og:description" content="借 GitHub / Gitee / GitCode 的 Release 做在线安装与自动更新，不用自己搭服务器。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="../assets/img/app-icon-tile.png">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#docMain">跳到正文</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" id="docSide">
+    <a class="side-brand" href="../index.html" aria-label="返回 Mofumofu 官网">
+      <img src="../assets/img/app-icon.png" alt="" width="36" height="36" decoding="async">
+      <span class="side-brand-t"><b>Mofumofu</b><i>PLUGIN DEV DOCS</i></span>
+    </a>
+    <nav class="dn-list" aria-label="文档目录">
+<div class="dn-group"><div class="dn-label">起点</div>
+<a class="dn-link" href="index.html"><span class="dn-num">00</span><span class="dn-text">概览</span></a>
+</div>
+<div class="dn-group"><div class="dn-label">八章指南</div>
+<a class="dn-link" href="01-setup.html"><span class="dn-num">01</span><span class="dn-text">开发环境</span></a>
+<a class="dn-link" href="02-first-plugin.html"><span class="dn-num">02</span><span class="dn-text">第一个插件</span></a>
+<a class="dn-link" href="03-api.html"><span class="dn-num">03</span><span class="dn-text">API 对照表</span></a>
+<a class="dn-link" href="04-packaging.html"><span class="dn-num">04</span><span class="dn-text">打包与发布</span></a>
+<a class="dn-link active" href="05-mirror.html" aria-current="page"><span class="dn-num">05</span><span class="dn-text">仓库镜像</span></a>
+<a class="dn-link" href="06-ui.html"><span class="dn-num">06</span><span class="dn-text">UI 扩展</span></a>
+<a class="dn-link" href="07-download.html"><span class="dn-num">07</span><span class="dn-text">下载与实例</span></a>
+<a class="dn-link" href="08-hooks.html"><span class="dn-num">08</span><span class="dn-text">钩子</span></a>
+</div></nav>
+    <div class="side-foot">
+      <a class="side-back" href="../index.html">← 返回官网</a>
+      <div class="side-meta">API 1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <main class="doc-main" id="docMain" tabindex="-1">
+    <header class="doc-top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开目录" aria-expanded="false" aria-controls="docSide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="doc-crumb"><a href="index.html">文档</a><i>/</i><b>仓库镜像</b></div>
+      <div class="doc-top-tools">
+        <span class="api-badge">API 1.0.0</span>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <article class="doc-body">
+      <div class="doc-eyebrow"><span>CHAPTER 05 / DISTRIBUTION</span><i>05</i></div>
+      <h1 class="doc-title">插件仓库镜像</h1>
+      <p class="doc-lead">借 GitHub / Gitee / GitCode 的 Release 做在线安装与自动更新，不用自己搭服务器。</p>
+      <p>启动器通过读取用户添加的仓库的最新 Release，实现插件在线安装与更新。</p>
+<h2 id="sec-1">支持的托管平台<a class="anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>平台</th><th>仓库链接示例</th><th>Release API</th></tr></thead><tbody><tr><td>GitHub</td><td><code>https://github.com/owner/repo</code></td><td><code>api.github.com/repos/{owner}/{repo}/releases/latest</code></td></tr><tr><td>Gitee</td><td><code>https://gitee.com/owner/repo</code></td><td><code>gitee.com/api/v5/repos/{owner}/{repo}/releases/latest</code></td></tr><tr><td>GitCode</td><td><code>https://gitcode.com/owner/repo</code></td><td><code>api.gitcode.com/api/v5/repos/{owner}/{repo}/releases/latest</code></td></tr></tbody></table></div>
+<p>在「下载 → 插件」里粘贴任一平台的仓库链接即可添加，支持同时添加多个仓库；同一仓库在不同平台可以各添加一份（按平台 + owner/repo 去重）。</p>
+<h2 id="sec-2">约定<a class="anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<ul>
+<li>仓库需要发布 Release，并在 Release 里附带 <code>.nekoex</code> 资产（见「4.打包」）。</li>
+<li>插件 id 约定 = 仓库名（owner/repo 的 repo 段），启动器用它关联已安装插件与商店条目。</li>
+<li>资产下载地址优先取 Release API 返回的 <code>browser_download_url</code>；缺失时按各平台约定拼直链兜底。</li>
+</ul>
+      <nav class="doc-pager" aria-label="章节切换"><a class="pg prev" href="04-packaging.html"><span class="pg-dir">← 上一章</span><span class="pg-t">打包与发布</span></a><a class="pg next" href="06-ui.html"><span class="pg-dir">下一章 →</span><span class="pg-t">UI 扩展</span></a></nav>
+      <footer class="doc-foot">
+        <div>本页内容来自启动器仓库 <code>docs/Extension_Guide</code></div>
+        <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+      </footer>
+    </article>
+  </main>
+
+  <aside class="doc-toc" aria-label="本页目录"><div class="toc-label">本页目录</div><ul class="toc-list"><li><a href="#sec-1" data-toc="sec-1">支持的托管平台</a></li><li><a href="#sec-2" data-toc="sec-2">约定</a></li></ul></aside>
+</div>
+
+<button class="nav-scrim" id="navScrim" aria-label="关闭目录" tabindex="-1"></button>
+<script src="assets/docs.js"></script>
+</body>
+</html>

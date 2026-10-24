@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>下载与实例 · Mofumofu 插件文档</title>
+<meta name="description" content="搜资源、装实例、管 mods、下 Java：四个接口覆盖完整下载链路。">
+<meta name="theme-color" content="#090d12">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="下载与实例 · 插件文档">
+<meta property="og:description" content="搜资源、装实例、管 mods、下 Java：四个接口覆盖完整下载链路。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="../assets/img/app-icon-tile.png">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#docMain">跳到正文</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" id="docSide">
+    <a class="side-brand" href="../index.html" aria-label="返回 Mofumofu 官网">
+      <img src="../assets/img/app-icon.png" alt="" width="36" height="36" decoding="async">
+      <span class="side-brand-t"><b>Mofumofu</b><i>PLUGIN DEV DOCS</i></span>
+    </a>
+    <nav class="dn-list" aria-label="文档目录">
+<div class="dn-group"><div class="dn-label">起点</div>
+<a class="dn-link" href="index.html"><span class="dn-num">00</span><span class="dn-text">概览</span></a>
+</div>
+<div class="dn-group"><div class="dn-label">八章指南</div>
+<a class="dn-link" href="01-setup.html"><span class="dn-num">01</span><span class="dn-text">开发环境</span></a>
+<a class="dn-link" href="02-first-plugin.html"><span class="dn-num">02</span><span class="dn-text">第一个插件</span></a>
+<a class="dn-link" href="03-api.html"><span class="dn-num">03</span><span class="dn-text">API 对照表</span></a>
+<a class="dn-link" href="04-packaging.html"><span class="dn-num">04</span><span class="dn-text">打包与发布</span></a>
+<a class="dn-link" href="05-mirror.html"><span class="dn-num">05</span><span class="dn-text">仓库镜像</span></a>
+<a class="dn-link" href="06-ui.html"><span class="dn-num">06</span><span class="dn-text">UI 扩展</span></a>
+<a class="dn-link active" href="07-download.html" aria-current="page"><span class="dn-num">07</span><span class="dn-text">下载与实例</span></a>
+<a class="dn-link" href="08-hooks.html"><span class="dn-num">08</span><span class="dn-text">钩子</span></a>
+</div></nav>
+    <div class="side-foot">
+      <a class="side-back" href="../index.html">← 返回官网</a>
+      <div class="side-meta">API 1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <main class="doc-main" id="docMain" tabindex="-1">
+    <header class="doc-top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开目录" aria-expanded="false" aria-controls="docSide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="doc-crumb"><a href="index.html">文档</a><i>/</i><b>下载与实例</b></div>
+      <div class="doc-top-tools">
+        <span class="api-badge">API 1.0.0</span>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <article class="doc-body">
+      <div class="doc-eyebrow"><span>CHAPTER 07 / DOWNLOADS</span><i>07</i></div>
+      <h1 class="doc-title">下载与实例</h1>
+      <p class="doc-lead">搜资源、装实例、管 mods、下 Java：四个接口覆盖完整下载链路。</p>
+      <p>四个接口覆盖"查版本 → 装实例 → 下资源 → 管模组 → 下 Java"的完整链路。 网络类失败全部直接抛异常（消息可直接展示给玩家），进度走 <code>IProgress&lt;T&gt;</code>，取消走 <code>CancellationToken</code>。</p>
+<h2 id="sec-1">1. 资源搜索与安装（Modrinth）<a class="anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<p><code>context.ResourceDownload</code>——搜模组/光影/资源包并装进实例（走宿主镜像体系，境内可用）：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="c">// 搜索：按关键词 + 游戏版本 + 加载器过滤</span>
+<span class="k">var</span> hits = <span class="k">await</span> ctx.ResourceDownload.SearchAsync(
+    <span class="s">"sodium"</span>, ResourceKind.Mod, gameVersion: <span class="s">"1.21.4"</span>, loader: <span class="s">"fabric"</span>);
+
+<span class="c">// 查某项目的可下载版本</span>
+<span class="k">var</span> files = <span class="k">await</span> ctx.ResourceDownload.GetFilesAsync(hits[<span class="n">0</span>].ProjectId, <span class="s">"1.21.4"</span>, <span class="s">"fabric"</span>);
+
+<span class="c">// 下载并装进实例（mod 会自动补依赖，目标目录按种类自动选：mods / shaderpacks / resourcepacks）</span>
+<span class="k">var</span> result = <span class="k">await</span> ctx.ResourceDownload.DownloadAsync(
+    files[<span class="n">0</span>].VersionId, ResourceKind.Mod, instanceId: <span class="s">"survival"</span>,
+    gameVersion: <span class="s">"1.21.4"</span>, loader: <span class="s">"fabric"</span>,
+    progress: <span class="k">new</span> Progress&lt;(<span class="k">int</span> Completed, <span class="k">int</span> Total, <span class="k">string</span> Detail)&gt;(p =&gt;
+        ctx.Popup.Toast($<span class="s">"下载中 {p.Completed}/{p.Total}"</span>)));</code></pre></figure>
+<p><code>ResourceKind</code> 三选一：<code>Mod</code> / <code>Shader</code> / <code>ResourcePack</code>。CurseForge 源暂未开放，当前全部走 Modrinth。</p>
+<h2 id="sec-2">2. 安装游戏实例（原版或带加载器）<a class="anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<p><code>context.Downloads</code>：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="c">// ① 查官方版本清单</span>
+<span class="k">var</span> versions = <span class="k">await</span> ctx.Downloads.GetVersionsAsync();
+
+<span class="c">// ② 带加载器安装：先查该游戏版本的加载器版本列表</span>
+<span class="k">var</span> loaderVersions = <span class="k">await</span> ctx.Downloads.GetLoaderVersionsAsync(
+    ModLoaderType.Fabric, <span class="s">"1.21.4"</span>);
+
+<span class="c">// ③ 安装（LoaderVersion 传 null = 自动选最新稳定版；原版依赖自动补装）</span>
+<span class="k">var</span> installed = <span class="k">await</span> ctx.Downloads.DownloadAsync(
+    <span class="k">new</span> InstanceDownloadRequest(
+        VersionId: <span class="s">"1.21.4"</span>,
+        Loader: ModLoaderType.Fabric,
+        LoaderVersion: <span class="k">null</span>,
+        DisplayName: <span class="s">"生存养老服"</span>),
+    progress: <span class="k">new</span> Progress&lt;InstanceDownloadProgress&gt;(p =&gt;
+        ctx.Popup.Toast($<span class="s">"{p.Phase} {p.Percent:0}%"</span>)));
+
+ctx.Popup.Toast($<span class="s">"已装到实例 {installed.Id}"</span>);   <span class="c">// Id = versions/ 下实际目录名</span></code></pre></figure>
+<blockquote>返回的 <code>InstanceInfo.Id</code> 可能和版本号不同（如 <code>1.21.4-fabric</code>），后续操作一律用这个 Id。 插件只能<strong>安装</strong>实例，不能启动任意实例——启动走 <code>context.Game.LaunchSelectedAsync()</code>（只能启玩家选中的那个）。</blockquote>
+<h2 id="sec-3">3. 实例模组管理<a class="anchor" href="#sec-3" aria-label="本节链接">#</a></h2>
+<p><code>context.InstanceAction</code>——列 / 启停 / 删实例 mods 目录里的模组：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="c">// 列出（含停用态；文件名一律是"启用态"名字）</span>
+<span class="k">var</span> mods = <span class="k">await</span> ctx.InstanceAction.GetModsAsync(<span class="s">"survival"</span>);
+<span class="k">foreach</span> (<span class="k">var</span> mod <span class="k">in</span> mods.Where(m =&gt; !m.Enabled))
+    ctx.Popup.Toast($<span class="s">"发现停用模组：{mod.FileName}"</span>);
+
+<span class="c">// 停用 / 启用（.jar ↔ .jar.disabled 改名）</span>
+ctx.InstanceAction.SetModEnabled(<span class="s">"survival"</span>, <span class="s">"sodium.jar"</span>, enabled: <span class="k">false</span>);
+
+<span class="c">// 删除（不可恢复）</span>
+ctx.InstanceAction.DeleteMod(<span class="s">"survival"</span>, <span class="s">"sodium.jar"</span>);</code></pre></figure>
+<p><strong>权限提醒</strong>：列表要 <code>readonly</code>，启停和删除要 <strong><code>instanceWrite</code></strong>（删除不可恢复，玩家会盯着这个开关）。</p>
+<h2 id="sec-4">4. Java 运行时<a class="anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
+<p><code>context.Java</code>——清单 / 安装 / 本机检测：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="c">// 宿主支持的主版本（当前 8 / 11 / 17 / 21 / 25）</span>
+<span class="k">foreach</span> (<span class="k">var</span> major <span class="k">in</span> ctx.Java.SupportedMajorVersions) { }
+
+<span class="c">// 装 Java 21 到游戏目录 runtime/（已存在自动跳过；字节级进度）</span>
+<span class="k">var</span> installed = <span class="k">await</span> ctx.Java.InstallAsync(<span class="n">21</span>,
+    <span class="k">new</span> Progress&lt;(<span class="k">string</span> Phase, long CompletedBytes, long TotalBytes)&gt;(p =&gt;
+        ctx.Popup.Toast($<span class="s">"{p.Phase}"</span>)));
+ctx.Log(<span class="s">"装好了："</span> + installed.JavaPath);
+
+<span class="c">// 本机检测到的全部 Java（环境变量 / 注册表 / 常见目录 / runtime/）</span>
+<span class="k">var</span> found = <span class="k">await</span> ctx.Java.GetInstalledAsync();</code></pre></figure>
+<h2 id="sec-5">权限速查<a class="anchor" href="#sec-5" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>本页用到的</th><th>权限区</th></tr></thead><tbody><tr><td>查询类（版本清单 / 搜索 / 文件列表 / Java 清单 / 本机检测）</td><td><code>networkReadonly</code> / <code>readonly</code></td></tr><tr><td>安装类（实例 / 资源 / Java）</td><td><code>network</code></td></tr><tr><td>mods 启停 / 删除</td><td><code>instanceWrite</code></td></tr></tbody></table></div>
+      <nav class="doc-pager" aria-label="章节切换"><a class="pg prev" href="06-ui.html"><span class="pg-dir">← 上一章</span><span class="pg-t">UI 扩展</span></a><a class="pg next" href="08-hooks.html"><span class="pg-dir">下一章 →</span><span class="pg-t">钩子</span></a></nav>
+      <footer class="doc-foot">
+        <div>本页内容来自启动器仓库 <code>docs/Extension_Guide</code></div>
+        <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+      </footer>
+    </article>
+  </main>
+
+  <aside class="doc-toc" aria-label="本页目录"><div class="toc-label">本页目录</div><ul class="toc-list"><li><a href="#sec-1" data-toc="sec-1">1. 资源搜索与安装（Modrinth）</a></li><li><a href="#sec-2" data-toc="sec-2">2. 安装游戏实例（原版或带加载器）</a></li><li><a href="#sec-3" data-toc="sec-3">3. 实例模组管理</a></li><li><a href="#sec-4" data-toc="sec-4">4. Java 运行时</a></li><li><a href="#sec-5" data-toc="sec-5">权限速查</a></li></ul></aside>
+</div>
+
+<button class="nav-scrim" id="navScrim" aria-label="关闭目录" tabindex="-1"></button>
+<script src="assets/docs.js"></script>
+</body>
+</html>

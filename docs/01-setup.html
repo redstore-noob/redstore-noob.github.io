@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>快速建立开发环境 · Mofumofu 插件文档</title>
+<meta name="description" content="装好 .NET 10 SDK、引对契约库，跑通「改代码 → 热重载」的循环，不用重启启动器。">
+<meta name="theme-color" content="#090d12">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="快速建立开发环境 · 插件文档">
+<meta property="og:description" content="装好 .NET 10 SDK、引对契约库，跑通「改代码 → 热重载」的循环，不用重启启动器。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="../assets/img/app-icon-tile.png">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#docMain">跳到正文</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" id="docSide">
+    <a class="side-brand" href="../index.html" aria-label="返回 Mofumofu 官网">
+      <img src="../assets/img/app-icon.png" alt="" width="36" height="36" decoding="async">
+      <span class="side-brand-t"><b>Mofumofu</b><i>PLUGIN DEV DOCS</i></span>
+    </a>
+    <nav class="dn-list" aria-label="文档目录">
+<div class="dn-group"><div class="dn-label">起点</div>
+<a class="dn-link" href="index.html"><span class="dn-num">00</span><span class="dn-text">概览</span></a>
+</div>
+<div class="dn-group"><div class="dn-label">八章指南</div>
+<a class="dn-link active" href="01-setup.html" aria-current="page"><span class="dn-num">01</span><span class="dn-text">开发环境</span></a>
+<a class="dn-link" href="02-first-plugin.html"><span class="dn-num">02</span><span class="dn-text">第一个插件</span></a>
+<a class="dn-link" href="03-api.html"><span class="dn-num">03</span><span class="dn-text">API 对照表</span></a>
+<a class="dn-link" href="04-packaging.html"><span class="dn-num">04</span><span class="dn-text">打包与发布</span></a>
+<a class="dn-link" href="05-mirror.html"><span class="dn-num">05</span><span class="dn-text">仓库镜像</span></a>
+<a class="dn-link" href="06-ui.html"><span class="dn-num">06</span><span class="dn-text">UI 扩展</span></a>
+<a class="dn-link" href="07-download.html"><span class="dn-num">07</span><span class="dn-text">下载与实例</span></a>
+<a class="dn-link" href="08-hooks.html"><span class="dn-num">08</span><span class="dn-text">钩子</span></a>
+</div></nav>
+    <div class="side-foot">
+      <a class="side-back" href="../index.html">← 返回官网</a>
+      <div class="side-meta">API 1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <main class="doc-main" id="docMain" tabindex="-1">
+    <header class="doc-top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开目录" aria-expanded="false" aria-controls="docSide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="doc-crumb"><a href="index.html">文档</a><i>/</i><b>开发环境</b></div>
+      <div class="doc-top-tools">
+        <span class="api-badge">API 1.0.0</span>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <article class="doc-body">
+      <div class="doc-eyebrow"><span>CHAPTER 01 / SETUP</span><i>01</i></div>
+      <h1 class="doc-title">快速建立开发环境</h1>
+      <p class="doc-lead">装好 .NET 10 SDK、引对契约库，跑通「改代码 → 热重载」的循环，不用重启启动器。</p>
+      <p>本章带你从零搭好 Mofumofu 插件的开发环境，并跑通"改代码 → 热重载看效果"的循环。</p>
+<h2 id="sec-1">1. 你需要准备什么<a class="anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>依赖</th><th>版本</th><th>说明</th></tr></thead><tbody><tr><td>.NET SDK</td><td>10.0 或更高</td><td><code>dotnet --version</code> 能看到 10.x 即可</td></tr><tr><td>IDE</td><td>Rider / VS2026 / VSCode</td><td>随意，能打开 .slnx 就行</td></tr><tr><td>Mofumofu 源码</td><td>main 分支</td><td><code>git clone https://github.com/redstore-noob/Mofumofu</code></td></tr></tbody></table></div>
+<p>不需要安装 Avalonia 模板——插件就是普通类库项目，用 <code>dotnet new classlib</code> 起手即可。</p>
+<h2 id="sec-2">2. 认识解决方案<a class="anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">CODE</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code>Mofumofu/
+├── Mofumofu.ExtensionAPI/        ← 插件 API 契约库（你唯一需要引用的项目）
+├── Mofumofu.Extension.Example/   ← 官方示例插件（圆形时钟，可当模板抄）
+├── Mofumofu.Launcher/            ← 启动器本体（宿主，跑起来用的）
+├── MofuCore/                     ← 启动器内核（插件不直接引用）
+└── NekoSolo/                     ← 单包安装器（与插件开发无关）</code></pre></figure>
+<p><strong>插件只引用 <code>Mofumofu.ExtensionAPI</code>，不要引用启动器本体或 MofuCore。</strong> 契约库里已经带好了 <code>Avalonia 12.1.4</code> 的编译期引用（<code>ExcludeAssets="runtime"</code>）， 也就是说你写界面用的 <code>Control</code>、<code>TextBlock</code> 等类型由宿主在运行时提供—— 你的插件 DLL 里不会打包 Avalonia，几十 KB 就是全部体积。</p>
+<h2 id="sec-3">3. 插件项目模板<a class="anchor" href="#sec-3" aria-label="本节链接">#</a></h2>
+<p>新建一个类库项目，csproj 长这样（也可以直接复制 <code>Mofumofu.Extension.Example</code>）：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">XML</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="t">&lt;Project</span> <span class="a">Sdk</span>=<span class="s">"Microsoft.NET.Sdk"</span>&gt;
+  <span class="t">&lt;PropertyGroup</span>&gt;
+    <span class="t">&lt;TargetFramework</span>&gt;net10.<span class="n">0</span><span class="t">&lt;/TargetFramework</span>&gt;
+    <span class="t">&lt;ImplicitUsings</span>&gt;enable<span class="t">&lt;/ImplicitUsings</span>&gt;
+    <span class="t">&lt;Nullable</span>&gt;enable<span class="t">&lt;/Nullable</span>&gt;
+  <span class="t">&lt;/PropertyGroup</span>&gt;
+  <span class="t">&lt;ItemGroup</span>&gt;
+    <span class="t">&lt;PackageReference</span> <span class="a">Include</span>=<span class="s">"Avalonia"</span> <span class="a">Version</span>=<span class="s">"12.1.4"</span> <span class="a">ExcludeAssets</span>=<span class="s">"runtime"</span> /&gt;
+  <span class="t">&lt;/ItemGroup</span>&gt;
+  <span class="t">&lt;ItemGroup</span>&gt;
+    <span class="t">&lt;ProjectReference</span> <span class="a">Include</span>=<span class="s">"..\Mofumofu.ExtensionAPI\Mofumofu.ExtensionAPI.csproj"</span> /&gt;
+  <span class="t">&lt;/ItemGroup</span>&gt;
+<span class="t">&lt;/Project</span>&gt;</code></pre></figure>
+<blockquote><code>ExcludeAssets="runtime"</code> 是关键：它保证 Avalonia 的 DLL 不会被复制进你的插件输出目录。 运行时宿主会和插件共享同一份 Avalonia，类型不会分裂。</blockquote>
+<h2 id="sec-4">4. 插件放在哪里、怎么调试<a class="anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
+<p>启动器是<strong>便携式</strong>布局，插件目录在程序目录旁边：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">CODE</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code>（启动器所在目录）/
+└── Mofumofu/
+    ├── config/     settings.yaml 等配置
+    ├── plugins/    ← 插件目录
+    │   └── my-plugin/
+    │       ├── plugin.yaml     ← 开发态清单（名字随意，见第二章）
+    │       └── MyPlugin.dll    ← 编译产物（DLL 名不限，打包发布时才改名 extension.dll）
+    └── logs/       plugins.log 插件日志</code></pre></figure>
+<p><strong>推荐调试循环</strong>：</p>
+<ol>
+<li><code>dotnet build -c Debug</code> 你的插件项目</li>
+<li>把输出 DLL 复制到 <code>Mofumofu/plugins/my-plugin/</code></li>
+<li>启动器里打开 插件 页，点右上角<strong>重载按钮</strong>——插件热加载，不用重启启动器</li>
+<li>改代码 → 重新 build → 再点重载，循环往复</li>
+</ol>
+<p>日志在 <code>Mofumofu/logs/plugins.log</code>，<code>context.Log(...)</code> 写的内容和宿主的装卸记录都在里面。</p>
+<h2 id="sec-5">5. 热加载的边界（重要）<a class="anchor" href="#sec-5" aria-label="本节链接">#</a></h2>
+<p>插件运行在<strong>可回收的 AssemblyLoadContext</strong> 里，停用/卸载/重载时宿主会：</p>
+<ul>
+<li>撤销插件注册过的一切（页面、组件、样式、壁纸接管……都通过注册时返回的 <code>IDisposable</code>）</li>
+<li>卸载插件的程序集，<strong>尽力</strong>让它被垃圾回收</li>
+</ul>
+<p>所以插件作者要遵守两条纪律，否则旧版本可能滞留到重启：</p>
+<ul>
+<li><strong>控件里别起停不下来的后台线程/定时器</strong>。如果必须用 <code>DispatcherTimer</code>， 请像示例时钟一样在 <code>DetachedFromVisualTree</code> 里停掉它</li>
+<li>别把插件类型挂进静态缓存（比如订阅别人的静态事件不退订）</li>
+</ul>
+<p>就算违反了也不会崩——宿主会提示"该插件的旧版本将在重启启动器后完全释放"， 但热重载就会退化成"重启才生效"，调试体验变差。</p>
+<h2 id="sec-6">6. 常见问题<a class="anchor" href="#sec-6" aria-label="本节链接">#</a></h2>
+<ul>
+<li><strong>Q：编译报找不到 Avalonia 类型？</strong> A：检查 csproj 是否加了 <code>ExcludeAssets="runtime"</code> 的 Avalonia 引用，以及目标框架是不是 <code>net10.0</code>。</li>
+<li><strong>Q：插件页显示"不兼容"？</strong> A：清单里的 <code>apiVersion</code> 高于宿主支持的版本会拒绝加载，见第三章的版本约定。</li>
+<li><strong>Q：调用 API 抛 <code>PluginPermissionException</code>？</strong> A：在清单 <code>permissions:</code> 里声明对应权限区，且玩家没在插件页把它关掉。权限区表见第三章。</li>
+</ul>
+      <nav class="doc-pager" aria-label="章节切换"><a class="pg prev" href="index.html"><span class="pg-dir">← 上一章</span><span class="pg-t">概览</span></a><a class="pg next" href="02-first-plugin.html"><span class="pg-dir">下一章 →</span><span class="pg-t">第一个插件</span></a></nav>
+      <footer class="doc-foot">
+        <div>本页内容来自启动器仓库 <code>docs/Extension_Guide</code></div>
+        <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+      </footer>
+    </article>
+  </main>
+
+  <aside class="doc-toc" aria-label="本页目录"><div class="toc-label">本页目录</div><ul class="toc-list"><li><a href="#sec-1" data-toc="sec-1">1. 你需要准备什么</a></li><li><a href="#sec-2" data-toc="sec-2">2. 认识解决方案</a></li><li><a href="#sec-3" data-toc="sec-3">3. 插件项目模板</a></li><li><a href="#sec-4" data-toc="sec-4">4. 插件放在哪里、怎么调试</a></li><li><a href="#sec-5" data-toc="sec-5">5. 热加载的边界（重要）</a></li><li><a href="#sec-6" data-toc="sec-6">6. 常见问题</a></li></ul></aside>
+</div>
+
+<button class="nav-scrim" id="navScrim" aria-label="关闭目录" tabindex="-1"></button>
+<script src="assets/docs.js"></script>
+</body>
+</html>

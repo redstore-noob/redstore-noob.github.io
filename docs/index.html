@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>插件开发指南 · Mofumofu 插件文档</title>
+<meta name="description" content="这是启动器插件系统的完整开发文档：环境搭建、第一个插件、API 速查、UI 扩展与启动钩子，八章按顺序读一遍就能上手。">
+<meta name="theme-color" content="#090d12">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="插件开发指南 · 插件文档">
+<meta property="og:description" content="这是启动器插件系统的完整开发文档：环境搭建、第一个插件、API 速查、UI 扩展与启动钩子，八章按顺序读一遍就能上手。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="../assets/img/app-icon-tile.png">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#docMain">跳到正文</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" id="docSide">
+    <a class="side-brand" href="../index.html" aria-label="返回 Mofumofu 官网">
+      <img src="../assets/img/app-icon.png" alt="" width="36" height="36" decoding="async">
+      <span class="side-brand-t"><b>Mofumofu</b><i>PLUGIN DEV DOCS</i></span>
+    </a>
+    <nav class="dn-list" aria-label="文档目录">
+<div class="dn-group"><div class="dn-label">起点</div>
+<a class="dn-link active" href="index.html" aria-current="page"><span class="dn-num">00</span><span class="dn-text">概览</span></a>
+</div>
+<div class="dn-group"><div class="dn-label">八章指南</div>
+<a class="dn-link" href="01-setup.html"><span class="dn-num">01</span><span class="dn-text">开发环境</span></a>
+<a class="dn-link" href="02-first-plugin.html"><span class="dn-num">02</span><span class="dn-text">第一个插件</span></a>
+<a class="dn-link" href="03-api.html"><span class="dn-num">03</span><span class="dn-text">API 对照表</span></a>
+<a class="dn-link" href="04-packaging.html"><span class="dn-num">04</span><span class="dn-text">打包与发布</span></a>
+<a class="dn-link" href="05-mirror.html"><span class="dn-num">05</span><span class="dn-text">仓库镜像</span></a>
+<a class="dn-link" href="06-ui.html"><span class="dn-num">06</span><span class="dn-text">UI 扩展</span></a>
+<a class="dn-link" href="07-download.html"><span class="dn-num">07</span><span class="dn-text">下载与实例</span></a>
+<a class="dn-link" href="08-hooks.html"><span class="dn-num">08</span><span class="dn-text">钩子</span></a>
+</div></nav>
+    <div class="side-foot">
+      <a class="side-back" href="../index.html">← 返回官网</a>
+      <div class="side-meta">API 1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <main class="doc-main" id="docMain" tabindex="-1">
+    <header class="doc-top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开目录" aria-expanded="false" aria-controls="docSide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="doc-crumb"><a href="index.html">文档</a><i>/</i><b>概览</b></div>
+      <div class="doc-top-tools">
+        <span class="api-badge">API 1.0.0</span>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <article class="doc-body">
+      <div class="doc-eyebrow"><span>OVERVIEW</span><i>00</i></div>
+      <h1 class="doc-title">插件开发指南</h1>
+      <p class="doc-lead">这是启动器插件系统的完整开发文档：环境搭建、第一个插件、API 速查、UI 扩展与启动钩子，八章按顺序读一遍就能上手。</p>
+      <blockquote>插件API由我设计，但文档可能有部分AI参与，如果您觉得有不妥之处，请提交ISSUE，我将尽我能力进行完善。</blockquote>
+<p>插件系统一览：插件是 .NET 类库（实现 <code>IMofuPlugin</code>），打包成 <code>.nekoex</code> 安装，与启动器同进程运行。 能做什么：桌面小组件、页面注入、任务栏/托盘常驻、主题与样式、实例与资源下载、启动钩子……全部能力见 <a href="03-api.html">第三章 API 对照表</a>。</p>
+<h2 id="sec-1">章节目录<a class="anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>章节</th><th>类型</th><th>内容</th></tr></thead><tbody><tr><td><a href="01-setup.html">第一章 开发环境</a></td><td>教程</td><td>装 SDK、建插件项目模板、认识目录结构、热重载调试循环</td></tr><tr><td><a href="02-first-plugin.html">第二章 第一个插件</a></td><td>教程</td><td>手把手写一个圆形时钟：Init → 组件 → 清单 → 打包 .nekoex → 安装</td></tr><tr><td><a href="03-api.html">第三章 API 对照表</a></td><td><strong>参考</strong></td><td>全部接口的签名 / 所需权限 / 宿主行为速查（开发时开着当字典用）</td></tr><tr><td><a href="04-packaging.html">第四章 打包</a></td><td>说明</td><td>.nekoex 包内结构：info.yaml / description.md / extension.dll / icon.png</td></tr><tr><td><a href="05-mirror.html">第五章 仓库镜像</a></td><td>说明</td><td>通过 GitHub Releases 实现在线安装与更新</td></tr><tr><td><a href="06-ui.html">第六章 UI 扩展</a></td><td>指南</td><td>任务栏托盘 / 桌面组件 / 页面注入 / 主题跟随 / 样式与主题库</td></tr><tr><td><a href="07-download.html">第七章 下载与实例</a></td><td>指南</td><td>资源搜索安装 / 带加载器装实例 / Java 运行时 / mods 管理</td></tr><tr><td><a href="08-hooks.html">第八章 钩子</a></td><td>指南</td><td>启动钩子与下载任务钩子的写法、宿主策略、钩子 vs 事件选型</td></tr></tbody></table></div>
+<h2 id="sec-2">按目标找章节<a class="anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>我想……</th><th>去哪</th></tr></thead><tbody><tr><td>从零跑通第一个插件</td><td><a href="01-setup.html">第一章</a> → <a href="02-first-plugin.html">第二章</a></td></tr><tr><td>查某个方法 / 权限 / record 字段</td><td><a href="03-api.html">第三章</a>（Ctrl+F 搜）</td></tr><tr><td>往任务栏 / 托盘 / 桌面 / 页面加东西</td><td><a href="06-ui.html">第六章 UI 扩展</a></td></tr><tr><td>让插件跟随主题变色 / 换全局主题</td><td><a href="06-ui.html">第六章</a> 第 5、6 节</td></tr><tr><td>下载模组 / 装带加载器的实例 / 装 Java / 管理 mods</td><td><a href="07-download.html">第七章 下载与实例</a></td></tr><tr><td>在启动前后插手游戏启动、统计游玩时长</td><td><a href="08-hooks.html">第八章 钩子</a></td></tr><tr><td>按编号查询 / 取消下载任务</td><td><a href="08-hooks.html">第八章</a> 第 2 节 + 第三章 <code>IDownloadAction</code></td></tr><tr><td>打包发布 / 上架在线商店</td><td><a href="04-packaging.html">第四章</a> → <a href="05-mirror.html">第五章</a></td></tr></tbody></table></div>
+<h2 id="sec-3">按插件类型定制路线<a class="anchor" href="#sec-3" aria-label="本节链接">#</a></h2>
+<p>插件清单里的 <code>ExtensionType</code>（<code>PluginTypeEnum</code>）决定你的插件在启动器里亮什么标签。 六种类型各有最合适的能力组合与章节路线，对号入座喵：</p>
+<div class="table-wrap"><table><thead><tr><th>类型标签</th><th>典型作品</th><th>必用能力域</th><th>推荐路线</th></tr></thead><tbody><tr><td><strong>Tool</strong> 工具</td><td>圆形时钟、下载管理器</td><td><code>Widget</code> <code>Taskbar</code> <code>SystemTray</code></td><td><a href="01-setup.html">1</a> → <a href="02-first-plugin.html">2</a> → <a href="03-api.html">3 章 UI 域</a> + <a href="06-ui.html">6.UI 扩展</a> → <a href="04-packaging.html">4</a></td></tr><tr><td><strong>Theme</strong> 主题美化</td><td>Material 换肤、暗色增强</td><td><code>Style</code> <code>Theme</code> <code>Wallpaper</code></td><td><a href="01-setup.html">1</a> → <a href="02-first-plugin.html">2</a> → <a href="03-api.html">3 章</a> + <a href="06-ui.html">6.UI 扩展</a> 第 5、6 节 → <a href="04-packaging.html">4</a></td></tr><tr><td><strong>General</strong> 通用扩展</td><td>模组市场、实例管理器</td><td><code>ResourceDownload</code> <code>InstanceAction</code> <code>Downloads</code></td><td><a href="01-setup.html">1</a> → <a href="02-first-plugin.html">2</a> → <a href="03-api.html">3 章</a> + <a href="07-download.html">7.下载与实例</a> → <a href="04-packaging.html">4</a></td></tr><tr><td><strong>Optimize</strong> 优化</td><td>JVM 参数调优、启动加速</td><td><code>ILaunchAction.LaunchingAsync</code>（注入参数）</td><td><a href="01-setup.html">1</a> → <a href="02-first-plugin.html">2</a> → <a href="03-api.html">3 章</a> + <a href="08-hooks.html">8.钩子</a> → <a href="04-packaging.html">4</a></td></tr><tr><td><strong>Patch</strong> 补丁</td><td>前置模组检查、启动拦截</td><td><code>ILaunchAction</code>（Cancel）+ <code>InstanceAction</code></td><td><a href="01-setup.html">1</a> → <a href="02-first-plugin.html">2</a> → <a href="03-api.html">3 章</a> + <a href="07-download.html">7.下载与实例</a> + <a href="08-hooks.html">8.钩子</a> → <a href="04-packaging.html">4</a></td></tr><tr><td><strong>Function</strong> 功能扩展</td><td>游戏时长统计、服务器监控</td><td><code>Game</code> 事件 + <code>IDownloadAction</code> 钩子 + <code>Taskbar</code></td><td><a href="01-setup.html">1</a> → <a href="02-first-plugin.html">2</a> → <a href="03-api.html">3 章</a> + <a href="06-ui.html">6.UI 扩展</a> + <a href="08-hooks.html">8.钩子</a> → <a href="04-packaging.html">4</a></td></tr></tbody></table></div>
+<blockquote>所有类型通用的三章：<strong><a href="01-setup.html">第一章</a>（环境）→ <a href="03-api.html">第三章</a>（当字典）→ <a href="04-packaging.html">第四章</a>（发布）</strong>； 想上架在线商店的再加 <a href="05-mirror.html">第五章</a>。</blockquote>
+<h2 id="sec-4">文档规则<a class="anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
+<ul>
+<li><strong>第三章是唯一的 API 速查表</strong>，只放签名 / 权限 / 行为表格；场景类教程放"按目标找章节"指向的位置</li>
+<li>第三章体量超过 300 行时按域拆分（3-UI / 3-下载 / 3-钩子），拆分前本目录会先更新</li>
+<li>数据 record 与枚举统一放在契约库 <code>Data/</code> 目录，文档统一在第三章第 8 节索引</li>
+<li>新增 API 的规矩：<strong>先改第三章，再合并代码</strong>——文档欠账会直接挡住作者的落地</li>
+</ul>
+<h2 id="sec-5">写插件前必读三条<a class="anchor" href="#sec-5" aria-label="本节链接">#</a></h2>
+<ol>
+<li>插件与启动器<strong>同进程</strong>运行：只安装可信来源的插件，权限开关是知情同意机制不是沙箱</li>
+<li>清单里<strong>声明权限</strong>（<code>permissions:</code>），没声明的 API 调用会抛 <code>PluginPermissionException</code></li>
+<li>别在控件里起停不下来的后台线程 / 定时器——热卸载需要配合（详见<a href="01-setup.html">第一章第 5 节</a>）</li>
+</ol>
+      <nav class="doc-pager" aria-label="章节切换"><span></span><a class="pg next" href="01-setup.html"><span class="pg-dir">下一章 →</span><span class="pg-t">开发环境</span></a></nav>
+      <footer class="doc-foot">
+        <div>本页内容来自启动器仓库 <code>docs/Extension_Guide</code></div>
+        <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+      </footer>
+    </article>
+  </main>
+
+  <aside class="doc-toc" aria-label="本页目录"><div class="toc-label">本页目录</div><ul class="toc-list"><li><a href="#sec-1" data-toc="sec-1">章节目录</a></li><li><a href="#sec-2" data-toc="sec-2">按目标找章节</a></li><li><a href="#sec-3" data-toc="sec-3">按插件类型定制路线</a></li><li><a href="#sec-4" data-toc="sec-4">文档规则</a></li><li><a href="#sec-5" data-toc="sec-5">写插件前必读三条</a></li></ul></aside>
+</div>
+
+<button class="nav-scrim" id="navScrim" aria-label="关闭目录" tabindex="-1"></button>
+<script src="assets/docs.js"></script>
+</body>
+</html>

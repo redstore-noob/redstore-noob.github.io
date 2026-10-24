@@ -73,5 +73,5 @@ write("architecture.html", page(
     body,
     tags=[("Avalonia 12", "accent"), (".NET 10", ""), ("跨平台", ""), ("内核零 UI 引用", "")],
     prev=("index.html", "首页"),
-    next_=("download.html", "下载大厅"),
+    next_=("docs/index.html", "插件文档"),
 ))

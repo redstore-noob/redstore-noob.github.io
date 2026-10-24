@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API 对照表 · Mofumofu 插件文档</title>
+<meta name="description" content="全部接口的签名、所需权限与宿主行为。开发时开着当字典用，Ctrl+F 直接搜。">
+<meta name="theme-color" content="#090d12">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="API 对照表 · 插件文档">
+<meta property="og:description" content="全部接口的签名、所需权限与宿主行为。开发时开着当字典用，Ctrl+F 直接搜。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="../assets/img/app-icon-tile.png">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#docMain">跳到正文</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" id="docSide">
+    <a class="side-brand" href="../index.html" aria-label="返回 Mofumofu 官网">
+      <img src="../assets/img/app-icon.png" alt="" width="36" height="36" decoding="async">
+      <span class="side-brand-t"><b>Mofumofu</b><i>PLUGIN DEV DOCS</i></span>
+    </a>
+    <nav class="dn-list" aria-label="文档目录">
+<div class="dn-group"><div class="dn-label">起点</div>
+<a class="dn-link" href="index.html"><span class="dn-num">00</span><span class="dn-text">概览</span></a>
+</div>
+<div class="dn-group"><div class="dn-label">八章指南</div>
+<a class="dn-link" href="01-setup.html"><span class="dn-num">01</span><span class="dn-text">开发环境</span></a>
+<a class="dn-link" href="02-first-plugin.html"><span class="dn-num">02</span><span class="dn-text">第一个插件</span></a>
+<a class="dn-link active" href="03-api.html" aria-current="page"><span class="dn-num">03</span><span class="dn-text">API 对照表</span></a>
+<a class="dn-link" href="04-packaging.html"><span class="dn-num">04</span><span class="dn-text">打包与发布</span></a>
+<a class="dn-link" href="05-mirror.html"><span class="dn-num">05</span><span class="dn-text">仓库镜像</span></a>
+<a class="dn-link" href="06-ui.html"><span class="dn-num">06</span><span class="dn-text">UI 扩展</span></a>
+<a class="dn-link" href="07-download.html"><span class="dn-num">07</span><span class="dn-text">下载与实例</span></a>
+<a class="dn-link" href="08-hooks.html"><span class="dn-num">08</span><span class="dn-text">钩子</span></a>
+</div></nav>
+    <div class="side-foot">
+      <a class="side-back" href="../index.html">← 返回官网</a>
+      <div class="side-meta">API 1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <main class="doc-main" id="docMain" tabindex="-1">
+    <header class="doc-top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开目录" aria-expanded="false" aria-controls="docSide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="doc-crumb"><a href="index.html">文档</a><i>/</i><b>API 对照表</b></div>
+      <div class="doc-top-tools">
+        <span class="api-badge">API 1.0.0</span>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <article class="doc-body">
+      <div class="doc-eyebrow"><span>CHAPTER 03 / REFERENCE</span><i>03</i></div>
+      <h1 class="doc-title">API 对照表</h1>
+      <p class="doc-lead">全部接口的签名、所需权限与宿主行为。开发时开着当字典用，Ctrl+F 直接搜。</p>
+      <p>契约库命名空间：<code>Mofumofu.ExtensionAPI</code>。子域：<code>UI</code>（界面能力）、<code>Game</code>（游戏/实例）、<code>Downloads</code>（实例与资源下载）、<code>Java</code>（运行时）、<code>Actions</code>（钩子）、<code>Data</code>（全部枚举与数据 record）、<code>Tools</code>（杂项）。</p>
+<p><strong>通用约定</strong></p>
+<ul>
+<li>网络与磁盘操作一律 <code>Task</code>/<code>Task&lt;T&gt;</code>；失败<strong>直接抛异常</strong>（消息面向玩家可读），列表查询不返回 null</li>
+<li>会撤销的注册一律返回 <code>IDisposable</code>：插件停用/卸载时宿主代为 Dispose，插件通常不用自己管</li>
+<li>权限不足抛 <code>PluginPermissionException</code>（<code>Permission</code> 属性 = 所需权限区名）</li>
+<li>UI 相关调用宿主已做线程调度，插件在任意线程调都可以；事件/钩子回调统一在 UI 线程</li>
+<li>数据 record 全部在 <code>Mofumofu.ExtensionAPI.Data</code>，按"数据进 Data/、接口留在域目录"的规矩摆放</li>
+</ul>
+<h2 id="sec-1">0. 插件入口 <code>IMofuPlugin</code><a class="anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>说明</th></tr></thead><tbody><tr><td><code>string Name</code></td><td>显示名，玩家可见</td></tr><tr><td><code>Version Version</code></td><td>插件版本</td></tr><tr><td><code>PluginTypeEnum ExtensionType</code></td><td>分类：Tool / Theme / General / Optimize / Patch / Function</td></tr><tr><td><code>string Description</code></td><td>一句话简介</td></tr><tr><td><code>Boolean Init(IPluginContext context)</code></td><td>加载时调用一次；返回 false = 拒绝加载；抛异常 = 插件页显示"异常"和原因</td></tr></tbody></table></div>
+<h2 id="sec-2">1. 权限区总表<a class="anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<p>清单 <code>permissions:</code> 里声明（逗号分隔），玩家在 插件页 → 权限 标签逐项开关（即时生效、持久化）。未声明而调用 → 抛 <code>PluginPermissionException</code>。</p>
+<div class="table-wrap"><table><thead><tr><th>权限区</th><th>管辖的能力</th></tr></thead><tbody><tr><td><code>notify</code></td><td><code>Popup.Toast</code> / <code>Popup.Dialog</code>、<code>SystemTray.ShowNotification</code></td></tr><tr><td><code>widget</code></td><td><code>IWidgetAdd</code> 全部方法、<code>Taskbar.AddWidget</code>、<code>SystemTray.AddMenuItem</code></td></tr><tr><td><code>network</code></td><td><code>Downloads.DownloadAsync</code>、<code>ResourceDownload.DownloadAsync</code>、<code>Java.InstallAsync</code>、<code>DownloadAction.Cancel</code> / <code>SetPaused</code>、商店安装</td></tr><tr><td><code>networkReadonly</code></td><td><code>Downloads.GetVersionsAsync</code> / <code>GetLoaderVersionsAsync</code>、<code>ResourceDownload.SearchAsync</code> / <code>GetFilesAsync</code>、<code>Java.GetAvailableAsync</code>、<code>DownloadAction.GetTaskAsync</code> 与完成/失败通知</td></tr><tr><td><code>storage</code></td><td><code>IConfig.ConfigAdd</code> / <code>ConfigRemove</code></td></tr><tr><td><code>readonly</code></td><td><code>IGameLaunch</code> 查询与事件订阅、<code>Java.GetInstalledAsync</code>、<code>InstanceAction.GetModsAsync</code></td></tr><tr><td><code>instanceWrite</code></td><td><code>InstanceAction.SetModEnabled</code> / <code>DeleteMod</code>（删除不可恢复）</td></tr><tr><td><code>serverStatus</code></td><td>预留（<code>IServerStatus</code> 未开放）</td></tr></tbody></table></div>
+<h2 id="sec-3">2. 组合根 <code>IPluginContext</code>（Init 的参数，能力唯一通道）<a class="anchor" href="#sec-3" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>属性</th><th>类型</th><th>一句话</th></tr></thead><tbody><tr><td><code>Popup</code></td><td><code>IPopup</code></td><td>Toast / 弹窗</td></tr><tr><td><code>Pages</code></td><td><code>IPageContentHost</code></td><td>往已有页面注入横幅/页脚/悬浮层</td></tr><tr><td><code>PageRegister</code></td><td><code>IPageRegister</code></td><td>注册新导航页（开始菜单）</td></tr><tr><td><code>Widget</code></td><td><code>IWidgetAdd</code></td><td>桌面小组件</td></tr><tr><td><code>Taskbar</code></td><td><code>ITaskbarTray</code></td><td>启动器任务栏右侧图标</td></tr><tr><td><code>SystemTray</code></td><td><code>ISystemTray</code></td><td>系统托盘菜单项 + 气泡通知</td></tr><tr><td><code>Wallpaper</code></td><td><code>IWallpaperEdit</code></td><td>壁纸接管</td></tr><tr><td><code>Style</code></td><td><code>IStyleLoad</code></td><td>axaml 样式 / 主题库合入全局</td></tr><tr><td><code>Theme</code></td><td><code>ITheme</code></td><td>主题色 / 明暗模式读取 + 变化通知</td></tr><tr><td><code>Game</code></td><td><code>IGameLaunch</code></td><td>实例查询、启动、游戏事件</td></tr><tr><td><code>InstanceAction</code></td><td><code>IInstanceAction</code></td><td>实例 mods 启停 / 删除</td></tr><tr><td><code>Downloads</code></td><td><code>IInstanceDownload</code></td><td>版本清单、原版/加载器实例安装</td></tr><tr><td><code>ResourceDownload</code></td><td><code>IResourceDownload</code></td><td>Modrinth 模组/光影/资源包搜索与安装</td></tr><tr><td><code>Java</code></td><td><code>IJavaDownload</code></td><td>Java 运行时清单、安装、本机检测</td></tr><tr><td><code>DownloadAction</code></td><td><code>IDownloadAction</code></td><td>按 4 位编号操作下载任务 + 完成/失败通知</td></tr><tr><td><code>Config</code></td><td><code>IConfig</code></td><td>插件独立配置文件</td></tr><tr><td><code>Log(string)</code></td><td>方法</td><td>写 <code>Mofumofu/logs/plugins.log</code></td></tr><tr><td><code>CreateIcon(kind, size)</code> / <code>HasIcon</code> / <code>IconKinds</code></td><td>方法/属性</td><td>宿主内置 IconPark 图标工厂</td></tr></tbody></table></div>
+<h2 id="sec-4">3. UI 域（<code>...UI</code>）<a class="anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
+<h3>IPopup</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>Toast(string message)</code></td><td>notify</td><td>左下角轻提示（自动带插件名前缀）</td></tr><tr><td><code>Dialog(Control content, string title)</code></td><td>notify</td><td>居中弹窗，内容自建</td></tr></tbody></table></div>
+<h3>IPageContentHost</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>行为</th></tr></thead><tbody><tr><td><code>IDisposable Add(string pageId, PageSlot slot, Func&lt;Control&gt; factory, int order = 0)</code></td><td><code>pageId</code> 如 <code>"home"</code>/<code>"download"</code>，<code>"*"</code> = 所有页面；<code>PageSlot</code> = Banner / Footer / Overlay（悬浮不占位）；每次进页面重建，工厂必须返回新控件</td></tr></tbody></table></div>
+<h3>IPageRegister</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>行为</th></tr></thead><tbody><tr><td><code>IDisposable RegisterPage(string pageName, Func&lt;Control&gt; createPage, Control icon)</code></td><td>出现在左下角开始菜单；icon 为任意控件</td></tr></tbody></table></div>
+<h3>IWidgetAdd</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>IDisposable WidgetAdd(string id, Control widget)</code></td><td>widget</td><td>注册进桌面组件盒（id 自动加插件前缀）</td></tr><tr><td><code>WidgetTitleEdit(id, newTitle)</code></td><td>widget</td><td>改标题</td></tr><tr><td><code>WidgetEdit(id, newWidget)</code></td><td>widget</td><td>换内容</td></tr></tbody></table></div>
+<h3>ITaskbarTray（任务栏右侧）</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>IDisposable AddWidget(string id, Control icon, Action click)</code></td><td>widget</td><td>图标出现在版本选择框左侧，样式与任务栏一致；点击回调里自己决定弹 <code>Popup.Dialog</code> 还是 <code>NavigateTo</code>（二选一或组合）</td></tr><tr><td><code>void NavigateTo(string pageId)</code></td><td>无</td><td>跳内置页或插件注册页</td></tr></tbody></table></div>
+<h3>ISystemTray（系统托盘常驻）</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>IDisposable AddMenuItem(string label, Action click)</code></td><td>widget</td><td>托盘菜单「退出」之前插入；启动器缩到托盘时依然可达</td></tr><tr><td><code>void ShowNotification(string title, string message)</code></td><td>notify</td><td>托盘气泡（平台不支持时回退启动器 Toast）</td></tr></tbody></table></div>
+<h3>IWallpaperEdit</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>行为</th></tr></thead><tbody><tr><td><code>IDisposable WallpaperTakeOver(Control wallpaperContent)</code></td><td>接管背景层，内置壁纸停用；同时只有一个插件生效，后到者顶掉先到者；Dispose 恢复</td></tr></tbody></table></div>
+<h3>IStyleLoad</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>行为</th></tr></thead><tbody><tr><td><code>StyleEdit(Stream xamlStream)</code></td><td>DLL 内嵌 axaml 资源流（根节点须为 <code>&lt;Styles&gt;</code>）</td></tr><tr><td><code>StyleEdit(string xamlPath)</code></td><td>插件目录散装 axaml（相对路径），开发期随改随看</td></tr><tr><td><code>StyleEdit(IStyle styles)</code></td><td><strong>主题库标准入口</strong>：插件自带 Material.Avalonia 等 DLL，实例化其主题类直接合入全局</td></tr></tbody></table></div>
+<blockquote>主题库注意：宿主会把插件随包的依赖 DLL 装入宿主默认 ALC 让 <code>avares://</code> 可解析——这些 DLL 会被钉住，<strong>用主题库的插件可能要重启启动器才能完全卸载</strong>。资源键请加插件 Id 前缀避免互相覆盖。主题库的 Avalonia 版本必须与宿主一致（当前 12.1.4）。</blockquote>
+<h3>ITheme</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>行为</th></tr></thead><tbody><tr><td><code>string AccentColorHex</code></td><td>当前主题色 <code>#RRGGBB</code>——出 UI 的插件别硬编码颜色</td></tr><tr><td><code>string ThemeMode</code> / <code>bool IsLight</code></td><td><code>"dark"</code> / <code>"light"</code></td></tr><tr><td><code>event Action ThemeChanged</code></td><td>玩家换主题/主题色时触发；停用自动退订</td></tr></tbody></table></div>
+<h2 id="sec-5">4. Game 域（<code>...Game</code>）<a class="anchor" href="#sec-5" aria-label="本节链接">#</a></h2>
+<h3>IGameLaunch</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>GetInstancesAsync(ct)</code></td><td>readonly</td><td>本地实例列表（各游戏目录 versions/ 全部）</td></tr><tr><td><code>GetSelectedInstanceAsync(ct)</code></td><td>readonly</td><td>玩家当前选中实例；未选中 null</td></tr><tr><td><code>LaunchSelectedAsync(ct)</code></td><td>无</td><td>只启动玩家选中的实例（用户意图即授权）；进程启动即返回</td></tr><tr><td><code>bool IsGameRunning</code></td><td>无</td><td>游戏是否运行中</td></tr><tr><td><code>event Action GameLaunched</code></td><td>readonly（订阅时）</td><td>进程启动成功，UI 线程回调</td></tr><tr><td><code>event Action&lt;int&gt; GameExited</code></td><td>readonly（订阅时）</td><td>游戏退出（UI 线程），退出码；手动停止 -1</td></tr></tbody></table></div>
+<h3>IInstanceAction</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>GetModsAsync(instanceId)</code></td><td>readonly</td><td>列出实例 mods/（含停用态）；文件名一律用启用态名字</td></tr><tr><td><code>SetModEnabled(instanceId, fileName, enabled)</code></td><td>instanceWrite</td><td><code>.jar</code> ↔ <code>.jar.disabled</code> 改名</td></tr><tr><td><code>DeleteMod(instanceId, fileName)</code></td><td>instanceWrite</td><td>删除文件，不可恢复</td></tr></tbody></table></div>
+<h2 id="sec-6">5. 下载域（<code>...Downloads</code>）<a class="anchor" href="#sec-6" aria-label="本节链接">#</a></h2>
+<h3>IInstanceDownload</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>GetVersionsAsync(ct)</code></td><td>networkReadonly</td><td>官方版本清单（原版）</td></tr><tr><td><code>GetLoaderVersionsAsync(loader, gameVersion, ct)</code></td><td>networkReadonly</td><td>某游戏版本可用的加载器版本（Fabric / Forge / NeoForge / Quilt）</td></tr><tr><td><code>DownloadAsync(request, progress, ct)</code></td><td>network</td><td>安装实例（原版或带加载器，加载器自动补装原版依赖）；<code>LoaderVersion</code> 传 null = 最新稳定版；返回的 <code>InstanceInfo.Id</code> 是 versions/ 实际目录名</td></tr></tbody></table></div>
+<h3>IResourceDownload（Modrinth；走宿主镜像体系）</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>SearchAsync(query, kind, gameVersion, loader, limit, offset, ct)</code></td><td>networkReadonly</td><td>搜索/浏览；query 空 = 热门浏览</td></tr><tr><td><code>GetFilesAsync(projectId, gameVersion, loader, ct)</code></td><td>networkReadonly</td><td>项目可下载版本列表</td></tr><tr><td><code>DownloadAsync(versionId, kind, instanceId, ..., includeDependencies, progress, ct)</code></td><td>network</td><td>装进实例（mods / shaderpacks / resourcepacks 按种类自动选目录；mod 自动补依赖）</td></tr></tbody></table></div>
+<h3>IJavaDownload</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>SupportedMajorVersions</code></td><td>无</td><td>当前 8 / 11 / 17 / 21 / 25</td></tr><tr><td><code>GetAvailableAsync(ct)</code></td><td>networkReadonly</td><td>Mojang 官方运行时清单</td></tr><tr><td><code>InstallAsync(majorVersion, progress, ct)</code></td><td>network</td><td>装到游戏目录 runtime/，已存在自动跳过；清单没有该主版本返回 null</td></tr><tr><td><code>GetInstalledAsync(ct)</code></td><td>readonly</td><td>本机检测到的全部 Java</td></tr></tbody></table></div>
+<h2 id="sec-7">6. 钩子（<code>...Actions</code>，插件实现的接口）<a class="anchor" href="#sec-7" aria-label="本节链接">#</a></h2>
+<p>钩子与事件的区别：<strong>事件是事后通知，钩子能参与决策</strong>。钩子全部在 UI 线程调用、单个 5 秒超时、抛异常按"不作为"处理并记日志。</p>
+<h3>ILaunchAction（启动过程钩子）</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>行为</th></tr></thead><tbody><tr><td><code>Task&lt;Boolean&gt; LaunchingAsync(ILaunchContext launch)</code></td><td>启动前调用；true = 放行，false / <code>launch.Cancel(reason)</code> = 拦截（原因展示给玩家）；<code>launch.JvmArguments.Add(...)</code> 注入的参数会被采用</td></tr><tr><td><code>GameCrashedHook(string crashedLog)</code></td><td>游戏崩溃退出时调用（带诊断摘要）</td></tr><tr><td><code>GameStoppedHook(GameSessionData session)</code></td><td>正常退出 / 手动停止时调用；<code>session</code> 含 <code>PlayDuration</code>（本次时长）、<code>StartedAt</code>、<code>ExitCode</code> 等；累计时长用 <code>context.Game.GetInstancesAsync</code> 查</td></tr></tbody></table></div>
+<p><code>ILaunchContext</code>：<code>InstanceId</code> / <code>VersionId</code> / <code>GameDirectory</code>（只读事实）+ <code>IList&lt;string&gt; JvmArguments</code>（唯一可写面）+ <code>Cancel(reason)</code>。</p>
+<h3>IDownloadAction（下载任务动作）</h3>
+<div class="table-wrap"><table><thead><tr><th>成员</th><th>权限</th><th>行为</th></tr></thead><tbody><tr><td><code>GetTaskAsync(taskNumber)</code></td><td>networkReadonly</td><td>按 4 位编号查快照；不存在返回 null</td></tr><tr><td><code>Cancel(taskNumber)</code> / <code>SetPaused(taskNumber, paused)</code></td><td>network</td><td>按编号取消（含清理）/ 暂停恢复</td></tr><tr><td><code>DownloadCompletedHook(taskNumber, title)</code></td><td>networkReadonly</td><td>任务完成通知</td></tr><tr><td><code>DownloadFailedHook(taskNumber, title, reason)</code></td><td>networkReadonly</td><td>任务失败通知</td></tr></tbody></table></div>
+<blockquote>任务编号（0001~9999）会话内唯一，<strong>任务结束后回收复用</strong>——不要长期缓存编号。下载页任务卡标题前的 <code>#0007</code> 就是它。</blockquote>
+<h2 id="sec-8">7. 工具域（<code>...Tools</code>）<a class="anchor" href="#sec-8" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>接口</th><th>状态</th><th>说明</th></tr></thead><tbody><tr><td><code>IConfig</code></td><td><code>context.Config</code></td><td><code>ConfigAdd(key, value)</code> / <code>ConfigRemove(key)</code>，存 <code>Mofumofu/plugin/{插件id}/config.yaml</code>，写要 storage 权限</td></tr><tr><td><code>ILogWrite</code> / <code>IMemoryInfo</code> / <code>IServerStatus</code></td><td>未挂载</td><td>预留</td></tr></tbody></table></div>
+<h2 id="sec-9">8. Data 域数据一览（<code>...Data</code>）<a class="anchor" href="#sec-9" aria-label="本节链接">#</a></h2>
+<p><code>PluginTypeEnum</code> · <code>PageSlot</code> · <code>InstanceInfo(Id, Name, GameVersion, Loader, LastPlayed, TotalPlaytime, ModCount, WorldCount, MemoryMb)</code> · <code>ModLoaderType</code> · <code>DownloadableVersionInfo(VersionId, Type, ReleaseTime)</code> · <code>LoaderVersionInfo(Loader, GameVersion, LoaderVersion, IsStable)</code> · <code>InstanceDownloadRequest(VersionId, Loader, LoaderVersion, DisplayName)</code> · <code>InstanceDownloadProgress(Phase, 字节, 文件数)</code> 含 <code>Percent</code> · <code>ResourceKind(Mod/Shader/ResourcePack)</code> · <code>ResourceProject</code> · <code>ResourceFileInfo</code> · <code>ResourceDownloadResult</code> · <code>JavaRuntimeChoice</code> · <code>InstalledJavaInfo</code> · <code>ModFileInfo(FileName, Enabled, SizeBytes)</code> · <code>GameSessionData(InstanceId, InstanceName, GameVersion, StartedAt, PlayDuration, ExitCode, Crashed, CrashLog)</code> · <code>DownloadTaskData(Number, Title, State, Percent, SpeedText, SizeText, CanPause)</code> · <code>DownloadTaskState</code></p>
+<h2 id="sec-10">9. 清单（info.yaml / plugin.yaml）字段<a class="anchor" href="#sec-10" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td><code>id</code></td><td></td><td>唯一 id；<strong>发布商店时约定 = GitHub 仓库名</strong></td></tr><tr><td><code>name</code></td><td></td><td>显示名</td></tr><tr><td><code>version</code></td><td></td><td>版本号</td></tr><tr><td><code>author</code></td><td></td><td>作者</td></tr><tr><td><code>description</code></td><td></td><td>一句话简介（详情页优先展示 description.md）</td></tr><tr><td><code>apiVersion</code></td><td></td><td>所需宿主 API 版本，高于宿主 → "不兼容"（当前 1.0.0）</td></tr><tr><td><code>permissions</code></td><td></td><td>权限区，逗号分隔（如 <code>notify, widget</code>）</td></tr></tbody></table></div>
+<h2 id="sec-11">10. 版本与兼容约定<a class="anchor" href="#sec-11" aria-label="本节链接">#</a></h2>
+<ul>
+<li>宿主当前实现 <strong>API 1.0.0</strong>；清单 <code>apiVersion</code> 高于它 → 拒绝加载并显示"不兼容"</li>
+<li>契约只加不改：新版本宿主对旧插件向后兼容；删除/改名成员会升主版本号</li>
+</ul>
+      <nav class="doc-pager" aria-label="章节切换"><a class="pg prev" href="02-first-plugin.html"><span class="pg-dir">← 上一章</span><span class="pg-t">第一个插件</span></a><a class="pg next" href="04-packaging.html"><span class="pg-dir">下一章 →</span><span class="pg-t">打包与发布</span></a></nav>
+      <footer class="doc-foot">
+        <div>本页内容来自启动器仓库 <code>docs/Extension_Guide</code></div>
+        <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+      </footer>
+    </article>
+  </main>
+
+  <aside class="doc-toc" aria-label="本页目录"><div class="toc-label">本页目录</div><ul class="toc-list"><li><a href="#sec-1" data-toc="sec-1">0. 插件入口 IMofuPlugin</a></li><li><a href="#sec-2" data-toc="sec-2">1. 权限区总表</a></li><li><a href="#sec-3" data-toc="sec-3">2. 组合根 IPluginContext（Init 的参数，能力唯一通道）</a></li><li><a href="#sec-4" data-toc="sec-4">3. UI 域（...UI）</a></li><li><a href="#sec-5" data-toc="sec-5">4. Game 域（...Game）</a></li><li><a href="#sec-6" data-toc="sec-6">5. 下载域（...Downloads）</a></li><li><a href="#sec-7" data-toc="sec-7">6. 钩子（...Actions，插件实现的接口）</a></li><li><a href="#sec-8" data-toc="sec-8">7. 工具域（...Tools）</a></li><li><a href="#sec-9" data-toc="sec-9">8. Data 域数据一览（...Data）</a></li><li><a href="#sec-10" data-toc="sec-10">9. 清单（info.yaml / plugin.yaml）字段</a></li><li><a href="#sec-11" data-toc="sec-11">10. 版本与兼容约定</a></li></ul></aside>
+</div>
+
+<button class="nav-scrim" id="navScrim" aria-label="关闭目录" tabindex="-1"></button>
+<script src="assets/docs.js"></script>
+</body>
+</html>

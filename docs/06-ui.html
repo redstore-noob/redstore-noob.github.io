@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI 扩展 · Mofumofu 插件文档</title>
+<meta name="description" content="任务栏托盘、桌面组件、页面注入、新页面、主题与样式——五个扩展点，全部走 context。">
+<meta name="theme-color" content="#090d12">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mofumofu Launcher">
+<meta property="og:title" content="UI 扩展 · 插件文档">
+<meta property="og:description" content="任务栏托盘、桌面组件、页面注入、新页面、主题与样式——五个扩展点，全部走 context。">
+<meta property="og:image" content="https://redstore-noob.github.io/assets/img/wallpaper.jpg">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/app-icon.png">
+<link rel="apple-touch-icon" href="../assets/img/app-icon-tile.png">
+<link rel="stylesheet" href="assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#docMain">跳到正文</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+<div class="doc-shell">
+  <aside class="doc-side" id="docSide">
+    <a class="side-brand" href="../index.html" aria-label="返回 Mofumofu 官网">
+      <img src="../assets/img/app-icon.png" alt="" width="36" height="36" decoding="async">
+      <span class="side-brand-t"><b>Mofumofu</b><i>PLUGIN DEV DOCS</i></span>
+    </a>
+    <nav class="dn-list" aria-label="文档目录">
+<div class="dn-group"><div class="dn-label">起点</div>
+<a class="dn-link" href="index.html"><span class="dn-num">00</span><span class="dn-text">概览</span></a>
+</div>
+<div class="dn-group"><div class="dn-label">八章指南</div>
+<a class="dn-link" href="01-setup.html"><span class="dn-num">01</span><span class="dn-text">开发环境</span></a>
+<a class="dn-link" href="02-first-plugin.html"><span class="dn-num">02</span><span class="dn-text">第一个插件</span></a>
+<a class="dn-link" href="03-api.html"><span class="dn-num">03</span><span class="dn-text">API 对照表</span></a>
+<a class="dn-link" href="04-packaging.html"><span class="dn-num">04</span><span class="dn-text">打包与发布</span></a>
+<a class="dn-link" href="05-mirror.html"><span class="dn-num">05</span><span class="dn-text">仓库镜像</span></a>
+<a class="dn-link active" href="06-ui.html" aria-current="page"><span class="dn-num">06</span><span class="dn-text">UI 扩展</span></a>
+<a class="dn-link" href="07-download.html"><span class="dn-num">07</span><span class="dn-text">下载与实例</span></a>
+<a class="dn-link" href="08-hooks.html"><span class="dn-num">08</span><span class="dn-text">钩子</span></a>
+</div></nav>
+    <div class="side-foot">
+      <a class="side-back" href="../index.html">← 返回官网</a>
+      <div class="side-meta">API 1.0.0 · .NET 10</div>
+    </div>
+  </aside>
+
+  <main class="doc-main" id="docMain" tabindex="-1">
+    <header class="doc-top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开目录" aria-expanded="false" aria-controls="docSide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="doc-crumb"><a href="index.html">文档</a><i>/</i><b>UI 扩展</b></div>
+      <div class="doc-top-tools">
+        <span class="api-badge">API 1.0.0</span>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <article class="doc-body">
+      <div class="doc-eyebrow"><span>CHAPTER 06 / UI</span><i>06</i></div>
+      <h1 class="doc-title">UI 扩展</h1>
+      <p class="doc-lead">任务栏托盘、桌面组件、页面注入、新页面、主题与样式——五个扩展点，全部走 context。</p>
+      <p>启动器界面的五个扩展点：任务栏托盘、桌面小组件、页面内容注入、导航页面、主题与样式。全部走 <code>IPluginContext</code> 的对应属性，UI 线程调度宿主已代劳。</p>
+<h2 id="sec-1">1. 任务栏托盘：常驻小图标<a class="anchor" href="#sec-1" aria-label="本节链接">#</a></h2>
+<p><code>context.Taskbar</code>（需要 <code>widget</code> 权限）往启动器任务栏右侧（版本选择框左边）加图标，点击行为完全由插件决定：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code>ctx.Taskbar.AddWidget(<span class="s">"clock"</span>, ctx.CreateIcon(<span class="s">"IconClock"</span>, <span class="n">18</span>), () =&gt;
+    ctx.Popup.Dialog(<span class="k">new</span> ClockWidget(), <span class="s">"圆形时钟"</span>));</code></pre></figure>
+<p>点击回调里<strong>弹窗和跳页面二选一或组合</strong>：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code>ctx.Taskbar.AddWidget(<span class="s">"download"</span>, ctx.CreateIcon(<span class="s">"IconDownload"</span>, <span class="n">18</span>), () =&gt;
+{
+    <span class="k">var</span> task = ctx.DownloadAction.GetTaskAsync(<span class="n">42</span>).Result;
+    <span class="k">if</span> (task <span class="k">is</span> { State: Data.DownloadTaskState.Downloading })
+        ctx.Popup.Dialog(BuildProgressView(task), $<span class="s">"任务 #{42}"</span>);
+    <span class="k">else</span>
+        ctx.Taskbar.NavigateTo(<span class="s">"download"</span>);   <span class="c">// 跳宿主下载页</span>
+});</code></pre></figure>
+<blockquote>返回的 <code>IDisposable</code> 撤销句柄在插件停用/卸载时宿主会代为调用（图标自动消失），一般不用自己管。</blockquote>
+<h2 id="sec-2">2. 桌面小组件：进组件盒<a class="anchor" href="#sec-2" aria-label="本节链接">#</a></h2>
+<p><code>context.Widget</code>（需要 <code>widget</code> 权限）把控件注册进桌面组件盒（主页右上角"+"打开），玩家拖出来摆：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code>ctx.Widget.WidgetAdd(<span class="s">"clock"</span>, <span class="k">new</span> ClockWidget());
+<span class="c">// 改标题 / 换内容：</span>
+ctx.Widget.WidgetTitleEdit(<span class="s">"clock"</span>, <span class="s">"桌面时钟"</span>);
+ctx.Widget.WidgetEdit(<span class="s">"clock"</span>, <span class="k">new</span> ClockWidgetV2());</code></pre></figure>
+<p>组件 id 会自动加插件前缀（<code>MyPlugin.clock</code>），无需担心撞名。 把控件做"可卸载友好"的关键一条：<strong>定时器在 <code>DetachedFromVisualTree</code> 里停</strong>（见第二章 ClockWidget）。</p>
+<h2 id="sec-3">3. 页面内容注入：三槽位<a class="anchor" href="#sec-3" aria-label="本节链接">#</a></h2>
+<p><code>context.Pages</code> 往<strong>宿主已有页面</strong>的边缘插内容，不用注册新页面：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="c">// 顶部横幅：只在下载页显示</span>
+ctx.Pages.Add(<span class="s">"download"</span>, PageSlot.Banner, () =&gt; <span class="k">new</span> Banner(), order: <span class="n">0</span>);
+
+<span class="c">// 所有页面右下角悬浮球（Overlay 不占布局高度）</span>
+ctx.Pages.Add(<span class="s">"*"</span>, PageSlot.Overlay, () =&gt; <span class="k">new</span> FloatingBall());</code></pre></figure>
+<p>三个槽位：<code>Banner</code>（顶部，占高度）/ <code>Footer</code>（底部，占高度）/ <code>Overlay</code>（悬浮层，不占位）。 <code>order</code> 决定同槽位的先后；工厂<strong>每次进页面都会被调用，必须返回新控件</strong>（同一个控件实例不能挂两处）。 <code>pageId</code> 传 <code>"*"</code> 表示所有页面。</p>
+<h2 id="sec-4">4. 注册新页面<a class="anchor" href="#sec-4" aria-label="本节链接">#</a></h2>
+<p><code>context.PageRegister</code> 在左下角开始菜单里加一项自己的页面：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code>ctx.PageRegister.RegisterPage(<span class="s">"服务器监控"</span>,
+    () =&gt; <span class="k">new</span> ServerMonitorView(),      <span class="c">// 每次进入页面都会调用，必须返回新控件</span>
+    ctx.CreateIcon(<span class="s">"IconServer"</span>, <span class="n">16</span>));</code></pre></figure>
+<h2 id="sec-5">5. 主题跟随：别硬编码颜色<a class="anchor" href="#sec-5" aria-label="本节链接">#</a></h2>
+<p><code>context.Theme</code> 读宿主当前主题色，出 UI 的插件用它配色，玩家换主题自动跟手：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="k">IBrush</span> AccentBrush() =&gt; <span class="k">new</span> <span class="k">SolidColorBrush</span>(<span class="k">Color</span>.Parse(ctx.Theme.AccentColorHex));
+ctx.Theme.ThemeChanged += () =&gt; InvalidateVisual();   <span class="c">// 自绘控件换主题时重画</span>
+ctx.Theme.IsLight;   <span class="c">// "dark" / "light"</span></code></pre></figure>
+<h2 id="sec-6">6. 样式与主题库<a class="anchor" href="#sec-6" aria-label="本节链接">#</a></h2>
+<p><code>context.Style</code> 三种加载方式（都返回撤销句柄）：</p>
+<figure class="cb"><figcaption class="cb-bar"><span class="cb-lang">C#</span><button class="cb-copy" type="button" aria-label="复制代码">复制</button></figcaption><pre class="cb-pre"><code><span class="c">// ① 散装 axaml（开发期随改随看，相对插件目录）</span>
+ctx.Style.StyleEdit(<span class="s">"theme.axaml"</span>);
+
+<span class="c">// ② 打进 DLL 的 axaml（csproj 里 &lt;AvaloniaResource Include="theme.axaml" /&gt;）</span>
+<span class="k">var</span> stream = AssetLoader.Open(<span class="k">new</span> Uri(<span class="s">"avares://MyPlugin/theme.axaml"</span>));
+ctx.Style.StyleEdit(stream);
+
+<span class="c">// ③ 主题库标准入口：插件自带 Material.Avalonia 等库，实例化其主题类直接合入全局</span>
+ctx.Style.StyleEdit(<span class="k">new</span> MaterialTheme());</code></pre></figure>
+<p>axaml 根节点必须是 <code>&lt;Styles&gt;</code>。资源键请加插件 Id 前缀（如 <code>MyClock.BackgroundBrush</code>）避免多插件互抢。</p>
+<blockquote>主题库注意：随包依赖会被宿主装入默认 ALC 让 <code>avares://</code> 可解析，代价是这些 DLL 被钉住—— <strong>用主题库的插件可能要重启启动器才能完全卸载</strong>；主题库的 Avalonia 版本必须与宿主一致（当前 12.1.4）。</blockquote>
+<h2 id="sec-7">权限速查<a class="anchor" href="#sec-7" aria-label="本节链接">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th>本页用到的</th><th>权限区</th></tr></thead><tbody><tr><td><code>Taskbar.AddWidget</code> / <code>Widget.*</code></td><td><code>widget</code></td></tr><tr><td>其余（Pages / PageRegister / Theme / Style）</td><td>无需权限</td></tr></tbody></table></div>
+      <nav class="doc-pager" aria-label="章节切换"><a class="pg prev" href="05-mirror.html"><span class="pg-dir">← 上一章</span><span class="pg-t">仓库镜像</span></a><a class="pg next" href="07-download.html"><span class="pg-dir">下一章 →</span><span class="pg-t">下载与实例</span></a></nav>
+      <footer class="doc-foot">
+        <div>本页内容来自启动器仓库 <code>docs/Extension_Guide</code></div>
+        <div>第三方辅助工具，与 Mojang / Microsoft 无隶属关系</div>
+      </footer>
+    </article>
+  </main>
+
+  <aside class="doc-toc" aria-label="本页目录"><div class="toc-label">本页目录</div><ul class="toc-list"><li><a href="#sec-1" data-toc="sec-1">1. 任务栏托盘：常驻小图标</a></li><li><a href="#sec-2" data-toc="sec-2">2. 桌面小组件：进组件盒</a></li><li><a href="#sec-3" data-toc="sec-3">3. 页面内容注入：三槽位</a></li><li><a href="#sec-4" data-toc="sec-4">4. 注册新页面</a></li><li><a href="#sec-5" data-toc="sec-5">5. 主题跟随：别硬编码颜色</a></li><li><a href="#sec-6" data-toc="sec-6">6. 样式与主题库</a></li><li><a href="#sec-7" data-toc="sec-7">权限速查</a></li></ul></aside>
+</div>
+
+<button class="nav-scrim" id="navScrim" aria-label="关闭目录" tabindex="-1"></button>
+<script src="assets/docs.js"></script>
+</body>
+</html>
